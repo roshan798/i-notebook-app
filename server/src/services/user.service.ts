@@ -1,0 +1,34 @@
+import UserModel from '../models/user.model';
+import { User } from 'user';
+
+class UserService {
+
+    async createUser(user: User): Promise<User> {
+        try {
+            const newUser = new UserModel(user);
+            await newUser.save();
+            console.log('User created successfully:', newUser);
+            return newUser;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw new Error('Failed to create user');
+        }
+    }
+
+    // Get a user by email
+    async getUserByEmail(email: string): Promise<User | null> {
+        try {
+            const user = await UserModel.findOne({ email }).exec();
+            if (!user) {
+                console.log('User not found');
+                return null;
+            }
+            return user;
+        } catch (error) {
+            console.error('Error retrieving user:', error);
+            throw new Error('Failed to retrieve user');
+        }
+    }
+}
+
+export default new UserService();
