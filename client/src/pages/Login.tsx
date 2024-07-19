@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Paper, IconButton, InputAdornment } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React, { useState } from 'react';
 import { AxiosResponse } from 'axios';
-import { login } from '../http/index'; // Ensure you have a login function in your HTTP utility
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CustomLink from '../components/shared/CustomLink';
-
+import { login } from '../http/index';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { setUser } from '../store/userSlice';
+import { useDispatch } from 'react-redux';
 interface FormState {
     email: string;
     password: string;
 }
 
 const Login: React.FC = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState<FormState>({
         email: '',
         password: ''
@@ -39,7 +42,10 @@ const Login: React.FC = () => {
                 email: formData.email,
                 password: formData.password
             });
-            console.log(response);
+            const { user } = response.data;
+            console.log("user", user);
+            dispatch(setUser(user));
+            navigate("/");
             // Handle successful login (e.g., redirect to home page or show a success message)
         } catch (error) {
             console.error(error);
@@ -107,7 +113,7 @@ const Login: React.FC = () => {
                 </form>
                 <Typography variant="body2" color="textSecondary" align='center' sx={{ marginTop: "0.8rem" }}>
                     Don't have an account?
-                    <CustomLink variant="body2" color="primary" component={Link} to="/signup" underline='hover'> Sign up now.</CustomLink>
+                    <CustomLink variant="body2" color="primary" to="/signup" underline='hover'> Sign up now.</CustomLink>
                 </Typography>
             </Paper>
         </Box>

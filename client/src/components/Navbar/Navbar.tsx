@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     AppBar,
     Box,
@@ -14,24 +13,18 @@ import {
     DarkMode,
     Menu as MoreVertIcon
 } from '@mui/icons-material';
+import { Link, useLocation } from 'react-router-dom';
 import { useThemeContext } from '../../theme/ThemeContextProvider';
 import CustomLink from '../shared/CustomLink';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/types';
 
 export default function Navbar() {
     const { mode, toggleMode } = useThemeContext();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-    const isMenuOpen = Boolean(anchorEl);
-    const isLoggedIn = false; // This should be replaced with your actual authentication logic
-
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+    const user = useSelector((state: RootState) => state.user);
+    const location = useLocation()
+    const { pathname } = location;
+    const isLoggedIn = user ? true : false;
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -75,7 +68,7 @@ export default function Navbar() {
                                     aria-label="account of current user"
                                     aria-controls="primary-search-account-menu"
                                     aria-haspopup="true"
-                                    onClick={handleProfileMenuOpen}
+                                    onClick={() => { console.log("clicked"); }}
                                     color="inherit"
                                     sx={{ mr: 1 }}
                                 >
@@ -87,7 +80,7 @@ export default function Navbar() {
 
                             </>
                         ) : (
-                            window.location.pathname === '/login' ? (
+                            pathname === '/login' ? (
                                 <Button component={Link} to="/signup" color="inherit">
                                     Sign Up
                                 </Button>
