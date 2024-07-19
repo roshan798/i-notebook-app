@@ -8,24 +8,35 @@ import Signup from "./pages/Signup";
 import PublicRoute from "./routes/PublicRoute";
 import { useThemeContext } from "./theme/ThemeContextProvider";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-
+import { useLoadingWithRefresh } from "./hooks/useLoadingWithRefresh";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 function App() {
   const { theme } = useThemeContext();
+  const { loading } = useLoadingWithRefresh();
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Navbar />
-        <Routes>
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<Home />}></Route>
-          </Route>
-          <Route element={<PublicRoute />}>
-            <Route path="/signup" element={<Signup />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-          </Route>
-          <Route path="*" element={<Error404 />}></Route>
-        </Routes>
+        {loading
+          ?
+          (<Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <CircularProgress />
+          </Box>)
+          :
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Home />}></Route>
+            </Route>
+            <Route element={<PublicRoute />}>
+              <Route path="/signup" element={<Signup />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+            </Route>
+            <Route path="*" element={<Error404 />}></Route>
+          </Routes>
+        }
       </ThemeProvider>
     </>
   )

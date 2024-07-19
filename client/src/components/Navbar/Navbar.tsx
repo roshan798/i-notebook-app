@@ -21,7 +21,7 @@ import { RootState } from '../../store/types';
 
 export default function Navbar() {
     const { mode, toggleMode } = useThemeContext();
-    const user = useSelector((state: RootState) => state.user);
+    const { user } = useSelector((state: RootState) => state.user);
     const location = useLocation()
     const { pathname } = location;
     const isLoggedIn = user ? true : false;
