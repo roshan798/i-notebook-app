@@ -99,10 +99,10 @@ class UserController {
                 password: hashedPassword,
             };
 
-            const savedUser = await UserService.createUser(user);
+            await UserService.createUser(user);
             res.status(201).json({
                 success: true,
-                user: new UserDTO(savedUser),
+                message: "User created successfully",
             });
         } catch (error) {
             console.error('Error signing up:', error);
