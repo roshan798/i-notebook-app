@@ -6,7 +6,11 @@ import { validateLogin, validateSignup } from '@utils/validation';
 import HashService from '@services/hash.service';
 import { User } from 'user';
 import UserDTO from 'DTO/user.dto';
-
+import { ObjectId } from 'mongoose';
+interface TokenPayload {
+    _id: string;
+    [key: string]: any;
+}
 class UserController {
     async login(req: Request<{}, {}, LoginRequestBody>, res: Response) {
         const loginValidationError = validateLogin(req.body);
@@ -48,7 +52,16 @@ class UserController {
                 _id: userId,
                 email: user.email,
             });
+            try {
+                await TokenService.storeRefreshToken(refreshToken, userId);
+            } catch (error) {
+                console.error('Error storing refresh token:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
 
+            }
             res.cookie('refreshToken', refreshToken, {
                 maxAge: 1000 * 60 * 60 * 24, // for 1 day
                 httpOnly: true,
@@ -112,6 +125,66 @@ class UserController {
             });
         }
     }
+    async refreshAccessToken(req: Request, res: Response): Promise<Response> {
+        const { refreshToken: refreshTokenFromCookie } = req.cookies;
+
+        if (!refreshTokenFromCookie) {
+            return res.status(401).json({ message: "Access denied, token missing!" });
+        }
+
+        let userData: TokenPayload;
+        try {
+            userData = await TokenService.verifyRefreshToken(refreshTokenFromCookie) as TokenPayload;
+        } catch (error) {
+            return res.status(401).json({ message: "Invalid Token" });
+        }
+
+        try {
+            const token = await TokenService.findRefreshToken(userData._id, refreshTokenFromCookie);
+            if (!token) {
+                return res.status(401).json({ message: "Invalid Token" });
+            }
+        } catch (error) {
+            return res.status(500).json({ message: "Internal error" });
+        }
+
+        const user = await UserService.getUser({ _id: userData._id });
+        if (!user) {
+            return res.status(404).json({ message: "No user found" });
+        }
+
+        // Delete previously stored token before creating new ones
+        await TokenService.removeToken(refreshTokenFromCookie);
+
+        // Generate new tokens (both access and refresh tokens)
+        const { refreshToken, accessToken } = TokenService.generateTokens({
+            _id: user._id as string,
+            email: user.email,
+        });
+
+        // Store new refresh token in the database
+        await TokenService.storeRefreshToken(refreshToken, user._id as ObjectId);
+        // TODO setting cookie will be a function in the future
+        // Set cookies with new tokens
+        res.cookie('refreshToken', refreshToken, {
+            maxAge: 1000 * 60 * 60 * 24, // for 1 day
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            sameSite: "strict",
+        });
+        res.cookie('accessToken', accessToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            sameSite: "strict",
+        });
+
+        return res.json({
+            user: new UserDTO(user),
+            success: true,
+        });
+    }
 }
+
 
 export default new UserController();

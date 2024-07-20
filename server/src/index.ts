@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import config from './configs/config';
 import authRouter from './routes/auth.route';
 import connectDB from 'configs/database';
@@ -13,6 +14,7 @@ const corsOptions = {
 // middlewares
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '4mb' }));
+app.use(cookieParser());
 
 //routes
 // will add the middleware to the route in future

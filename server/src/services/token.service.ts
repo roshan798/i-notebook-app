@@ -1,7 +1,7 @@
 import config from 'configs/config';
 import jwt from 'jsonwebtoken';
 import refreshModal from '@models/refresh.model';
-import { User } from 'user';
+import { ObjectId } from 'mongoose';
 
 type TokenPayload = {
     _id: string;
@@ -28,7 +28,7 @@ class TokenService {
         return { accessToken, refreshToken };
     }
 
-    async storeRefreshToken(token: string, userId: string): Promise<void> {
+    async storeRefreshToken(token: string, userId: ObjectId | string): Promise<void> {
         try {
             await refreshModal.create({
                 token: token,
@@ -50,7 +50,6 @@ class TokenService {
     async findRefreshToken(userId: string, refreshToken: string): Promise<RefreshTokenDocument | null> {
         return await refreshModal.findOne({
             userId: userId,
-            token: refreshToken,
         });
     }
 
