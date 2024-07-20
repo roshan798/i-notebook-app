@@ -27,3 +27,6 @@ export const login = async (data: LoginUserData) => {
 export const signup = async (data: SignupUserData) => {
     return api.post('/auth/signup', data);
 };
+export const logout = async () => {
+    return api.post('/auth/logout');
+}

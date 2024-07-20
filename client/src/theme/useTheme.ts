@@ -1,32 +1,34 @@
-import { useState, useMemo } from "react";
-import { PaletteMode, createTheme } from "@mui/material";
-import theme from "./theme";
-// import { getDesignTokens } from "./theme";
+import { createTheme } from "@mui/material";
+import { useState } from "react";
+import { colors } from "@mui/material";
+
 const useTheme = () => {
-    const [mode, setMode] = useState<PaletteMode>(localStorage.getItem("theme") as "light") || "light";
+    const preferedTheme = localStorage.getItem("prefered-theme") as "light" | "dark";
+    const [mode, setMode] = useState<"light" | "dark">(preferedTheme != undefined ? preferedTheme : "light");
     const toggleMode = () => {
-        setMode((prev) => {
-            const newMode = prev === "light" ? "dark" : "light";
-            localStorage.setItem("theme", newMode);
-            return newMode;
-        }
-        );
-    }
-    const modifiedTheme = useMemo(
-        () =>
-            createTheme({
-                ...theme,
-                palette: {
-                    ...theme.palette,
-                    mode,
-                },
-            }),
-        [mode]
-    );
-    // const modifiedTheme = useMemo(
-    //     () => createTheme(getDesignTokens(mode)),
-    //     [mode]
-    // );
-    return { mode, toggleMode, theme: modifiedTheme }
+        setMode(((prevMode) => {
+            if (prevMode === "light") {
+                localStorage.setItem("prefered-theme", "dark");
+                return "dark";
+            } else {
+                localStorage.setItem("prefered-theme", "light");
+                return "light";
+            }
+        }));
+    };
+
+    const theme = createTheme({
+        palette: {
+            mode: mode,
+            primary: {
+                main: colors.teal[500],
+            },
+            secondary: {
+                main: colors.blueGrey[500],
+            },
+        },
+    });
+
+    return { mode, toggleMode, theme };
 }
 export default useTheme;

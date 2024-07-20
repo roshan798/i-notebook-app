@@ -43,6 +43,12 @@ const MUIComponentShowcase = () => {
                     <Button variant="contained" color="secondary">Secondary</Button>
                 </Grid>
                 <Grid item>
+                    <Button variant="contained" color="success">Success</Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="contained" color="warning">Warning</Button>
+                </Grid>
+                <Grid item>
                     <Button variant="contained" color="error">Error</Button>
                 </Grid>
                 <Grid item>

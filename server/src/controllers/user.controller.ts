@@ -12,6 +12,47 @@ interface TokenPayload {
     [key: string]: any;
 }
 class UserController {
+    async signup(req: Request<{}, {}, SignupRequestBody>, res: Response) {
+        const { name, email, password } = req.body;
+
+        const signupValidationError = validateSignup(req.body);
+        if (signupValidationError !== null) {
+            return res.status(400).json({
+                success: false,
+                message: signupValidationError,
+            });
+        }
+
+        try {
+            //check if the user already exist
+            const userExist = await UserService.getUserByEmail(email);
+            if (userExist) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'User already exist, please login',
+                });
+            }
+            const hashedPassword = await HashService.hash(password);
+            const user: User = {
+                name: name,
+                email: email,
+                password: hashedPassword,
+            };
+
+            await UserService.createUser(user);
+            res.status(201).json({
+                success: true,
+                message: "User created successfully",
+            });
+        } catch (error) {
+            console.error('Error signing up:', error);
+            res.status(500).json({
+                success: false,
+                msg: 'Internal server error',
+            });
+        }
+    }
+    
     async login(req: Request<{}, {}, LoginRequestBody>, res: Response) {
         const loginValidationError = validateLogin(req.body);
         if (loginValidationError !== null) {
@@ -85,46 +126,34 @@ class UserController {
             });
         }
     }
-    async signup(req: Request<{}, {}, SignupRequestBody>, res: Response) {
-        const { name, email, password } = req.body;
 
-        const signupValidationError = validateSignup(req.body);
-        if (signupValidationError !== null) {
+    async logout(req: Request, res: Response) {
+        const { refreshToken } = req.cookies;
+        if (!refreshToken) {
             return res.status(400).json({
                 success: false,
-                message: signupValidationError,
+                message: 'User not logged in',
             });
         }
-
         try {
-            //check if the user already exist
-            const userExist = await UserService.getUserByEmail(email);
-            if (userExist) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'User already exist, please login',
-                });
-            }
-            const hashedPassword = await HashService.hash(password);
-            const user: User = {
-                name: name,
-                email: email,
-                password: hashedPassword,
-            };
-
-            await UserService.createUser(user);
-            res.status(201).json({
+            const { _id } = await TokenService.verifyRefreshToken(refreshToken) as TokenPayload;
+            await TokenService.removeToken(refreshToken);
+            res.clearCookie('refreshToken');
+            res.clearCookie('accessToken');
+            res.status(200).json({
                 success: true,
-                message: "User created successfully",
+                message: 'User logged out',
             });
         } catch (error) {
-            console.error('Error signing up:', error);
+            console.error('Error logging out:', error);
             res.status(500).json({
                 success: false,
-                msg: 'Internal server error',
+                message: 'Internal server error',
             });
         }
     }
+
+
     async refreshAccessToken(req: Request, res: Response): Promise<Response> {
         const { refreshToken: refreshTokenFromCookie } = req.cookies;
 

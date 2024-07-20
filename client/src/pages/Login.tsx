@@ -1,10 +1,10 @@
-import { TextField, Button, Box, Typography, Paper, IconButton, InputAdornment } from '@mui/material';
+import { TextField, Button, Box, Typography, Paper, IconButton, InputAdornment, Divider } from '@mui/material';
 import React, { useState } from 'react';
 import { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CustomLink from '../components/shared/CustomLink';
 import { login } from '../http/index';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Google, Visibility, VisibilityOff } from '@mui/icons-material';
 import { setUser } from '../store/userSlice';
 import { useDispatch } from 'react-redux';
 interface FormState {
@@ -59,7 +59,9 @@ const Login: React.FC = () => {
         <Box sx={{ maxWidth: 400, margin: 'auto', padding: 1, marginTop: 4 }}>
             <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
                 <Typography variant="h4" gutterBottom align="center">Login</Typography>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{
+                    marginBottom: "1rem"
+                }}>
                     <TextField
                         fullWidth
                         margin="normal"
@@ -111,6 +113,25 @@ const Login: React.FC = () => {
                     </Button>
                     {error && <Typography color="error.main" align="center" sx={{ marginTop: 2 }}>{error}</Typography>}
                 </form>
+                <Divider>OR</Divider>
+                <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            startIcon={<Google />}
+            sx={{
+                marginTop: 2,
+                borderRadius: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+
+            }}
+        >
+            Sign in with Google
+        </Button>
+
                 <Typography variant="body2" color="textSecondary" align='center' sx={{ marginTop: "0.8rem" }}>
                     Don't have an account?
                     <CustomLink variant="body2" color="primary" to="/signup" underline='hover'> Sign up now.</CustomLink>

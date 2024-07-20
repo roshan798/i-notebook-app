@@ -6,40 +6,21 @@ import Error404 from "./pages/Error404";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PublicRoute from "./routes/PublicRoute";
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import { useLoadingWithRefresh } from "./hooks/useLoadingWithRefresh";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { useState } from "react";
+import useTheme from "./theme/useTheme";
 function App() {
+
   const { loading } = useLoadingWithRefresh();
-
-
-  // state to manage the dark mode
-  const [toggleDarkMode, setToggleDarkMode] = useState(true);
-
-  // function to toggle the dark mode as true or false
-  const toggleDarkTheme = (): void => {
-    setToggleDarkMode(!toggleDarkMode);
-  };
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: toggleDarkMode == true ? "dark" : "light",
-      primary: {
-        main: '#90caf9',
-      },
-      secondary: {
-        main: '#131052',
-      },
-    },
-  });
+  const { mode, toggleMode, theme } = useTheme();
 
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Navbar toggleDarkTheme={toggleDarkTheme} mode={toggleDarkMode == true ? "dark" : "light"} />
+        <Navbar toggleDarkTheme={toggleMode} mode={mode} />
         {loading
           ?
           (<Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
