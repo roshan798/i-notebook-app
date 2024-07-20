@@ -9,3 +9,7 @@ export interface User {
     createdAt?: Date;
     updatedAt?: Date;
 }
+export type FilterQuery = {
+    email?: string;
+    _id?: string;
+}

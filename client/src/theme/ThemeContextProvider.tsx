@@ -1,9 +1,9 @@
-import { createTheme, Theme, PaletteMode } from "@mui/material";
+import { createTheme, Theme } from "@mui/material";
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 import useTheme from "./useTheme";
 
 type ThemeContextType = {
-    mode: PaletteMode;
+    mode: string;
     toggleMode: () => void;
     theme: Theme;
 };

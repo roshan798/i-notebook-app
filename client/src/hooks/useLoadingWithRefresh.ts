@@ -13,7 +13,7 @@ export function useLoadingWithRefresh() {
         const fetchRefreshToken = async () => {
             try {
                 const response = await axios.get<{ user: User }>(
-                    `${config.getAPIURL()}/refresh`,
+                    `${config.getAPIURL()}/auth/refresh`,
                     {
                         withCredentials: true,
                     }

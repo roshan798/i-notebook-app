@@ -14,18 +14,26 @@ import {
     Menu as MoreVertIcon
 } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-import { useThemeContext } from '../../theme/ThemeContextProvider';
+// import { useThemeContext } from '../../theme/ThemeContextProvider';
 import CustomLink from '../shared/CustomLink';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/types';
+import { logout } from '../../store/userSlice';
 
-export default function Navbar() {
-    const { mode, toggleMode } = useThemeContext();
+interface NavbarProps {
+    toggleDarkTheme: () => void;
+    mode: "dark" | "light";
+}
+const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
+    // const { mode, toggleMode } = useThemeContext();
     const { user } = useSelector((state: RootState) => state.user);
     const location = useLocation()
     const { pathname } = location;
     const isLoggedIn = user ? true : false;
-
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+        dispatch(logout());
+    }
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -53,7 +61,7 @@ export default function Navbar() {
                                 aria-label="theme"
                                 onClick={() => {
                                     console.log("theme");
-                                    toggleMode();
+                                    toggleDarkTheme();
                                 }}
                                 sx={{ mr: 1 }}
                             >
@@ -74,7 +82,7 @@ export default function Navbar() {
                                 >
                                     <AccountCircle />
                                 </IconButton>
-                                <Button onClick={() => {/* handleLogout */ }} color="inherit">
+                                <Button onClick={handleLogout} color="inherit">
                                     Logout
                                 </Button>
 
@@ -110,3 +118,5 @@ export default function Navbar() {
         </Box>
     );
 }
+
+export default Navbar;

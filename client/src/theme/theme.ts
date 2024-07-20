@@ -1,15 +1,24 @@
 import { PaletteMode } from "@mui/material";
+import { blue, teal } from "@mui/material/colors";
 
-// Default theme export for light mode
-export const theme = {
+const theme = {
   palette: {
-    mode: "light",
+    primary: teal,
   },
 };
 
-// Function to get design tokens based on palette mode (light/dark)
+// for using custome pallete
 export const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
     mode,
+    ...(mode === "light"
+      ? {
+        primary: teal,
+      }
+      : {
+        primary: blue
+      }),
   },
 });
+
+export default theme;
