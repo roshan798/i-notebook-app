@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import refreshModal from '@models/refresh.model';
 import { ObjectId } from 'mongoose';
 
-type TokenPayload = {
+export type TokenPayload = {
     _id: string;
     email: string;
 };
@@ -39,8 +39,8 @@ class TokenService {
         }
     }
 
-    async verifyAccessToken(token: string): Promise<string | jwt.JwtPayload> {
-        return jwt.verify(token, config.jwt.access_secret);
+    async verifyAccessToken(token: string): Promise<string | TokenPayload> {
+        return jwt.verify(token, config.jwt.access_secret) as TokenPayload;
     }
 
     async verifyRefreshToken(refreshToken: string): Promise<string | jwt.JwtPayload> {
