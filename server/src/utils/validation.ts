@@ -1,4 +1,5 @@
-import { LoginRequestBody, SignupRequestBody } from "userRequest";
+import type { NotesRequestBody } from "notes";
+import type { LoginRequestBody, SignupRequestBody } from "userRequest";
 const validationMessages = {
     EMAIL_REQUIRED: 'Email is required',
     PASSWORD_REQUIRED: 'Password is required',
@@ -48,3 +49,12 @@ export const validateSignup = (data: SignupRequestBody): string | null => {
     return null;
 }
 
+export const validateNote = (data: NotesRequestBody): string | null => {
+    const { title, content } = data;
+
+    if (!title || !content) {
+        return 'Title and content are required';
+    }
+
+    return null;
+}

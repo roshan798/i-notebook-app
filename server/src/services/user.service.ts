@@ -7,7 +7,6 @@ class UserService {
         try {
             const newUser = new UserModel(user);
             await newUser.save();
-            console.log('User created successfully:', newUser);
             return newUser;
         } catch (error) {
             console.error('Error creating user:', error);
