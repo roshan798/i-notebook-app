@@ -11,19 +11,16 @@ interface TokenPayload {
     _id: string;
     [key: string]: any;
 }
-const setCookie = (res: Response, accessToken: String, refreshToken: String) => {
-    res.cookie('refreshToken', refreshToken, {
+const setCookie = (res: Response, accessToken: string, refreshToken: string) => {
+    const options = {
         maxAge: 1000 * 60 * 60 * 24, // for 1 day
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-    });
-    res.cookie('accessToken', accessToken, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        sameSite: "none",
-    });
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict" as "none" | "strict" | "lax",
+    };
+    console.log("cookie options", options);
+    res.cookie('refreshToken', refreshToken, options);
+    res.cookie('accessToken', accessToken, options);
 }
 
 class UserController {
