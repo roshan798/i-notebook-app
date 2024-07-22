@@ -16,13 +16,13 @@ const setCookie = (res: Response, accessToken: String, refreshToken: String) => 
         maxAge: 1000 * 60 * 60 * 24, // for 1 day
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
     });
     res.cookie('accessToken', accessToken, {
         maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        sameSite: "strict",
+        sameSite: "none",
     });
 }
 
