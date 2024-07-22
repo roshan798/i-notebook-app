@@ -17,6 +17,20 @@ const token_service_1 = __importDefault(require("../services/token.service"));
 const validation_1 = require("../utils/validation");
 const hash_service_1 = __importDefault(require("../services/hash.service"));
 const user_dto_1 = __importDefault(require("../DTO/user.dto"));
+const setCookie = (res, accessToken, refreshToken) => {
+    res.cookie('refreshToken', refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24, // for 1 day
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    });
+    res.cookie('accessToken', accessToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        sameSite: "strict",
+    });
+};
 class UserController {
     signup(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -104,14 +118,15 @@ class UserController {
                         message: 'Internal server error',
                     });
                 }
-                res.cookie('refreshToken', refreshToken, {
-                    maxAge: 1000 * 60 * 60 * 24, // for 1 day
-                    httpOnly: true,
-                });
-                res.cookie('accessToken', accessToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
-                    httpOnly: true,
-                });
+                setCookie(res, accessToken, refreshToken);
+                // res.cookie('refreshToken', refreshToken, {
+                //     maxAge: 1000 * 60 * 60 * 24, // for 1 day
+                //     httpOnly: true,
+                // });
+                // res.cookie('accessToken', accessToken, {
+                //     maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
+                //     httpOnly: true,
+                // });
                 res.status(200).json({
                     success: true,
                     user: new user_dto_1.default(user),
@@ -191,18 +206,19 @@ class UserController {
             yield token_service_1.default.storeRefreshToken(refreshToken, user._id);
             // TODO setting cookie will be a function in the future
             // Set cookies with new tokens
-            res.cookie('refreshToken', refreshToken, {
-                maxAge: 1000 * 60 * 60 * 24, // for 1 day
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-                sameSite: "strict",
-            });
-            res.cookie('accessToken', accessToken, {
-                maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-                sameSite: "strict",
-            });
+            setCookie(res, accessToken, refreshToken);
+            // res.cookie('refreshToken', refreshToken, {
+            //     maxAge: 1000 * 60 * 60 * 24, // for 1 day
+            //     httpOnly: true,
+            //     secure: process.env.NODE_ENV === "production",
+            //     sameSite: "strict",
+            // });
+            // res.cookie('accessToken', accessToken, {
+            //     maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
+            //     httpOnly: true,
+            //     secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            //     sameSite: "strict",
+            // });
             return res.json({
                 user: new user_dto_1.default(user),
                 success: true,

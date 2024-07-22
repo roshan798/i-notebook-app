@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = __importDefault(require("./configs/config"));
 const auth_route_1 = __importDefault(require("./routes/auth.route"));
@@ -11,19 +12,22 @@ const notes_route_1 = __importDefault(require("./routes/notes.route"));
 const database_1 = __importDefault(require("./configs/database"));
 const PORT = config_1.default.server.port;
 const app = (0, express_1.default)();
-// const corsOptions = {
-//     origin: [config.client.url],
-//     credentials: true,
-// };
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies and other credentials
-    next();
-});
+console.log("frontend url = >", config_1.default.client.url);
+const corsOptions = {
+    origin: [config_1.default.client.url],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+};
+console.log(corsOptions);
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
+//     res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies and other credentials
+//     next();
+// });
 // middlewares
-// app.use(cors(corsOptions));
+app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json({ limit: '4mb' }));
 app.use((0, cookie_parser_1.default)());
 //routes
