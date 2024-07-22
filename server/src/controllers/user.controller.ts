@@ -11,11 +11,12 @@ interface TokenPayload {
     _id: string;
     [key: string]: any;
 }
+const options = {
+    maxAge: 1000 * 60 * 60 * 24, // for 1 day
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict" as "none" | "strict" | "lax",
+};
 const setCookie = (res: Response, accessToken: string, refreshToken: string) => {
-    const options = {
-        maxAge: 1000 * 60 * 60 * 24, // for 1 day
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict" as "none" | "strict" | "lax",
-    };
+
     console.log("cookie options", options);
     res.cookie('refreshToken', refreshToken, options);
     res.cookie('accessToken', accessToken, options);
@@ -127,6 +128,7 @@ class UserController {
             res.status(200).json({
                 success: true,
                 user: new UserDTO(user),
+                options: options,
             });
 
         } catch (error) {
