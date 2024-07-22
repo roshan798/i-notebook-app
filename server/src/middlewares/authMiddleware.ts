@@ -16,7 +16,6 @@ export default async function (req: Request, res: Response, next: NextFunction) 
             throw new Error();
         }
         const userData = await TokenService.verifyAccessToken(accessToken) as TokenPayload;
-        console.log(userData, userData);
         if (!userData) {
             throw new Error("User not found!");
         }

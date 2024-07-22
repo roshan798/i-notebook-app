@@ -28,7 +28,7 @@ export function useLoadingWithRefresh() {
         };
 
         fetchRefreshToken();
-    }, [dispatch]);
+    }, []);
 
     return { loading };
 }

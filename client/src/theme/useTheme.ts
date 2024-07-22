@@ -26,7 +26,9 @@ const useTheme = () => {
             secondary: {
                 main: colors.blueGrey[500],
             },
+            
         },
+         
     });
 
     return { mode, toggleMode, theme };

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Paper, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { AxiosResponse } from 'axios';
-import { signup } from '../http/index';
+import { signup } from '../http/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomLink from '../components/shared/CustomLink';
+import SignInWithGoogle from '../components/SignInWithGoogle';
 
 interface FormState {
     name: string;
@@ -60,7 +61,9 @@ const Signup: React.FC = () => {
         <Box sx={{ maxWidth: 400, margin: 'auto', padding: 1, marginTop: 4 }}>
             <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
                 <Typography variant="h4" gutterBottom align="center">Sign Up</Typography>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{
+                    marginBottom: "1rem"
+                }}>
                     <TextField
                         fullWidth
                         margin="normal"
@@ -124,6 +127,7 @@ const Signup: React.FC = () => {
                     </Button>
                     {error && <Typography color="error.main" align="center" sx={{ marginTop: 2 }}>{error}</Typography>}
                 </form>
+                <SignInWithGoogle />
                 <Typography variant="body2" color="textSecondary" align='center' sx={{ marginTop: "0.8rem" }}>
                     Already signed up?
                     <CustomLink variant="body2" color="primary" component={Link} to="/login" underline='hover'> Login to your account.</CustomLink>

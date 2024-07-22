@@ -24,7 +24,7 @@ import CustomLink from '../shared/CustomLink';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/types';
 import { setUser } from '../../store/userSlice';
-import { logout } from '../../http';
+import { logout } from '../../http/auth';
 
 interface NavbarProps {
     toggleDarkTheme: () => void;
@@ -59,7 +59,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClose, open }
                 'aria-labelledby': 'Account menu',
             }}
             PaperProps={{
-                elevation: 0,
+                elevation: 1,
                 sx: {
                     overflow: 'visible',
                     filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',

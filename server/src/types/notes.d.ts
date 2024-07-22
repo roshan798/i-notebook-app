@@ -6,6 +6,7 @@ export interface NotesRequestBody {
     title: string;
     content: string;
     tags: string[];
+    userId: UserId;
 }
 
 export interface Notes extends NotesRequestBody {

@@ -1,5 +1,5 @@
 import { Notes, NotesId, NotesRequestBody } from "notes";
-import NotesModel from "@models/notes.model";
+import NotesModel from "../models/notes.model"
 import { UserId } from "user";
 class NotesService {
 

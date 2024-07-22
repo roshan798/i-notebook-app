@@ -3,7 +3,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import config from './configs/config';
 import authRouter from './routes/auth.route';
-import connectDB from 'configs/database';
+import notesRouter from './routes/notes.route';
+import connectDB from './configs/database';
 
 const PORT = config.server.port;
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 //routes
 // will add the middleware to the route in future
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/notes', notesRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.json({

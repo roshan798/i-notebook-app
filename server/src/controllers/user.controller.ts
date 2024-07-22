@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import UserService from '@services/user.service';
-import TokenService from '@services/token.service';
-import { LoginRequestBody, SignupRequestBody } from 'userRequest';
-import { validateLogin, validateSignup } from '@utils/validation';
-import HashService from '@services/hash.service';
-import { User } from 'user';
-import UserDTO from 'DTO/user.dto';
 import { ObjectId } from 'mongoose';
+import { Request, Response } from 'express';
+import UserService from '../services/user.service';
+import TokenService from '../services/token.service';
+import { LoginRequestBody, SignupRequestBody } from 'userRequest';
+import { validateLogin, validateSignup } from '../utils/validation';
+import HashService from '../services/hash.service';
+import { User } from 'user';
+import UserDTO from '../DTO/user.dto';
 interface TokenPayload {
     _id: string;
     [key: string]: any;
@@ -52,7 +52,7 @@ class UserController {
             });
         }
     }
-    
+
     async login(req: Request<{}, {}, LoginRequestBody>, res: Response) {
         const loginValidationError = validateLogin(req.body);
         if (loginValidationError !== null) {

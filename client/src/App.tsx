@@ -23,9 +23,11 @@ function App() {
         <Navbar toggleDarkTheme={toggleMode} mode={mode} />
         {loading
           ?
-          (<Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-            <CircularProgress />
-          </Box>)
+          (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+              <CircularProgress />
+            </Box>
+          )
           :
           <Routes>
             <Route element={<PrivateRoute />}>
