@@ -13,6 +13,8 @@ interface TokenPayload {
 }
 const options = {
     maxAge: 1000 * 60 * 60 * 24, // for 1 day
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict" as "none" | "strict" | "lax",
 };
 const setCookie = (res: Response, accessToken: string, refreshToken: string) => {
