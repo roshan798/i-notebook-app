@@ -12,6 +12,15 @@ const corsOptions = {
     origin: [config.client.url],
     credentials: true,
 };
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", config.client.url); 
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies and other credentials
+    next();
+});
+
 // middlewares
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '4mb' }));
