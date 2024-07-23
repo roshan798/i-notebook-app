@@ -11,6 +11,7 @@ import { useLoadingWithRefresh } from './hooks/useLoadingWithRefresh'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import useTheme from './theme/useTheme'
+import Notification from './components/Notification/Notification'
 function App() {
     const { loading } = useLoadingWithRefresh()
     const { mode, toggleMode, theme } = useTheme()
@@ -29,6 +30,7 @@ function App() {
                         <CircularProgress />
                     </Box>
                 ) : (
+
                     <Routes>
                         <Route element={<PrivateRoute />}>
                             <Route path="/" element={<Home />}></Route>
@@ -40,6 +42,7 @@ function App() {
                         <Route path="*" element={<Error404 />}></Route>
                     </Routes>
                 )}
+                <Notification />
             </ThemeProvider>
         </>
     )
