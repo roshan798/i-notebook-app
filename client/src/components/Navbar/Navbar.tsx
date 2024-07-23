@@ -6,108 +6,23 @@ import {
     Toolbar,
     IconButton,
     Typography,
-    Tooltip,
     Button,
-    Menu,
-    MenuItem,
-    Avatar,
-    ListItemIcon,
 } from '@mui/material'
 import {
     AccountCircle,
-    LightMode,
-    DarkMode,
     Menu as MoreVertIcon,
-    Logout,
 } from '@mui/icons-material'
 import CustomLink from '../shared/CustomLink'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setUser } from '../../store/userSlice'
-import { logout } from '../../http/auth'
-import { useNotification } from '../../contexts/NotificationContext'
+import AccountMenu from './AccountMenu'
+
 
 interface NavbarProps {
     toggleDarkTheme: () => void
     mode: 'dark' | 'light'
 }
 
-interface AccountMenuProps {
-    anchorEl: HTMLElement | null
-    handleClose: () => void
-    open: boolean
-}
-
-const AccountMenu: React.FC<AccountMenuProps> = ({
-    anchorEl,
-    handleClose,
-    open,
-}) => {
-    const { addNotification: notify } = useNotification()
-    const dispatch = useDispatch()
-    const handleLogout = async () => {
-        try {
-            await logout()
-            dispatch(setUser(null))
-            notify('Logout successfull...', 'success')
-            handleClose()
-        } catch (error) {
-            console.error(error)
-            handleClose()
-        }
-    }
-    return (
-        <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'Account menu',
-            }}
-            PaperProps={{
-                elevation: 1,
-                sx: {
-                    overflow: 'visible',
-                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                    mt: 1.5,
-                    '& .MuiAvatar-root': {
-                        width: 32,
-                        height: 32,
-                        ml: -0.5,
-                        mr: 1,
-                    },
-                    '&::before': {
-                        content: '""',
-                        display: 'block',
-                        position: 'absolute',
-                        top: 0,
-                        right: 14,
-                        width: 10,
-                        height: 10,
-                        bgcolor: 'background.paper',
-                        transform: 'translateY(-50%) rotate(45deg)',
-                        zIndex: 0,
-                    },
-                },
-            }}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-            <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                    <Avatar />
-                </ListItemIcon>{' '}
-                Profile
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                    <Logout fontSize="small" />
-                </ListItemIcon>
-                Logout
-            </MenuItem>
-        </Menu>
-    )
-}
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
     const { user } = useSelector((state: RootState) => state.user)
@@ -147,23 +62,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                             display: { xs: 'none', md: 'flex' },
                             alignItems: 'center',
                         }}>
-                        <Tooltip title={mode === 'light' ? 'Dark' : 'Light'}>
-                            <IconButton
-                                edge="start"
-                                size="large"
-                                aria-label="theme"
-                                onClick={() => {
-                                    console.log('theme')
-                                    toggleDarkTheme()
-                                }}
-                                sx={{ mr: 1 }}>
-                                {mode === 'light' ? (
-                                    <DarkMode />
-                                ) : (
-                                    <LightMode />
-                                )}
-                            </IconButton>
-                        </Tooltip>
                         {isLoggedIn ? (
                             <>
                                 <Button
@@ -187,6 +85,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                                     anchorEl={anchorEl as HTMLElement | null}
                                     handleClose={handleClose}
                                     open={open}
+                                    toggleDarkTheme={toggleDarkTheme}
+                                    mode={mode}
                                 />
                             </>
                         ) : pathname === '/login' ? (
@@ -211,9 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                             aria-label="show more"
                             aria-controls="primary-search-account-menu-mobile"
                             aria-haspopup="true"
-                            onClick={() => {
-                                /* handle mobile menu open */
-                            }}
+                            onClick={handleClick}
                             color="inherit">
                             <MoreVertIcon />
                         </IconButton>

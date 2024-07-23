@@ -17,6 +17,7 @@ import { setUser } from '../store/userSlice'
 import { useDispatch } from 'react-redux'
 import SignInWithGoogle from '../components/SignInWithGoogle'
 import { useNotification } from '../contexts/NotificationContext'
+import { notifications } from '../utils/notificationMessages'
 interface FormState {
     email: string
     password: string
@@ -52,15 +53,14 @@ const Login: React.FC = () => {
             const response: AxiosResponse = await login(formData)
             const { user } = response.data
             dispatch(setUser(user))
-            notify('Login successfull...', 'success')
+            notify(notifications.login.success, 'success')
             navigate('/')
         } catch (error) {
             console.error(error)
             setError(
                 'Login failed. Please check your credentials and try again.'
             )
-            notify(
-                'Login failed. Please check your credentials and try again.',
+            notify(notifications.login.error,
                 'error'
             )
         } finally {

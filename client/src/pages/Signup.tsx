@@ -14,6 +14,9 @@ import { signup } from '../http/auth'
 import { Link, useNavigate } from 'react-router-dom'
 import CustomLink from '../components/shared/CustomLink'
 import SignInWithGoogle from '../components/SignInWithGoogle'
+import { useNotification } from '../contexts/NotificationContext'
+import { notifications } from '../utils/notificationMessages'
+
 
 interface FormState {
     name: string
@@ -22,6 +25,7 @@ interface FormState {
 }
 
 const Signup: React.FC = () => {
+    const { addNotification: notify } = useNotification()
     const navigate = useNavigate()
     const [formData, setFormData] = useState<FormState>({
         name: '',
@@ -52,13 +56,12 @@ const Signup: React.FC = () => {
                 email: formData.email,
                 password: formData.password,
             })
-            console.log(response)
+            console.log(response);
+            notify(notifications.signup.success, 'success')
             navigate('/login')
-            // add notification
-            // Handle successful signup (e.g., redirect to login or home page)
-            // You may redirect or show a success message here
         } catch (error) {
             console.error(error)
+            notify(notifications.signup.error, 'error')
             setError('Signup failed. Please try again.')
         } finally {
             setLoading(false)
