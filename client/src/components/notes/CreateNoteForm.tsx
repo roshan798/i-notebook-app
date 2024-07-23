@@ -25,8 +25,8 @@ interface FilmOption {
 
 const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const { addNotification: notify } = useNotification()
-    const [isTitleVisible, setIsTitleVisible] = useState<boolean>(true)
-    const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(!false)
+    const [isTitleVisible, setIsTitleVisible] = useState<boolean>(false)
+    const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(true)
 
     //
     // for the tag suggestions
@@ -200,7 +200,7 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                     },
                 }}
             />
-            {isAddTagVisible &&
+            {isTitleVisible && isAddTagVisible &&
                 <Box ref={tagRef} id="id">
                     <Demo
                         tagListId="tags-standard"
