@@ -16,12 +16,14 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { setUser } from '../store/userSlice'
 import { useDispatch } from 'react-redux'
 import SignInWithGoogle from '../components/SignInWithGoogle'
+import { useNotification } from '../contexts/NotificationContext'
 interface FormState {
     email: string
     password: string
 }
 
 const Login: React.FC = () => {
+    const { addNotification: notify } = useNotification()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [formData, setFormData] = useState<FormState>({
@@ -47,20 +49,18 @@ const Login: React.FC = () => {
         setError(null)
 
         try {
-            const response: AxiosResponse = await login({
-                email: formData.email,
-                password: formData.password,
-            })
+            const response: AxiosResponse = await login(formData)
             const { user } = response.data
-            console.log('user', user)
             dispatch(setUser(user))
+            notify("Login successfull...", "success")
             navigate('/')
-            // Handle successful login (e.g., redirect to home page or show a success message)
         } catch (error) {
             console.error(error)
             setError(
                 'Login failed. Please check your credentials and try again.'
             )
+            notify("Login failed. Please check your credentials and try again.", "error")
+
         } finally {
             setLoading(false)
         }

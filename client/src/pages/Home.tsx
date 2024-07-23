@@ -35,7 +35,7 @@ export default function Home() {
                         maxWidth: '40rem',
                         width: '100%',
                     }}>
-                    <CreateNoteForm />
+                    <CreateNoteForm setNotes={setNotes} />
                     {loading ? (
                         'loading...'
                     ) : (

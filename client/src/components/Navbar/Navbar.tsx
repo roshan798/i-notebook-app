@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../store/types'
 import { setUser } from '../../store/userSlice'
 import { logout } from '../../http/auth'
+import { useNotification } from '../../contexts/NotificationContext'
 
 interface NavbarProps {
     toggleDarkTheme: () => void
@@ -42,11 +43,13 @@ const AccountMenu: React.FC<AccountMenuProps> = ({
     handleClose,
     open,
 }) => {
+    const { addNotification: notify } = useNotification()
     const dispatch = useDispatch()
     const handleLogout = async () => {
         try {
             await logout()
             dispatch(setUser(null))
+            notify('Logout successfull...', 'success')
             handleClose()
         } catch (error) {
             console.error(error)

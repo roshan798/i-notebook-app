@@ -4,20 +4,13 @@ import {
     TextField,
     // IconButton,
 } from '@mui/material'
-// import {
-//     NotificationsNone as NotificationsIcon,
-//     PersonAdd as PersonAddIcon,
-//     Palette as PaletteIcon,
-//     Image as ImageIcon,
-//     Archive as ArchiveIcon,
-//     MoreVert as MoreVertIcon,
-//     Undo as UndoIcon,
-//     Redo as RedoIcon,
-// } from '@mui/icons-material';
 import SaveButton from './SaveButton'
 import { createNote } from '../../http/notes'
+import { useNotification } from '../../contexts/NotificationContext'
+import { Note as NoteType } from '../../types/notes'
 const defaultBorderColor = '#757575'
-const CreateNoteForm: React.FC = () => {
+const CreateNoteForm: React.FC<React.Dispatch<React.SetStateAction<NoteType[]>>> = ({ setNotes }) => {
+    const { addNotification: notify } = useNotification()
     const [isTitleVisible, setIsTitleVisible] = useState(false)
     const initialFormData = {
         title: '',
@@ -50,6 +43,8 @@ const CreateNoteForm: React.FC = () => {
                 tags: [],
             })
             console.log('Note saved:', response)
+            notify('Note saved successfully', 'success')
+            setNotes((prevState: NoteType[]) => [response.note, ...prevState])
             setFormStatus((prevState) => ({ ...prevState, isSaved: true }))
             setFormData(initialFormData)
         } catch (error) {
