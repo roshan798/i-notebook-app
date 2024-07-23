@@ -25,7 +25,6 @@ const setCookie = (
     accessToken: string,
     refreshToken: string
 ) => {
-    console.log('cookie options', options)
     res.cookie('refreshToken', refreshToken, options)
     res.cookie('accessToken', accessToken, options)
 }
