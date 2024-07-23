@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
-import MUIComponentShowcase from '../components/Navbar/MUIComponentShowcase'
-import CreateNoteForm from '../components/Notes/CreateNoteForm'
-import Note from '../components/Notes/Note'
 import { useEffect, useState } from 'react'
+import MUIComponentShowcase from '../components/Navbar/MUIComponentShowcase'
+import CreateNoteForm from '../components/notes/CreateNoteForm'
+import Note from '../components/notes/Note'
 import { getNotes } from '../http/notes'
 import { Note as NoteType } from '../types/notes'
 export default function Home() {

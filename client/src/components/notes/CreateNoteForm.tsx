@@ -3,12 +3,12 @@ import {
     Box,
     TextField, Tooltip, IconButton,
 } from '@mui/material'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
 import { Note as NoteType } from '../../types/notes'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import Demo from './AddTags/AddTags'
+import AddTags from './addTags/AddTags'
 
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
@@ -28,7 +28,6 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const [isTitleVisible, setIsTitleVisible] = useState<boolean>(false)
     const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(true)
 
-    //
     // for the tag suggestions
     const [tags, setTags] = useState<(FilmOption | string)[]>([]);
     const [options, setOptions] = useState<FilmOption[]>([]);
@@ -202,7 +201,7 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
             />
             {isTitleVisible && isAddTagVisible &&
                 <Box ref={tagRef} id="id">
-                    <Demo
+                    <AddTags
                         tagListId="tags-standard"
                         value={tags}
                         setValue={setTags}

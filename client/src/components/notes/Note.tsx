@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { Note as NoteType } from '../../types/notes';
 import NoteCard from './NoteCard';
-
 interface NoteProps {
     notes: NoteType[];
     loading: boolean;
