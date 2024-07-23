@@ -1,21 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
     Box,
-    TextField,
-    // IconButton,
+    TextField, Tooltip, IconButton,
 } from '@mui/material'
 import SaveButton from './SaveButton'
-import { createNote } from '../../http/notes'
+import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
 import { Note as NoteType } from '../../types/notes'
-const defaultBorderColor = '#757575'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import Demo from './AddTags/AddTags'
+
+export const defaultBorderColor = '#757575'
+const TAG_LIST_ID = 'tags-standard'
 interface CreateNoteFormProps {
     setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>;
 }
 
+//
+interface FilmOption {
+    title: string;
+    inputValue?: string;
+}
+//
+
 const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const { addNotification: notify } = useNotification()
-    const [isTitleVisible, setIsTitleVisible] = useState(false)
+    const [isTitleVisible, setIsTitleVisible] = useState<boolean>(true)
+    const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(!false)
+
+    //
+    // for the tag suggestions
+    const [tags, setTags] = useState<(FilmOption | string)[]>([]);
+    const [options, setOptions] = useState<FilmOption[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        // Fetch options from API
+        const fetchOptions = async () => {
+            setLoading(true);
+            try {
+                // Replace with your API call
+                const response = await getTags();
+                setOptions(response);
+            } catch (err) {
+                setError('Failed to fetch options');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOptions();
+    }, []);
+    //
     const initialFormData = {
         title: '',
         content: '',
@@ -24,6 +60,7 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const [formData, setFormData] = useState(initialFormData)
     const { title, content } = formData
     const formRef = useRef<HTMLDivElement>(null)
+    const tagRef = useRef<HTMLDivElement>(null)
     const [formStatus, setFormStatus] = useState({
         isSaving: false,
         isSaved: false,
@@ -41,10 +78,11 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                 isSaved: false,
                 isErrorSaving: false,
             })
+
             const response = await createNote({
                 title,
                 content,
-                tags: [],
+                tags: tags as string[],
             })
             console.log('Note saved:', response)
             notify('Note saved successfully', 'success')
@@ -71,14 +109,22 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+
+            const isTargetInside = target.id.startsWith(TAG_LIST_ID);
+
             if (
                 formRef.current &&
-                !formRef.current.contains(event.target as Node)
+                !formRef.current.contains(event.target as Node) &&
+                !(tagRef.current && tagRef.current.contains(event.target as Node)) &&
+                !isTargetInside
             ) {
-                setIsTitleVisible(false)
-                setFormData(initialFormData)
+                setIsTitleVisible(false);
+                setIsAddTagVisible(false);
+                setTags([]);
+                setFormData(initialFormData);
             }
-        }
+        };
         document.addEventListener('mousedown', handleClickOutside)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
@@ -124,79 +170,78 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                     }}
                 />
             )}
-            <Box>
-                <TextField
-                    id="content"
-                    name="content"
-                    label=""
-                    value={content}
-                    onChange={handleChange}
-                    onClick={handleContentClick}
-                    placeholder="Take a note..."
-                    fullWidth
-                    multiline
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderRadius: isTitleVisible ? 0 : '4px',
-                                borderColor: defaultBorderColor,
-                                borderTop: isTitleVisible ? '0px' : '',
-                                borderBottom: isTitleVisible ? '0px' : '',
-                                top: '-6px',
-                            },
-                            '&:hover fieldset': {
-                                borderColor: defaultBorderColor,
-                            },
-                            '&.Mui-focused fieldset': {
-                                borderWidth: 1,
-                                borderColor: defaultBorderColor, // Default focus border color
-                            },
+
+            <TextField
+                id="content"
+                name="content"
+                label=""
+                value={content}
+                onChange={handleChange}
+                onClick={handleContentClick}
+                placeholder="Take a note..."
+                fullWidth
+                multiline
+                sx={{
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderRadius: isTitleVisible ? 0 : '4px',
+                            borderColor: defaultBorderColor,
+                            borderTop: isTitleVisible ? '0px' : '',
+                            borderBottom: isTitleVisible ? '0px' : '',
+                            top: '-6px',
                         },
-                    }}
-                />
+                        '&:hover fieldset': {
+                            borderColor: defaultBorderColor,
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderWidth: 1,
+                            borderColor: defaultBorderColor, // Default focus border color
+                        },
+                    },
+                }}
+            />
+            {isAddTagVisible &&
+                <Box ref={tagRef} id="id">
+                    <Demo
+                        tagListId="tags-standard"
+                        value={tags}
+                        setValue={setTags}
+                        options={options}
+                        setOptions={() => {
+                            setOptions(options);
+                        }}
+                        loading={loading}
+                        error={error}
+                    />
+                </Box >}
+            <Box>
                 {isTitleVisible && (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            border: `1px solid ${defaultBorderColor}`,
-                            borderTop: 'none',
-                            borderRadius: '0 0 4px 4px',
-                            p: 1,
-                        }}>
-                        {/* <IconButton>
-                        <NotificationsIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <PersonAddIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <PaletteIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <ImageIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <ArchiveIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <MoreVertIcon fontSize="small" />
-                    </IconButton>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <IconButton>
-                        <UndoIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                        <RedoIcon fontSize="small" />
-                    </IconButton> */}
-                        <SaveButton
-                            color="inherit"
-                            variant="text"
-                            loading={formStatus.isSaving}
-                            onClick={handleSave}
-                        />
-                    </Box>
+                    <>
+
+                        <Box
+                            sx={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                border: `1px solid ${defaultBorderColor}`,
+                                borderTop: 'none',
+                                borderRadius: '0 0 4px 4px',
+                                p: 1,
+                            }}>
+
+                            <SaveButton
+                                color="inherit"
+                                variant="text"
+                                loading={formStatus.isSaving}
+                                onClick={handleSave}
+                            />
+                            <Tooltip title={isAddTagVisible ? "Close add tag" : "Add tags"}>
+                                <IconButton color="primary" size="small" aria-label="add-tags" onClick={() => setIsAddTagVisible((prevState) => !prevState)}>
+                                    <LocalOfferIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    </>
                 )}
             </Box>
         </Box>
