@@ -26,7 +26,6 @@ const options = {
         : 'strict',
 };
 const setCookie = (res, accessToken, refreshToken) => {
-    console.log('cookie options', options);
     res.cookie('refreshToken', refreshToken, options);
     res.cookie('accessToken', accessToken, options);
 };
