@@ -10,5 +10,25 @@ export const notifications = {
     logout: {
         success: "👋 Goodbye! You’ve successfully logged out. See you next time! 👋",
         error: "❗ Oops! We had trouble logging you out. Please try again. 🔄"
+    },
+    note: {
+        save: {
+            success: "📝 Note saved successfully! 🎉",
+            error: "❗ Failed to save note. Please try again. 🔄"
+        },
+        update: {
+            success: "📝 Note updated successfully! 🎉",
+            error: "❗ Failed to update note. Please try again. 🔄"
+        },
+        delete: {
+            success: "🗑️ Note deleted successfully! 🚮",
+            error: "❗ Failed to delete note. Please try again. 🔄"
+        }
+    },
+    profile: {
+        update: {
+            success: "🔄 Profile updated successfully! 🎉",
+            error: "❗ Failed to update profile. Please try again. 🔄"
+        }
     }
 };
