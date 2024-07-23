@@ -107,15 +107,11 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement
 
-            const isTargetInside = target.id.startsWith(TAG_LIST_ID)
+            const isTargetInside = target.id.startsWith(TAG_LIST_ID) || target.id === 'create-first-note-btn'
 
             if (
                 formRef.current &&
                 !formRef.current.contains(event.target as Node) &&
-                !(
-                    tagRef.current &&
-                    tagRef.current.contains(event.target as Node)
-                ) &&
                 !isTargetInside
             ) {
                 setIsTitleVisible(false)
@@ -177,6 +173,7 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                 value={content}
                 onChange={handleChange}
                 onClick={handleContentClick}
+                onFocus={() => { setIsTitleVisible(true) }}
                 placeholder="Take a note..."
                 fullWidth
                 multiline
