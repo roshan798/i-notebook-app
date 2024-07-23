@@ -1,26 +1,26 @@
-import { createTheme, Theme } from "@mui/material";
-import { createContext, FC, PropsWithChildren, useContext } from "react";
-import useTheme from "./useTheme";
+import { createTheme, Theme } from '@mui/material'
+import { createContext, FC, PropsWithChildren, useContext } from 'react'
+import useTheme from './useTheme'
 
 type ThemeContextType = {
-    mode: string;
-    toggleMode: () => void;
-    theme: Theme;
-};
+    mode: string
+    toggleMode: () => void
+    theme: Theme
+}
 
 export const ThemeContext = createContext<ThemeContextType>({
-    mode: "light",
-    toggleMode: () => { },
+    mode: 'light',
+    toggleMode: () => {},
     theme: createTheme(),
-});
+})
 
 export const ThemeContextProvider: FC<PropsWithChildren> = ({ children }) => {
-    const value = useTheme();
+    const value = useTheme()
     return (
         <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-    );
-};
+    )
+}
 
 export const useThemeContext = () => {
-    return useContext(ThemeContext);
-};
+    return useContext(ThemeContext)
+}

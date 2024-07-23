@@ -1,15 +1,15 @@
-import { ObjectId } from "mongoose";
-export type UserId = ObjectId | string;
+import { ObjectId } from 'mongoose'
+export type UserId = ObjectId | string
 export interface User {
     _id?: UserId
-    id?: string;
-    name: string;
-    email: string;
-    password?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    id?: string
+    name: string
+    email: string
+    password?: string
+    createdAt?: Date
+    updatedAt?: Date
 }
 export type FilterQuery = {
-    email?: string;
-    _id?: string;
+    email?: string
+    _id?: string
 }

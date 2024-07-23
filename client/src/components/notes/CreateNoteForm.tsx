@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import {
     Box,
     TextField,
     // IconButton,
-} from '@mui/material';
+} from '@mui/material'
 // import {
 //     NotificationsNone as NotificationsIcon,
 //     PersonAdd as PersonAddIcon,
@@ -14,82 +14,96 @@ import {
 //     Undo as UndoIcon,
 //     Redo as RedoIcon,
 // } from '@mui/icons-material';
-import SaveButton from './SaveButton';
-import { createNote } from '../../http/notes';
-const defaultBorderColor = "#757575";
+import SaveButton from './SaveButton'
+import { createNote } from '../../http/notes'
+const defaultBorderColor = '#757575'
 const CreateNoteForm: React.FC = () => {
-    const [isTitleVisible, setIsTitleVisible] = useState(false);
+    const [isTitleVisible, setIsTitleVisible] = useState(false)
     const initialFormData = {
         title: '',
         content: '',
         tags: [],
     }
-    const [formData, setFormData] = useState(initialFormData);
-    const { title, content, } = formData;
-    const formRef = useRef<HTMLDivElement>(null);
+    const [formData, setFormData] = useState(initialFormData)
+    const { title, content } = formData
+    const formRef = useRef<HTMLDivElement>(null)
     const [formStatus, setFormStatus] = useState({
         isSaving: false,
         isSaved: false,
         isErrorSaving: false,
-    });
+    })
 
     const handleContentClick = () => {
-        setIsTitleVisible(true);
-    };
-
+        setIsTitleVisible(true)
+    }
 
     const handleSave = async () => {
-
         try {
-            setFormStatus({ isSaving: true, isSaved: false, isErrorSaving: false });
+            setFormStatus({
+                isSaving: true,
+                isSaved: false,
+                isErrorSaving: false,
+            })
             const response = await createNote({
                 title,
                 content,
                 tags: [],
-            });
-            console.log('Note saved:', response);
-            setFormStatus(prevState => ({ ...prevState, isSaved: true }));
-            setFormData(initialFormData);
-
+            })
+            console.log('Note saved:', response)
+            setFormStatus((prevState) => ({ ...prevState, isSaved: true }))
+            setFormData(initialFormData)
         } catch (error) {
-            console.error('Error saving note:', error);
-            setFormStatus(prevState => ({ ...prevState, isErrorSaving: true }));
-        }
-        finally {
-            setFormStatus(preState => ({ ...preState, isSaving: false }));
+            console.error('Error saving note:', error)
+            setFormStatus((prevState) => ({
+                ...prevState,
+                isErrorSaving: true,
+            }))
+        } finally {
+            setFormStatus((preState) => ({ ...preState, isSaving: false }))
         }
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState, [name]: value
-        }));
+        const { name, value } = e.target
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }))
     }
-
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (formRef.current && !formRef.current.contains(event.target as Node)) {
-                setIsTitleVisible(false);
-                setFormData(initialFormData);
+            if (
+                formRef.current &&
+                !formRef.current.contains(event.target as Node)
+            ) {
+                setIsTitleVisible(false)
+                setFormData(initialFormData)
             }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
+        }
+        document.addEventListener('mousedown', handleClickOutside)
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [])
 
     return (
-        <Box ref={formRef} sx={{ width: '100%', maxWidth: "35rem", margin: 'auto', marginTop: '2rem', boxShadow: 6 }}>
+        <Box
+            ref={formRef}
+            sx={{
+                width: '100%',
+                maxWidth: '35rem',
+                margin: 'auto',
+                marginTop: '2rem',
+                boxShadow: 6,
+            }}>
             {isTitleVisible && (
                 <TextField
                     id="title"
-                    name='title'
+                    name="title"
                     label=""
                     value={title}
-                    placeholder='Title'
+                    placeholder="Title"
                     onChange={handleChange}
                     fullWidth
                     sx={{
@@ -98,7 +112,7 @@ const CreateNoteForm: React.FC = () => {
                                 borderBottomLeftRadius: 0,
                                 borderBottomRightRadius: 0,
                                 borderColor: defaultBorderColor,
-                                borderBottom: "none",
+                                borderBottom: 'none',
                             },
                             '&:hover fieldset': {
                                 borderColor: defaultBorderColor,
@@ -114,12 +128,12 @@ const CreateNoteForm: React.FC = () => {
             <Box>
                 <TextField
                     id="content"
-                    name='content'
+                    name="content"
                     label=""
                     value={content}
                     onChange={handleChange}
                     onClick={handleContentClick}
-                    placeholder='Take a note...'
+                    placeholder="Take a note..."
                     fullWidth
                     multiline
                     sx={{
@@ -127,9 +141,9 @@ const CreateNoteForm: React.FC = () => {
                             '& fieldset': {
                                 borderRadius: isTitleVisible ? 0 : '4px',
                                 borderColor: defaultBorderColor,
-                                borderTop: isTitleVisible ? "0px" : "",
-                                borderBottom: isTitleVisible ? "0px" : "",
-                                top: "-6px"
+                                borderTop: isTitleVisible ? '0px' : '',
+                                borderBottom: isTitleVisible ? '0px' : '',
+                                top: '-6px',
                             },
                             '&:hover fieldset': {
                                 borderColor: defaultBorderColor,
@@ -141,17 +155,18 @@ const CreateNoteForm: React.FC = () => {
                         },
                     }}
                 />
-                {isTitleVisible && <Box sx={{
-                    width: "100%",
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    border: `1px solid ${defaultBorderColor}`,
-                    borderTop: "none",
-                    borderRadius: "0 0 4px 4px",
-                    p: 1
-                }}
-                >
-                    {/* <IconButton>
+                {isTitleVisible && (
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            border: `1px solid ${defaultBorderColor}`,
+                            borderTop: 'none',
+                            borderRadius: '0 0 4px 4px',
+                            p: 1,
+                        }}>
+                        {/* <IconButton>
                         <NotificationsIcon fontSize="small" />
                     </IconButton>
                     <IconButton>
@@ -176,11 +191,17 @@ const CreateNoteForm: React.FC = () => {
                     <IconButton>
                         <RedoIcon fontSize="small" />
                     </IconButton> */}
-                    <SaveButton color='inherit' variant='text' loading={formStatus.isSaving} onClick={handleSave} />
-                </Box>}
+                        <SaveButton
+                            color="inherit"
+                            variant="text"
+                            loading={formStatus.isSaving}
+                            onClick={handleSave}
+                        />
+                    </Box>
+                )}
             </Box>
-        </Box >
-    );
-};
+        </Box>
+    )
+}
 
-export default CreateNoteForm;
+export default CreateNoteForm

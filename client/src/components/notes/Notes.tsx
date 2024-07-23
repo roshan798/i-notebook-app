@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
     Box,
     Card,
@@ -9,24 +9,23 @@ import {
     Grid,
     Alert,
     Tooltip,
-} from '@mui/material';
-import { Note as NoteType } from '../../types/notes';
-import { formatDate, getRelativeTime } from '../../utils/timeUtils';
+} from '@mui/material'
+import { Note as NoteType } from '../../types/notes'
+import { formatDate, getRelativeTime } from '../../utils/timeUtils'
 
 interface NoteProps {
-    notes: NoteType[];
-    loading: boolean;
-    error: string | null;
+    notes: NoteType[]
+    loading: boolean
+    error: string | null
 }
 
 const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
-
     if (loading) {
-        return <CircularProgress />;
+        return <CircularProgress />
     }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>;
+        return <Alert severity="error">{error}</Alert>
     }
 
     return (
@@ -35,33 +34,44 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
                 My Notes
             </Typography>
             <Grid container spacing={2}>
-                {notes.length > 0 && notes.map((note) => (
-                    <Grid item xs={12} key={note.id}>
-                        <Card elevation={3}>
-                            <CardContent>
-                                <Typography variant="h5" component="div">
-                                    {note.title}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {note.content}
-                                </Typography>
-                                <Box sx={{ mt: 2, mb: 1 }}>
-                                    {note.tags.map((tag) => (
-                                        <Chip variant="outlined" color="secondary" key={tag} label={tag} sx={{ mr: 1 }} />
-                                    ))}
-                                </Box>
-                                <Tooltip title={formatDate(note.createdAt)}>
-                                    <Typography variant="caption" color="text.secondary">
-                                        {getRelativeTime(note.createdAt)}
+                {notes.length > 0 &&
+                    notes.map((note) => (
+                        <Grid item xs={12} key={note.id}>
+                            <Card elevation={3}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {note.title}
                                     </Typography>
-                                </Tooltip>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary">
+                                        {note.content}
+                                    </Typography>
+                                    <Box sx={{ mt: 2, mb: 1 }}>
+                                        {note.tags.map((tag) => (
+                                            <Chip
+                                                variant="outlined"
+                                                color="secondary"
+                                                key={tag}
+                                                label={tag}
+                                                sx={{ mr: 1 }}
+                                            />
+                                        ))}
+                                    </Box>
+                                    <Tooltip title={formatDate(note.createdAt)}>
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary">
+                                            {getRelativeTime(note.createdAt)}
+                                        </Typography>
+                                    </Tooltip>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
             </Grid>
         </Box>
-    );
-};
+    )
+}
 
-export default Note;
+export default Note

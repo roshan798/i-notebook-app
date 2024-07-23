@@ -1,15 +1,17 @@
-import { Google } from "@mui/icons-material";
-import { Divider, Button } from "@mui/material";
+import { Google } from '@mui/icons-material'
+import { Divider, Button } from '@mui/material'
 
 export default function SignInWithGoogle() {
     return (
         <>
-
-            <Divider sx={{
-                fontSize: '0.8rem',
-                color: "GrayText",
-                userSelect: 'none',
-            }}>OR</Divider>
+            <Divider
+                sx={{
+                    fontSize: '0.8rem',
+                    color: 'GrayText',
+                    userSelect: 'none',
+                }}>
+                OR
+            </Divider>
             <Button
                 variant="outlined"
                 color="secondary"
@@ -23,9 +25,7 @@ export default function SignInWithGoogle() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     textAlign: 'center',
-
-                }}
-            >
+                }}>
                 Sign in with Google
             </Button>
         </>

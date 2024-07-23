@@ -1,68 +1,82 @@
-import { TextField, Button, Box, Typography, Paper, IconButton, InputAdornment } from '@mui/material';
-import React, { useState } from 'react';
-import { AxiosResponse } from 'axios';
-import { useNavigate } from 'react-router-dom';
-import CustomLink from '../components/shared/CustomLink';
-import { login } from '../http/auth';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { setUser } from '../store/userSlice';
-import { useDispatch } from 'react-redux';
-import SignInWithGoogle from '../components/SignInWithGoogle';
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    Paper,
+    IconButton,
+    InputAdornment,
+} from '@mui/material'
+import React, { useState } from 'react'
+import { AxiosResponse } from 'axios'
+import { useNavigate } from 'react-router-dom'
+import CustomLink from '../components/shared/CustomLink'
+import { login } from '../http/auth'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { setUser } from '../store/userSlice'
+import { useDispatch } from 'react-redux'
+import SignInWithGoogle from '../components/SignInWithGoogle'
 interface FormState {
-    email: string;
-    password: string;
+    email: string
+    password: string
 }
 
 const Login: React.FC = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const [formData, setFormData] = useState<FormState>({
         email: '',
-        password: ''
-    });
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+        password: '',
+    })
+    const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [showPassword, setShowPassword] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
+        const { name, value } = e.target
+        setFormData((prevState) => ({
             ...prevState,
-            [name]: value
-        }));
-    };
+            [name]: value,
+        }))
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault()
 
-        setLoading(true);
-        setError(null);
+        setLoading(true)
+        setError(null)
 
         try {
             const response: AxiosResponse = await login({
                 email: formData.email,
-                password: formData.password
-            });
-            const { user } = response.data;
-            console.log("user", user);
-            dispatch(setUser(user));
-            navigate("/");
+                password: formData.password,
+            })
+            const { user } = response.data
+            console.log('user', user)
+            dispatch(setUser(user))
+            navigate('/')
             // Handle successful login (e.g., redirect to home page or show a success message)
         } catch (error) {
-            console.error(error);
-            setError('Login failed. Please check your credentials and try again.');
+            console.error(error)
+            setError(
+                'Login failed. Please check your credentials and try again.'
+            )
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     return (
         <Box sx={{ maxWidth: 400, margin: 'auto', padding: 1, marginTop: 4 }}>
             <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
-                <Typography variant="h4" gutterBottom align="center">Login</Typography>
-                <form onSubmit={handleSubmit} style={{
-                    marginBottom: "1rem"
-                }}>
+                <Typography variant="h4" gutterBottom align="center">
+                    Login
+                </Typography>
+                <form
+                    onSubmit={handleSubmit}
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
                     <TextField
                         fullWidth
                         margin="normal"
@@ -72,7 +86,7 @@ const Login: React.FC = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        autoComplete='email'
+                        autoComplete="email"
                         required
                         sx={{ borderRadius: 1 }}
                     />
@@ -85,21 +99,26 @@ const Login: React.FC = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        autoComplete='current-password'
+                        autoComplete="current-password"
                         required
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                        edge="end">
+                                        {showPassword ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
                                     </IconButton>
                                 </InputAdornment>
                             ),
-                            sx: { borderRadius: 1 }
+                            sx: { borderRadius: 1 },
                         }}
                     />
                     <Button
@@ -108,20 +127,37 @@ const Login: React.FC = () => {
                         color="primary"
                         fullWidth
                         sx={{ marginTop: 2, borderRadius: 1 }}
-                        disabled={loading}
-                    >
+                        disabled={loading}>
                         {loading ? 'Logging In...' : 'Login'}
                     </Button>
-                    {error && <Typography color="error.main" align="center" sx={{ marginTop: 2 }}>{error}</Typography>}
+                    {error && (
+                        <Typography
+                            color="error.main"
+                            align="center"
+                            sx={{ marginTop: 2 }}>
+                            {error}
+                        </Typography>
+                    )}
                 </form>
                 <SignInWithGoogle />
-                <Typography variant="body2" color="textSecondary" align='center' sx={{ marginTop: "0.8rem" }}>
+                <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    align="center"
+                    sx={{ marginTop: '0.8rem' }}>
                     Don't have an account?
-                    <CustomLink variant="body2" color="primary" to="/signup" underline='hover'> Sign up now.</CustomLink>
+                    <CustomLink
+                        variant="body2"
+                        color="primary"
+                        to="/signup"
+                        underline="hover">
+                        {' '}
+                        Sign up now.
+                    </CustomLink>
                 </Typography>
             </Paper>
         </Box>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login

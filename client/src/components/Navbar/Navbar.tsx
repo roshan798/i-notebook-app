@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import {
     AppBar,
     Box,
@@ -12,41 +12,45 @@ import {
     MenuItem,
     Avatar,
     ListItemIcon,
-} from '@mui/material';
+} from '@mui/material'
 import {
     AccountCircle,
     LightMode,
     DarkMode,
     Menu as MoreVertIcon,
-    Logout
-} from '@mui/icons-material';
-import CustomLink from '../shared/CustomLink';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/types';
-import { setUser } from '../../store/userSlice';
-import { logout } from '../../http/auth';
+    Logout,
+} from '@mui/icons-material'
+import CustomLink from '../shared/CustomLink'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../../store/types'
+import { setUser } from '../../store/userSlice'
+import { logout } from '../../http/auth'
 
 interface NavbarProps {
-    toggleDarkTheme: () => void;
-    mode: "dark" | "light";
+    toggleDarkTheme: () => void
+    mode: 'dark' | 'light'
 }
 
 interface AccountMenuProps {
-    anchorEl: HTMLElement | null;
-    handleClose: () => void;
-    open: boolean;
+    anchorEl: HTMLElement | null
+    handleClose: () => void
+    open: boolean
 }
 
-const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClose, open }) => {
-    const dispatch = useDispatch();
+const AccountMenu: React.FC<AccountMenuProps> = ({
+    anchorEl,
+    handleClose,
+    open,
+}) => {
+    const dispatch = useDispatch()
     const handleLogout = async () => {
         try {
-            await logout();
-            dispatch(setUser(null));
-            handleClose();
+            await logout()
+            dispatch(setUser(null))
+            handleClose()
         } catch (error) {
-            console.error(error);
-            handleClose();
+            console.error(error)
+            handleClose()
         }
     }
     return (
@@ -85,12 +89,12 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClose, open }
                 },
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        >
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
             <MenuItem onClick={handleClose}>
                 <ListItemIcon>
                     <Avatar />
-                </ListItemIcon>    Profile
+                </ListItemIcon>{' '}
+                Profile
             </MenuItem>
             <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
@@ -103,53 +107,58 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClose, open }
 }
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
-    const { user } = useSelector((state: RootState) => state.user);
-    const location = useLocation();
-    const { pathname } = location;
-    const isLoggedIn = Boolean(user);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const { user } = useSelector((state: RootState) => state.user)
+    const location = useLocation()
+    const { pathname } = location
+    const isLoggedIn = Boolean(user)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <CustomLink to='/' sx={{
-                        color: "white",
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                        textDecoration: 'none'
-                    }}>
-                        <Typography
-                            variant="h4"
-                            noWrap
-                            component="div"
-                        >
+                    <CustomLink
+                        to="/"
+                        sx={{
+                            color: 'white',
+                            fontSize: '1.5rem',
+                            fontWeight: 'bold',
+                            textDecoration: 'none',
+                        }}>
+                        <Typography variant="h4" noWrap component="div">
                             I-Notebook
                         </Typography>
                     </CustomLink>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-                        <Tooltip title={mode === "light" ? "Dark" : "Light"}>
+                    <Box
+                        sx={{
+                            display: { xs: 'none', md: 'flex' },
+                            alignItems: 'center',
+                        }}>
+                        <Tooltip title={mode === 'light' ? 'Dark' : 'Light'}>
                             <IconButton
                                 edge="start"
                                 size="large"
                                 aria-label="theme"
                                 onClick={() => {
-                                    console.log("theme");
-                                    toggleDarkTheme();
+                                    console.log('theme')
+                                    toggleDarkTheme()
                                 }}
-                                sx={{ mr: 1 }}
-                            >
-                                {mode === "light" ? <DarkMode /> : <LightMode />}
+                                sx={{ mr: 1 }}>
+                                {mode === 'light' ? (
+                                    <DarkMode />
+                                ) : (
+                                    <LightMode />
+                                )}
                             </IconButton>
                         </Tooltip>
                         {isLoggedIn ? (
@@ -159,13 +168,16 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                                     aria-label="account"
                                     sx={{ mr: 1, textTransform: 'none' }}
                                     id="basic-button"
-                                    aria-controls={open ? 'basic-menu' : undefined}
+                                    aria-controls={
+                                        open ? 'basic-menu' : undefined
+                                    }
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
                                     onClick={handleClick}
-                                    variant='text'
+                                    variant="text"
                                     endIcon={<AccountCircle />}
-                                    color="inherit" disableRipple>
+                                    color="inherit"
+                                    disableRipple>
                                     {user?.name.split(' ')[0]}
                                 </Button>
                                 <AccountMenu
@@ -174,35 +186,39 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                                     open={open}
                                 />
                             </>
+                        ) : pathname === '/login' ? (
+                            <Button
+                                component={Link}
+                                to="/signup"
+                                color="inherit">
+                                Sign Up
+                            </Button>
                         ) : (
-                            pathname === '/login' ? (
-                                <Button component={Link} to="/signup" color="inherit">
-                                    Sign Up
-                                </Button>
-                            ) : (
-                                <Button component={Link} to="/login" color="inherit">
-                                    Login
-                                </Button>
-                            )
+                            <Button
+                                component={Link}
+                                to="/login"
+                                color="inherit">
+                                Login
+                            </Button>
                         )}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-
                         <IconButton
                             size="large"
                             aria-label="show more"
                             aria-controls="primary-search-account-menu-mobile"
                             aria-haspopup="true"
-                            onClick={() => { /* handle mobile menu open */ }}
-                            color="inherit"
-                        >
+                            onClick={() => {
+                                /* handle mobile menu open */
+                            }}
+                            color="inherit">
                             <MoreVertIcon />
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
         </Box>
-    );
+    )
 }
 
-export default Navbar;
+export default Navbar

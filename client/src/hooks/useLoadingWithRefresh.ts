@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../store/userSlice';
-import config from '../configs/config';
-import { User } from '../store/types';
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../store/userSlice'
+import config from '../configs/config'
+import { User } from '../store/types'
 
 export function useLoadingWithRefresh() {
-    const [loading, setLoading] = useState<boolean>(true);
-    const dispatch = useDispatch();
+    const [loading, setLoading] = useState<boolean>(true)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const fetchRefreshToken = async () => {
@@ -17,18 +17,18 @@ export function useLoadingWithRefresh() {
                     {
                         withCredentials: true,
                     }
-                );
-                const { user } = response.data;
-                dispatch(setUser(user));
-                setLoading(false);
+                )
+                const { user } = response.data
+                dispatch(setUser(user))
+                setLoading(false)
             } catch (error) {
-                console.error('Error fetching refresh token:', error);
-                setLoading(false);
+                console.error('Error fetching refresh token:', error)
+                setLoading(false)
             }
-        };
+        }
 
-        fetchRefreshToken();
-    }, []);
+        fetchRefreshToken()
+    }, [])
 
-    return { loading };
+    return { loading }
 }
