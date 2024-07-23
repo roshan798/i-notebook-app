@@ -18,7 +18,7 @@ interface AddTagsProps {
     error?: string | null
 }
 
-export default function AddTags({
+export default function AddTagsTextArea({
     tagListId,
     value,
     setValue,

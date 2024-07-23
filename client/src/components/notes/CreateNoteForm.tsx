@@ -5,7 +5,7 @@ import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
 import { Note as NoteType } from '../../types/notes'
-import AddTags from './addTags/AddTags'
+import AddTags from './addTags/AddTagsTextArea'
 
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
