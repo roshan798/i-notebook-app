@@ -9,7 +9,11 @@ import { createNote } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
 import { Note as NoteType } from '../../types/notes'
 const defaultBorderColor = '#757575'
-const CreateNoteForm: React.FC<React.Dispatch<React.SetStateAction<NoteType[]>>> = ({ setNotes }) => {
+interface CreateNoteFormProps {
+    setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>;
+}
+
+const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const { addNotification: notify } = useNotification()
     const [isTitleVisible, setIsTitleVisible] = useState(false)
     const initialFormData = {
