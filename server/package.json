@@ -4,9 +4,11 @@
     "main": "index.js",
     "scripts": {
         "start": "node dist/index.js",
-        "build": "tsc",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
-        "stage": "tsc && git status && git add . && git commit -m 'stage' && git push"
+        "stage": "npm run build &&  npm run publish",
+        "build": "tsc -b && npm run buildFrontend",
+        "buildFrontend": "cd ../client && npm run build",
+        "publish": "git status  && git add . && git commit -m 'stage' && git push"
     },
     "author": "Roshan Kumar",
     "license": "ISC",

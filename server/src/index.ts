@@ -30,7 +30,6 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 connectDB()
-// start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://${config.server.host}:${PORT} 🚀`)
 })

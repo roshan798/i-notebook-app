@@ -31,7 +31,6 @@ app.get('/', (req, res) => {
     });
 });
 (0, database_1.default)();
-// start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://${config_1.default.server.host}:${PORT} 🚀`);
 });
