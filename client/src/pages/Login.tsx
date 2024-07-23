@@ -52,15 +52,17 @@ const Login: React.FC = () => {
             const response: AxiosResponse = await login(formData)
             const { user } = response.data
             dispatch(setUser(user))
-            notify("Login successfull...", "success")
+            notify('Login successfull...', 'success')
             navigate('/')
         } catch (error) {
             console.error(error)
             setError(
                 'Login failed. Please check your credentials and try again.'
             )
-            notify("Login failed. Please check your credentials and try again.", "error")
-
+            notify(
+                'Login failed. Please check your credentials and try again.',
+                'error'
+            )
         } finally {
             setLoading(false)
         }

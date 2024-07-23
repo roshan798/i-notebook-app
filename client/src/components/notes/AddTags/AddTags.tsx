@@ -1,54 +1,71 @@
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { defaultBorderColor } from '../CreateNoteForm';
+import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField'
+import Stack from '@mui/material/Stack'
+import { defaultBorderColor } from '../CreateNoteForm'
 
 interface FilmOption {
-    title: string;
-    inputValue?: string;
+    title: string
+    inputValue?: string
 }
 
 interface AddTagsProps {
-    tagListId: string;
-    value: (FilmOption | string)[];
-    setValue: (value: (FilmOption | string)[]) => void;
-    options: FilmOption[];
-    setOptions: (options: FilmOption[]) => void;
-    loading?: boolean;
-    error?: string | null;
+    tagListId: string
+    value: (FilmOption | string)[]
+    setValue: (value: (FilmOption | string)[]) => void
+    options: FilmOption[]
+    setOptions: (options: FilmOption[]) => void
+    loading?: boolean
+    error?: string | null
 }
 
-export default function AddTags({ tagListId, value, setValue, options, setOptions }: AddTagsProps) {
+export default function AddTags({
+    tagListId,
+    value,
+    setValue,
+    options,
+    setOptions,
+}: AddTagsProps) {
+    const handleAddTag = (
+        _event: React.SyntheticEvent,
+        newValue: (FilmOption | string)[]
+    ) => {
+        const newOptions = newValue
+            .filter((option) => {
+                if (typeof option === 'string') {
+                    return !options.some(
+                        (existingOption) => existingOption.title === option
+                    )
+                }
+                if (option.inputValue) {
+                    return !options.some(
+                        (existingOption) =>
+                            existingOption.title === option.inputValue
+                    )
+                }
+                return false
+            })
+            .map((option) => {
+                if (typeof option === 'string') {
+                    return { title: option }
+                }
+                if (option.inputValue) {
+                    return { title: option.inputValue }
+                }
+                return option
+            })
 
-    const handleAddTag = (_event: React.SyntheticEvent, newValue: (FilmOption | string)[]) => {
-        const newOptions = newValue.filter((option) => {
-            if (typeof option === 'string') {
-                return !options.some((existingOption) => existingOption.title === option);
-            }
-            if (option.inputValue) {
-                return !options.some((existingOption) => existingOption.title === option.inputValue);
-            }
-            return false;
-        }).map((option) => {
-            if (typeof option === 'string') {
-                return { title: option };
-            }
-            if (option.inputValue) {
-                return { title: option.inputValue };
-            }
-            return option;
-        });
-
-        setValue(newValue);
-        setOptions([...options, ...newOptions]);
-    };
+        setValue(newValue)
+        setOptions([...options, ...newOptions])
+    }
 
     return (
-        <Stack spacing={3} sx={{
-            width: '100%',
-            borderLeft: `1px solid ${defaultBorderColor}`,
-            borderRight: `1px solid ${defaultBorderColor}`,
-        }}>
+        <Stack
+            spacing={3}
+            sx={{
+                width: '100%',
+                borderLeft: `1px solid ${defaultBorderColor}`,
+                borderRight: `1px solid ${defaultBorderColor}`,
+            }}>
             <Autocomplete
                 size="small"
                 multiple
@@ -58,35 +75,37 @@ export default function AddTags({ tagListId, value, setValue, options, setOption
                 value={value}
                 onChange={handleAddTag}
                 renderOption={(props, option) => {
-                    const { key, ...optionProps } = props;
+                    const { key, ...optionProps } = props
                     return (
                         <li key={key} {...optionProps}>
                             {option.title}
                         </li>
-                    );
+                    )
                 }}
                 getOptionLabel={(option: FilmOption | string) => {
                     if (typeof option === 'string') {
-                        return option;
+                        return option
                     }
                     if (option.inputValue) {
-                        return option.inputValue;
+                        return option.inputValue
                     }
-                    return option.title;
+                    return option.title
                 }}
                 filterOptions={(options: FilmOption[], params) => {
                     const filtered = options.filter((option) =>
-                        option.title.toLowerCase().includes(params.inputValue.toLowerCase())
-                    );
+                        option.title
+                            .toLowerCase()
+                            .includes(params.inputValue.toLowerCase())
+                    )
 
                     if (params.inputValue !== '') {
                         filtered.push({
                             inputValue: params.inputValue,
                             title: `Add "${params.inputValue}"`,
-                        });
+                        })
                     }
 
-                    return filtered;
+                    return filtered
                 }}
                 renderInput={(params) => (
                     <TextField
@@ -110,8 +129,8 @@ export default function AddTags({ tagListId, value, setValue, options, setOption
                     />
                 )}
                 sx={{
-                    '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]': {
-                    },
+                    '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]':
+                        {},
                     '& .MuiOutlinedInput-root': {
                         '&:hover .MuiOutlinedInput-notchedOutline': {
                             border: 'none',
@@ -123,5 +142,5 @@ export default function AddTags({ tagListId, value, setValue, options, setOption
                 }}
             />
         </Stack>
-    );
+    )
 }

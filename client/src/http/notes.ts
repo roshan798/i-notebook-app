@@ -27,24 +27,25 @@ export const getNote = async (id: string): Promise<GetNoteResponse> => {
 }
 
 interface FilmOption {
-    title: string;
-    inputValue?: string;
+    title: string
+    inputValue?: string
 }
 
 // Assuming this is just a placeholder for mock data
-const result: FilmOption[] = [
-];
+const result: FilmOption[] = []
 
 // dummy function in future will use api calls for suggestions
 export const getTags = async (): Promise<FilmOption[]> => {
     const response: { data: FilmOption[] } = await new Promise((resolve) => {
-        resolve({ data: result });
+        resolve({ data: result })
         // use setTimeout to simulate a delay
     })
-    return response.data as FilmOption[];
+    return response.data as FilmOption[]
 }
 
-export const tagSuggestions = async (inputValue: string): Promise<FilmOption[]> => {
-    const response = await api.get<FilmOption[]>(`/tags?query=${inputValue}`);
-    return response.data;
+export const tagSuggestions = async (
+    inputValue: string
+): Promise<FilmOption[]> => {
+    const response = await api.get<FilmOption[]>(`/tags?query=${inputValue}`)
+    return response.data
 }

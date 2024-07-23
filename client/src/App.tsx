@@ -30,7 +30,6 @@ function App() {
                         <CircularProgress />
                     </Box>
                 ) : (
-
                     <Routes>
                         <Route element={<PrivateRoute />}>
                             <Route path="/" element={<Home />}></Route>

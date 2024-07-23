@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-    Box,
-    TextField, Tooltip, IconButton,
-} from '@mui/material'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { Box, TextField, Tooltip, IconButton } from '@mui/material'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
@@ -13,13 +10,13 @@ import AddTags from './addTags/AddTags'
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
 interface CreateNoteFormProps {
-    setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>;
+    setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>
 }
 
 //
 interface FilmOption {
-    title: string;
-    inputValue?: string;
+    title: string
+    inputValue?: string
 }
 //
 
@@ -29,27 +26,27 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
     const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(true)
 
     // for the tag suggestions
-    const [tags, setTags] = useState<(FilmOption | string)[]>([]);
-    const [options, setOptions] = useState<FilmOption[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [tags, setTags] = useState<(FilmOption | string)[]>([])
+    const [options, setOptions] = useState<FilmOption[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     useEffect(() => {
         // Fetch options from API
         const fetchOptions = async () => {
-            setLoading(true);
+            setLoading(true)
             try {
                 // Replace with your API call
-                const response = await getTags();
-                setOptions(response);
+                const response = await getTags()
+                setOptions(response)
             } catch (err) {
-                setError('Failed to fetch options');
+                setError('Failed to fetch options')
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchOptions();
-    }, []);
+        fetchOptions()
+    }, [])
     //
     const initialFormData = {
         title: '',
@@ -108,22 +105,25 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
+            const target = event.target as HTMLElement
 
-            const isTargetInside = target.id.startsWith(TAG_LIST_ID);
+            const isTargetInside = target.id.startsWith(TAG_LIST_ID)
 
             if (
                 formRef.current &&
                 !formRef.current.contains(event.target as Node) &&
-                !(tagRef.current && tagRef.current.contains(event.target as Node)) &&
+                !(
+                    tagRef.current &&
+                    tagRef.current.contains(event.target as Node)
+                ) &&
                 !isTargetInside
             ) {
-                setIsTitleVisible(false);
-                setIsAddTagVisible(false);
-                setTags([]);
-                setFormData(initialFormData);
+                setIsTitleVisible(false)
+                setIsAddTagVisible(false)
+                setTags([])
+                setFormData(initialFormData)
             }
-        };
+        }
         document.addEventListener('mousedown', handleClickOutside)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
@@ -199,7 +199,7 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                     },
                 }}
             />
-            {isTitleVisible && isAddTagVisible &&
+            {isTitleVisible && isAddTagVisible && (
                 <Box ref={tagRef} id="id">
                     <AddTags
                         tagListId="tags-standard"
@@ -207,16 +207,16 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                         setValue={setTags}
                         options={options}
                         setOptions={() => {
-                            setOptions(options);
+                            setOptions(options)
                         }}
                         loading={loading}
                         error={error}
                     />
-                </Box >}
+                </Box>
+            )}
             <Box>
                 {isTitleVisible && (
                     <>
-
                         <Box
                             sx={{
                                 width: '100%',
@@ -227,15 +227,27 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                                 borderRadius: '0 0 4px 4px',
                                 p: 1,
                             }}>
-
                             <SaveButton
                                 color="inherit"
                                 variant="text"
                                 loading={formStatus.isSaving}
                                 onClick={handleSave}
                             />
-                            <Tooltip title={isAddTagVisible ? "Close add tag" : "Add tags"}>
-                                <IconButton color="primary" size="small" aria-label="add-tags" onClick={() => setIsAddTagVisible((prevState) => !prevState)}>
+                            <Tooltip
+                                title={
+                                    isAddTagVisible
+                                        ? 'Close add tag'
+                                        : 'Add tags'
+                                }>
+                                <IconButton
+                                    color="primary"
+                                    size="small"
+                                    aria-label="add-tags"
+                                    onClick={() =>
+                                        setIsAddTagVisible(
+                                            (prevState) => !prevState
+                                        )
+                                    }>
                                     <LocalOfferIcon />
                                 </IconButton>
                             </Tooltip>

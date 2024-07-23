@@ -1,26 +1,20 @@
-import React from 'react';
-import {
-    Box,
-    CircularProgress,
-    Typography,
-    Grid,
-    Alert,
-} from '@mui/material';
-import { Note as NoteType } from '../../types/notes';
-import NoteCard from './NoteCard';
+import React from 'react'
+import { Box, CircularProgress, Typography, Grid, Alert } from '@mui/material'
+import { Note as NoteType } from '../../types/notes'
+import NoteCard from './NoteCard'
 interface NoteProps {
-    notes: NoteType[];
-    loading: boolean;
-    error: string | null;
+    notes: NoteType[]
+    loading: boolean
+    error: string | null
 }
 
 const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
     if (loading) {
-        return <CircularProgress />;
+        return <CircularProgress />
     }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>;
+        return <Alert severity="error">{error}</Alert>
     }
 
     return (
@@ -37,7 +31,7 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
                     ))}
             </Grid>
         </Box>
-    );
-};
+    )
+}
 
-export default Note;
+export default Note

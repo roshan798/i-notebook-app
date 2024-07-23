@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
     Card,
     CardContent,
@@ -6,12 +6,12 @@ import {
     Chip,
     Box,
     Tooltip,
-} from '@mui/material';
-import { Note as NoteType } from '../../types/notes';
-import { formatDate, getRelativeTime } from '../../utils/timeUtils';
+} from '@mui/material'
+import { Note as NoteType } from '../../types/notes'
+import { formatDate, getRelativeTime } from '../../utils/timeUtils'
 
 interface NoteCardProps {
-    note: NoteType;
+    note: NoteType
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({ note }) => (
@@ -41,6 +41,6 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => (
             </Tooltip>
         </CardContent>
     </Card>
-);
+)
 
-export default NoteCard;
+export default NoteCard
