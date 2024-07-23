@@ -1,8 +1,6 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import Alert from '@mui/material/Alert';
 import { defaultBorderColor } from '../CreateNoteForm';
 
 interface FilmOption {
@@ -10,7 +8,7 @@ interface FilmOption {
     inputValue?: string;
 }
 
-interface DemoProps {
+interface AddTagsProps {
     tagListId: string;
     value: (FilmOption | string)[];
     setValue: (value: (FilmOption | string)[]) => void;
@@ -20,7 +18,7 @@ interface DemoProps {
     error?: string | null;
 }
 
-export default function AddTags({ tagListId, value, setValue, options, setOptions }: DemoProps) {
+export default function AddTags({ tagListId, value, setValue, options, setOptions }: AddTagsProps) {
 
     const handleAddTag = (_event: React.SyntheticEvent, newValue: (FilmOption | string)[]) => {
         const newOptions = newValue.filter((option) => {
@@ -51,8 +49,6 @@ export default function AddTags({ tagListId, value, setValue, options, setOption
             borderLeft: `1px solid ${defaultBorderColor}`,
             borderRight: `1px solid ${defaultBorderColor}`,
         }}>
-            {/* {loading && <CircularProgress />} */}
-            {/* {error && <Alert severity="error">{error}</Alert>} */}
             <Autocomplete
                 size="small"
                 multiple
