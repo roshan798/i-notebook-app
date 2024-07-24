@@ -16,7 +16,7 @@ class NotesService {
         const { id, orderBy = "desc", sortBy = "createdAt", limit, page } = params;
         try {
             const notes = await NotesModel.find({ userId })
-                .sort({ [sortBy] : orderBy});
+                .sort({ [sortBy]: orderBy });
             return notes
         } catch (error) {
             throw error
@@ -24,10 +24,25 @@ class NotesService {
     }
 
     async getNoteById(noteId: NotesId): Promise<Notes | null> {
-        // null in case there is no note  mathing to id
         try {
             const note = await NotesModel.findById(noteId)
             return note
+        } catch (error) {
+            throw error
+        }
+    }
+    async deleteNoteById(noteId: NotesId): Promise<Notes | null> {
+        try {
+            const note = await NotesModel.findByIdAndDelete(noteId)
+            return note
+        } catch (error) {
+            throw error
+        }
+    }
+    async updateNoteById(noteId: NotesId, notes: NotesRequestBody): Promise<Notes | null> {
+        try {
+            const updatedNote = await NotesModel.findByIdAndUpdate(noteId, notes, { new: true })
+            return updatedNote
         } catch (error) {
             throw error
         }
