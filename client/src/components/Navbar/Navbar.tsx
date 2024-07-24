@@ -7,9 +7,12 @@ import {
     IconButton,
     Typography,
     Button,
+    Tooltip,
 } from '@mui/material'
 import {
     AccountCircle,
+    DarkMode,
+    LightMode,
     Menu as MoreVertIcon,
 } from '@mui/icons-material'
 import CustomLink from '../shared/CustomLink'
@@ -89,21 +92,39 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                                     mode={mode}
                                 />
                             </>
-                        ) : pathname === '/login' ? (
-                            <Button
-                                component={Link}
-                                to="/signup"
-                                color="inherit">
-                                Sign Up
-                            </Button>
-                        ) : (
-                            <Button
-                                component={Link}
-                                to="/login"
-                                color="inherit">
-                                Login
-                            </Button>
-                        )}
+                        ) : <>
+                            <Tooltip title={mode === 'light' ? 'Dark' : 'Light'}>
+                                <IconButton
+                                    edge="start"
+                                    size="large"
+                                    aria-label="theme"
+                                    onClick={() => {
+                                        toggleDarkTheme()
+                                    }}
+                                    sx={{ mr: 1 }}>
+                                    {mode === 'light' ? (
+                                        <DarkMode />
+                                    ) : (
+                                        <LightMode />
+                                    )}
+                                </IconButton>
+                            </Tooltip>
+                                {pathname === '/login' ? (
+                                    <Button
+                                        component={Link}
+                                        to="/signup"
+                                        color="inherit">
+                                        Sign Up
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        component={Link}
+                                        to="/login"
+                                        color="inherit">
+                                        Login
+                                    </Button>
+                                )}
+                        </>}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton

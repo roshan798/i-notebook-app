@@ -95,7 +95,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({
                 <ListItemIcon>
                     {mode === 'light' ? <DarkMode /> : <LightMode />}
                 </ListItemIcon>
-                <ListItemText primary="Dark Mode" />
+                {/* <ListItemText primary={`${mode !== 'light' ? "Dark" : "Light"}`} /> */}
                 <Switch
                     checked={mode === 'dark'}
                     onChange={toggleDarkTheme}
