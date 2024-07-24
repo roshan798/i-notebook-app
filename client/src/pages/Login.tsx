@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux'
 import SignInWithGoogle from '../components/SignInWithGoogle'
 import { useNotification } from '../contexts/NotificationContext'
 import { notifications } from '../utils/notificationMessages'
+import { APIError } from '../types/api'
 interface FormState {
     email: string
     password: string
@@ -27,10 +28,11 @@ const Login: React.FC = () => {
     const { addNotification: notify } = useNotification()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [formData, setFormData] = useState<FormState>({
+    const initialFormData = {
         email: '',
-        password: '',
-    })
+        password: ""
+    }
+    const [formData, setFormData] = useState<FormState>(initialFormData)
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -56,11 +58,10 @@ const Login: React.FC = () => {
             notify(notifications.login.success, 'success')
             navigate('/')
         } catch (error) {
-            console.error(error)
-            setError(
-                'Login failed. Please check your credentials and try again.'
-            )
-            notify(notifications.login.error,
+            const err = error as APIError;
+            console.log(error);
+            setError(err.response?.data.message || 'Login failed. Please check your credentials and try again.')
+            notify(err.response?.data.message || notifications.login.error,
                 'error'
             )
         } finally {

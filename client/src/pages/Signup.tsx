@@ -9,13 +9,13 @@ import {
     InputAdornment,
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { AxiosResponse } from 'axios'
 import { signup } from '../http/auth'
 import { Link, useNavigate } from 'react-router-dom'
 import CustomLink from '../components/shared/CustomLink'
 import SignInWithGoogle from '../components/SignInWithGoogle'
 import { useNotification } from '../contexts/NotificationContext'
 import { notifications } from '../utils/notificationMessages'
+import { APIError } from '../types/api'
 
 
 interface FormState {
@@ -27,11 +27,12 @@ interface FormState {
 const Signup: React.FC = () => {
     const { addNotification: notify } = useNotification()
     const navigate = useNavigate()
-    const [formData, setFormData] = useState<FormState>({
+    const initialFormData = {
         name: '',
         email: '',
         password: '',
-    })
+    }
+    const [formData, setFormData] = useState<FormState>(initialFormData)
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -51,18 +52,18 @@ const Signup: React.FC = () => {
         setError(null)
 
         try {
-            const response: AxiosResponse = await signup({
+            await signup({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
             })
-            console.log(response);
             notify(notifications.signup.success, 'success')
             navigate('/login')
-        } catch (error) {
-            console.error(error)
-            notify(notifications.signup.error, 'error')
-            setError('Signup failed. Please try again.')
+        } catch (err) {
+            const error = err as APIError
+            notify(error.response?.data.message || notifications.signup.error, 'error')
+            setError(error.response?.data.message || 'Signup failed. Please try again.')
+            setFormData(initialFormData)
         } finally {
             setLoading(false)
         }

@@ -5,11 +5,8 @@ import {
     ListItemIcon,
     ListItemText,
     Avatar,
-    Switch,
 } from '@mui/material'
 import {
-    DarkMode,
-    LightMode,
     Logout,
 } from '@mui/icons-material'
 import { useNotification } from '../../contexts/NotificationContext'
@@ -22,16 +19,12 @@ interface AccountMenuProps {
     anchorEl: HTMLElement | null
     handleClose: () => void
     open: boolean
-    toggleDarkTheme: () => void
-    mode: 'dark' | 'light'
 }
 
 const AccountMenu: React.FC<AccountMenuProps> = ({
     anchorEl,
     handleClose,
     open,
-    toggleDarkTheme,
-    mode,
 }) => {
     const { addNotification: notify } = useNotification()
     const dispatch = useDispatch()
@@ -90,17 +83,6 @@ const AccountMenu: React.FC<AccountMenuProps> = ({
                     <Avatar />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
-            </MenuItem>
-            <MenuItem>
-                <ListItemIcon>
-                    {mode === 'light' ? <DarkMode /> : <LightMode />}
-                </ListItemIcon>
-                {/* <ListItemText primary={`${mode !== 'light' ? "Dark" : "Light"}`} /> */}
-                <Switch
-                    checked={mode === 'dark'}
-                    onChange={toggleDarkTheme}
-                    edge="end"
-                />
             </MenuItem>
             <MenuItem onClick={handleLogout}>
                 <ListItemIcon>

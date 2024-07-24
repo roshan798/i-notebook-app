@@ -26,6 +26,27 @@ interface NavbarProps {
     mode: 'dark' | 'light'
 }
 
+const ToggleThemeSwitch: React.FC<NavbarProps> = ({ mode, toggleDarkTheme }) => {
+
+    return (
+        <>
+            <Tooltip title={mode === 'light' ? 'Dark' : 'Light'}>
+                <IconButton
+                    edge="start"
+                    aria-label="toggle theme"
+                    onClick={() => {
+                        toggleDarkTheme()
+                    }}
+                    sx={{ mr: 1 }}>
+                    {mode === 'light' ? (
+                        <DarkMode />
+                    ) : (
+                        <LightMode />
+                    )}
+                </IconButton>
+            </Tooltip></>
+    )
+}
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
     const { user } = useSelector((state: RootState) => state.user)
@@ -65,6 +86,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                             display: { xs: 'none', md: 'flex' },
                             alignItems: 'center',
                         }}>
+                        <ToggleThemeSwitch
+                            mode={mode}
+                            toggleDarkTheme={toggleDarkTheme}
+                        />
                         {isLoggedIn ? (
                             <>
                                 <Button
@@ -88,45 +113,31 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                                     anchorEl={anchorEl as HTMLElement | null}
                                     handleClose={handleClose}
                                     open={open}
-                                    toggleDarkTheme={toggleDarkTheme}
-                                    mode={mode}
                                 />
                             </>
                         ) : <>
-                            <Tooltip title={mode === 'light' ? 'Dark' : 'Light'}>
-                                <IconButton
-                                    edge="start"
-                                    size="large"
-                                    aria-label="theme"
-                                    onClick={() => {
-                                        toggleDarkTheme()
-                                    }}
-                                    sx={{ mr: 1 }}>
-                                    {mode === 'light' ? (
-                                        <DarkMode />
-                                    ) : (
-                                        <LightMode />
-                                    )}
-                                </IconButton>
-                            </Tooltip>
-                                {pathname === '/login' ? (
-                                    <Button
-                                        component={Link}
-                                        to="/signup"
-                                        color="inherit">
-                                        Sign Up
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        component={Link}
-                                        to="/login"
-                                        color="inherit">
-                                        Login
-                                    </Button>
-                                )}
+                            {pathname === '/login' ? (
+                                <Button
+                                    component={Link}
+                                    to="/signup"
+                                    color="inherit">
+                                    Sign Up
+                                </Button>
+                            ) : (
+                                <Button
+                                    component={Link}
+                                    to="/login"
+                                    color="inherit">
+                                    Login
+                                </Button>
+                            )}
                         </>}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                        <ToggleThemeSwitch
+                            mode={mode}
+                            toggleDarkTheme={toggleDarkTheme}
+                        />
                         <IconButton
                             size="large"
                             aria-label="show more"
