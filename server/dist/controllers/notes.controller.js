@@ -70,12 +70,62 @@ class NotesController {
     }
     updateNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.json({ message: 'PUT Notes' });
+            const noteId = req.params.id;
+            if (!noteId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Note ID is required',
+                });
+            }
+            const noteData = req.body;
+            const notesValidationError = (0, validation_1.validateNote)(noteData);
+            if (notesValidationError !== null) {
+                return res.status(400).json({
+                    success: false,
+                    message: notesValidationError,
+                });
+            }
+            try {
+                const updatedNote = yield notes_service_1.default.updateNoteById(noteId, noteData);
+                res.json({
+                    success: true,
+                    message: 'Note updated successfully',
+                    updatedNote: new notes_dto_1.default(updatedNote),
+                });
+            }
+            catch (error) {
+                console.log('Error updating note', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         });
     }
     deleteNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.json({ message: 'DELETE Notes' });
+            const noteId = req.params.id;
+            if (!noteId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Note ID is required',
+                });
+            }
+            try {
+                const note = yield notes_service_1.default.deleteNoteById(noteId);
+                res.json({
+                    success: true,
+                    message: 'Note deleted successfully',
+                    deletedNote: new notes_dto_1.default(note),
+                });
+            }
+            catch (error) {
+                console.log('Error deleting note', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         });
     }
 }

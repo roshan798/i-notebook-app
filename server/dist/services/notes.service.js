@@ -41,10 +41,31 @@ class NotesService {
     }
     getNoteById(noteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            // null in case there is no note  mathing to id
             try {
                 const note = yield notes_model_1.default.findById(noteId);
                 return note;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    deleteNoteById(noteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const note = yield notes_model_1.default.findByIdAndDelete(noteId);
+                return note;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    updateNoteById(noteId, notes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updatedNote = yield notes_model_1.default.findByIdAndUpdate(noteId, notes, { new: true });
+                return updatedNote;
             }
             catch (error) {
                 throw error;

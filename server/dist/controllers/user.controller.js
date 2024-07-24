@@ -65,7 +65,7 @@ class UserController {
                 console.error('Error signing up:', error);
                 res.status(500).json({
                     success: false,
-                    msg: 'Internal server error',
+                    message: 'Internal server error',
                 });
             }
         });
@@ -85,20 +85,20 @@ class UserController {
                 if (!user) {
                     return res.status(404).json({
                         success: false,
-                        msg: 'User not found',
+                        message: `User with email ${email} not found! Please signup`,
                     });
                 }
                 if (!user.password) {
                     return res.status(500).json({
                         success: false,
-                        msg: 'All Fields are required',
+                        message: 'All Fields are required',
                     });
                 }
                 const isMatch = yield hash_service_1.default.compare(password, user.password);
                 if (isMatch === false) {
                     return res.status(401).json({
                         success: false,
-                        msg: 'Invalid credentials',
+                        message: 'Invalid credentials, please try with correct credentials',
                     });
                 }
                 const userId = user.id;
@@ -117,14 +117,6 @@ class UserController {
                     });
                 }
                 setCookie(res, accessToken, refreshToken);
-                // res.cookie('refreshToken', refreshToken, {
-                //     maxAge: 1000 * 60 * 60 * 24, // for 1 day
-                //     httpOnly: true,
-                // });
-                // res.cookie('accessToken', accessToken, {
-                //     maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
-                //     httpOnly: true,
-                // });
                 res.status(200).json({
                     success: true,
                     user: new user_dto_1.default(user),
