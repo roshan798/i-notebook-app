@@ -2,6 +2,19 @@ import { createTheme } from '@mui/material'
 import { useState } from 'react'
 import { colors } from '@mui/material'
 
+const palette = {
+    primary: colors.teal,
+    secondary: colors.blueGrey,
+    background: {
+        light: '#FEFDED',
+        dark: '#121212',
+    },
+    text: {
+        light: '#000',
+        dark: '#fff',
+    }
+
+}
 const useTheme = () => {
     const preferedTheme = localStorage.getItem('prefered-theme') as
         | 'light'
@@ -30,6 +43,9 @@ const useTheme = () => {
             secondary: {
                 main: colors.blueGrey[500],
             },
+            background: {
+                default: palette.background[mode],
+            }
         },
     })
 
