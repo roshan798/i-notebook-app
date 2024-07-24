@@ -26,10 +26,12 @@ class NotesService {
             }
         });
     }
-    getNotesByUserId(userId) {
+    getNotesByUserId(userId, params) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { id, orderBy = "desc", sortBy = "createdAt", limit, page } = params;
             try {
-                const notes = yield notes_model_1.default.find({ userId });
+                const notes = yield notes_model_1.default.find({ userId })
+                    .sort({ [sortBy]: orderBy });
                 return notes;
             }
             catch (error) {

@@ -1,4 +1,4 @@
-import { Notes, NotesId, NotesRequestBody } from 'notes'
+import { Notes, NotesId, NotesRequestBody, GetNotesParams } from 'notes'
 import NotesModel from '../models/notes.model'
 import { UserId } from 'user'
 class NotesService {

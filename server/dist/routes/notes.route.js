@@ -7,6 +7,8 @@ const notes_controller_1 = __importDefault(require("../controllers/notes.control
 const authMiddleware_1 = __importDefault(require("../middlewares/authMiddleware"));
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-router.get('/', authMiddleware_1.default, notes_controller_1.default.getNotes); // get all notes of logged in user
-router.post('/', authMiddleware_1.default, notes_controller_1.default.createNote); // create note
+router.get('/', authMiddleware_1.default, notes_controller_1.default.getNotes);
+router.post('/', authMiddleware_1.default, notes_controller_1.default.createNote);
+router.put('/:id', authMiddleware_1.default, notes_controller_1.default.updateNote);
+router.delete('/:id', authMiddleware_1.default, notes_controller_1.default.deleteNote);
 exports.default = router;

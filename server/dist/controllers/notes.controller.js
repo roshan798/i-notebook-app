@@ -46,8 +46,9 @@ class NotesController {
     getNotes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = req.user;
+            const params = req.query;
             try {
-                const notes = yield notes_service_1.default.getNotesByUserId(user._id);
+                const notes = yield notes_service_1.default.getNotesByUserId(user._id, params);
                 res.json({
                     success: true,
                     notes: notes.map((note) => new notes_dto_1.default(note)),
@@ -67,12 +68,12 @@ class NotesController {
             res.json({ message: 'GET Note by ID' });
         });
     }
-    updateNotes(req, res) {
+    updateNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             res.json({ message: 'PUT Notes' });
         });
     }
-    deleteNotes(req, res) {
+    deleteNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             res.json({ message: 'DELETE Notes' });
         });

@@ -57,10 +57,10 @@ class NotesController {
         res.json({ message: 'GET Note by ID' })
     }
 
-    async updateNotes(req: Request, res: Response) {
+    async updateNote(req: Request, res: Response) {
         res.json({ message: 'PUT Notes' })
     }
-    async deleteNotes(req: Request, res: Response) {
+    async deleteNote(req: Request, res: Response) {
         res.json({ message: 'DELETE Notes' })
     }
 }
