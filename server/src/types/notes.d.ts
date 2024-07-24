@@ -17,3 +17,10 @@ export interface Notes extends NotesRequestBody {
     userId: UserId
     accessTo?: UserId[]
 }
+export interface GetNotesParams {
+    id?: string
+    sortBy ?: "createdAt" | "updatedAt",
+    orderBy?: "asc" | "desc",
+    limit?: number,
+    page?: number,
+}

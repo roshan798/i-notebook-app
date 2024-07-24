@@ -12,9 +12,11 @@ class NotesService {
         }
     }
 
-    async getNotesByUserId(userId: UserId): Promise<Notes[]> {
+    async getNotesByUserId(userId: UserId, params: GetNotesParams): Promise<Notes[]> {
+        const { id, orderBy = "desc", sortBy = "createdAt", limit, page } = params;
         try {
             const notes = await NotesModel.find({ userId })
+                .sort({ [sortBy] : orderBy});
             return notes
         } catch (error) {
             throw error

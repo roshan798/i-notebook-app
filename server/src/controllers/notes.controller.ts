@@ -1,4 +1,4 @@
-import { NotesRequestBody } from 'notes'
+import { NotesRequestBody, GetNotesParams } from 'notes'
 import { Request, Response } from 'express'
 import { validateNote } from '../utils/validation'
 import NotesService from '../services/notes.service'
@@ -37,8 +37,9 @@ class NotesController {
 
     async getNotes(req: Request, res: Response) {
         const user = req.user as TokenPayload
+        const params = req.query as GetNotesParams;
         try {
-            const notes = await NotesService.getNotesByUserId(user._id)
+            const notes = await NotesService.getNotesByUserId(user._id,params)
             res.json({
                 success: true,
                 notes: notes.map((note) => new NotesDTO(note)),
