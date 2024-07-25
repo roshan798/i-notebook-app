@@ -14,7 +14,7 @@ const Notification = () => {
         if (notifications.length > 0) {
             const timer = setTimeout(() => {
                 removeNotification(notifications[0].id)
-            }, 3000)
+            }, 5000)
             return () => clearTimeout(timer)
         }
     }, [notifications, removeNotification])

@@ -19,15 +19,15 @@ const Note = () => {
     useEffect(() => {
         const fetchNotes = async () => {
             try {
-                setLoading(true)
+                dispatch(setLoading(true))
                 const data = await getNotes()
                 dispatch(setNotes(data.notes))
             } catch (err) {
                 console.error('Error fetching notes:', err)
                 alert('Some error occures while fetching notes')
-                setError('Failed to load notes')
+                dispatch(setError('Failed to load notes'))
             } finally {
-                setLoading(false)
+                dispatch(setLoading(false))
             }
         }
         fetchNotes()
@@ -65,7 +65,6 @@ const Note = () => {
                         ))}
                     </Grid>
                 ) : (
-
                     notes.length > 0 ? (
                         <Masonry
                             columns={{ xs: 1, sm: 2, md: 2 }}

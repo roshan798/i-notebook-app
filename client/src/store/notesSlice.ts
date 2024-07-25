@@ -5,7 +5,7 @@ import { NotesState, Note } from './types';
 
 const initialState: NotesState = {
     notes: [],
-    loading: false,
+    loading: true,
     error: null,
 };
 

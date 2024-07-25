@@ -34,7 +34,7 @@ const NotificationProvider = ({ children }: { children: ReactNode }) => {
         message: string,
         type: Notification['type'],
         anchorOrigin: Notification['anchorOrigin'] = {
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'right',
         },
         deley: Notification['delay'] = 5000
