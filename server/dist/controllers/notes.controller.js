@@ -113,10 +113,17 @@ class NotesController {
             }
             try {
                 const note = yield notes_service_1.default.deleteNoteById(noteId);
+                if (note === null) {
+                    return res.status(400)
+                        .json({
+                        success: "false",
+                        message: "Note note availble to delete"
+                    });
+                }
                 res.json({
                     success: true,
                     message: 'Note deleted successfully',
-                    deletedNote: new notes_dto_1.default(note),
+                    // deletedNote: new NotesDTO(note as Notes),
                 });
             }
             catch (error) {
