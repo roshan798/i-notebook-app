@@ -2,16 +2,16 @@ import React from 'react';
 import { Box, Typography, Alert, Button, Card, Skeleton, Grid } from '@mui/material';
 import { Note as NoteType } from '../../types/notes';
 import NoteCard from './NoteCard';
-import Masonry from 'react-masonry-css';
-import "./masonaryLayout.css";
+import Masonry from '@mui/lab/Masonry';
 
 interface NoteProps {
     notes: NoteType[];
     loading: boolean;
     error: string | null;
+    handleDeleteNote?: (noteId: string) => void;
 }
 
-const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
+const Note: React.FC<NoteProps> = ({ notes, loading, error, handleDeleteNote }) => {
 
     if (error) {
         return <Alert severity="error">{error}</Alert>;
@@ -38,11 +38,12 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
                 )}
                 {notes.length > 0 ? (
                     <Masonry
-                        className="my-masonry-grid"
-                        columnClassName="my-masonry-grid_column"
+                        columns={{ xs: 1, sm: 2, md: 2 }}
+                        spacing={2}
+                        sequential
                     >
                         {notes.map((note) => (
-                            <NoteCard note={note} key={note.id} />
+                            <NoteCard handleDeleteNote={handleDeleteNote} note={note} key={note.id} />
                         ))}
                     </Masonry>
                 ) : (

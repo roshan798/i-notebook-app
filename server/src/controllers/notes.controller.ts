@@ -99,10 +99,17 @@ class NotesController {
         }
         try {
             const note = await NotesService.deleteNoteById(noteId)
+            if (note === null) {
+                return res.status(400)
+                    .json({
+                        success: "false",
+                        message: "Note note availble to delete"
+                    })
+            }
             res.json({
                 success: true,
                 message: 'Note deleted successfully',
-                deletedNote: new NotesDTO(note as Notes),
+                // deletedNote: new NotesDTO(note as Notes),
             });
 
         } catch (error) {

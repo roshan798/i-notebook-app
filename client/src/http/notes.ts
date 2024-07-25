@@ -5,6 +5,7 @@ import {
     CreateNoteResponse,
     GetNotesResponse,
     GetNoteResponse,
+    Note,
 } from '../types/notes'
 
 const api = getApiInstance('/notes')
@@ -23,6 +24,17 @@ export const getNotes = async (): Promise<GetNotesResponse> => {
 
 export const getNote = async (id: string): Promise<GetNoteResponse> => {
     const response = await api.get<GetNoteResponse>(`/${id}`)
+    return response.data
+}
+
+interface DeleteNoteResponse {
+    success: boolean,
+    message: string,
+    deletedNote?: Note
+
+}
+export const deleteNote = async (noteId: string): Promise<DeleteNoteResponse> => {
+    const response = await api.delete(`/${noteId}`)
     return response.data
 }
 
