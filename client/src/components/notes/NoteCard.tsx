@@ -26,6 +26,9 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
                 '&:hover': {
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
                 },
+                '&:hover .edit-icon': {
+                    opacity: 1,
+                },
             }}>
                 <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -41,12 +44,17 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
                         >
                             {note.title}
                         </Typography>
-                        <Tooltip title="working on edit functionality">
-                            <IconButton size='small' aria-label="edit-note" onClick={() => { }}>
+                        <Tooltip title="Edit note">
+                            <IconButton
+                                size='small'
+                                aria-label="edit-note"
+                                className="edit-icon"
+                                sx={{ opacity: 0, transition: 'opacity 0.3s' }}
+                                onClick={() => { }}
+                            >
                                 <EditNoteIcon fontSize='large' />
                             </IconButton>
                         </Tooltip>
-
                     </Box>
 
                     <Typography
@@ -73,7 +81,8 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
                             />
                         ))}
                         {note.tags.length > 4 && (
-                            <Chip variant="outlined"
+                            <Chip
+                                variant="outlined"
                                 size="small"
                                 label={showMore ? 'Show Less' : 'Show More'}
                                 color="secondary"
