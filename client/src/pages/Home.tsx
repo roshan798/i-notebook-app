@@ -15,7 +15,6 @@ export default function Home() {
                 setLoading(true)
                 const data = await getNotes()
                 setNotes(data.notes)
-                setLoading(false)
             } catch (err) {
                 console.error('Error fetching notes:', err)
                 alert('Some error occures while fetching notes')
@@ -36,11 +35,7 @@ export default function Home() {
                         width: '100%',
                     }}>
                     <CreateNoteForm setNotes={setNotes} />
-                    {loading ? (
-                        'loading...'
-                    ) : (
-                        <Note notes={notes} loading={loading} error={error} />
-                    )}
+                    <Note notes={notes} loading={loading} error={error} />
                 </Box>
             </Box>
 

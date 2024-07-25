@@ -1,22 +1,20 @@
-import React from 'react'
-import { Box, CircularProgress, Typography, Alert, Button, Card } from '@mui/material'
-import { Note as NoteType } from '../../types/notes'
-import NoteCard from './NoteCard'
-import Masonry from 'react-masonry-css'
-import "./masonaryLayout.css"
+import React from 'react';
+import { Box, Typography, Alert, Button, Card, Skeleton, Grid } from '@mui/material';
+import { Note as NoteType } from '../../types/notes';
+import NoteCard from './NoteCard';
+import Masonry from 'react-masonry-css';
+import "./masonaryLayout.css";
+
 interface NoteProps {
-    notes: NoteType[]
-    loading: boolean
-    error: string | null
+    notes: NoteType[];
+    loading: boolean;
+    error: string | null;
 }
 
 const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
-    if (loading) {
-        return <CircularProgress />
-    }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>
+        return <Alert severity="error">{error}</Alert>;
     }
 
     return (
@@ -24,11 +22,23 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
             <Typography variant="h4" component="h1" gutterBottom>
                 My Notes
             </Typography>
-            <Box
-            >
+            <Box>
+                {loading && (
+                    // Show skeleton of the notes card 4
+                    <Grid container spacing={2}>
+                        {Array.from({ length: 4 }).map((_, index) => (
+                            <Grid item xs={12} sm={6} key={index}>
+                                <Skeleton width="100%" height={240} variant="rectangular" sx={{
+                                    borderRadius: 2,
+                                }}>
+                                </Skeleton>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
                 {notes.length > 0 ? (
                     <Masonry
-                        className='my-masonry-grid'
+                        className="my-masonry-grid"
                         columnClassName="my-masonry-grid_column"
                     >
                         {notes.map((note) => (
@@ -46,12 +56,12 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                                 <Button
-                                    id='create-first-note-btn'
+                                    id="create-first-note-btn"
                                     variant="contained"
                                     color="primary"
                                     onClick={(e) => {
-                                        e.stopPropagation()
-                                        document.getElementById("content")?.focus()
+                                        e.stopPropagation();
+                                        document.getElementById("content")?.focus();
                                     }}
                                 >
                                     Create a Note 📝
@@ -62,7 +72,7 @@ const Note: React.FC<NoteProps> = ({ notes, loading, error }) => {
                 )}
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default Note
+export default Note;
