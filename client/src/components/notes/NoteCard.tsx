@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import { Note as NoteType } from '../../types/notes';
+import { Note as NoteType } from '../../store/types';
 import { formatDate, getRelativeTime } from '../../utils/timeUtils';
 import { DeleteOutlineRounded } from '@mui/icons-material';
 
@@ -21,6 +21,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
     return (
         <div>
             <Card elevation={3} sx={{
+                borderRadius: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
@@ -63,12 +64,12 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                         variant="body2"
                         color="text.secondary"
                         sx={{
-                            mt: 2,
-                            overflow: 'hidden',
-                            display: '-webkit-box',
-                            WebkitBoxOrient: 'vertical',
-                            WebkitLineClamp: 20,
-                            lineClamp: 20,
+                            mt: 1,
+                            // overflow: 'hidden',
+                            // display: '-webkit-box',
+                            // WebkitBoxOrient: 'vertical',
+                            // WebkitLineClamp: 20,
+                            // lineClamp: 20,
                         }}
                     >
                         {note.content}
@@ -93,11 +94,13 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                             />
                         )}
                     </Box>
-                    <Tooltip title={formatDate(note.createdAt)}>
-                        <Typography variant="caption" color="GrayText">
-                            {getRelativeTime(note.createdAt)}
-                        </Typography>
-                    </Tooltip>
+                    <Box>
+                        <Tooltip title={formatDate(note?.createdAt)}>
+                            <Typography variant="caption" color="GrayText">
+                                {getRelativeTime(note.createdAt)}
+                            </Typography>
+                        </Tooltip>
+                    </Box>
                 </CardContent>
                 <Stack className='notes-menu' direction="row" sx={{
                     padding: '0.2rem',

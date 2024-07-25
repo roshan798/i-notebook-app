@@ -1,12 +1,11 @@
 // http/notes.ts
 import { getApiInstance } from '.'
 import {
-    CreateNoteBody,
     CreateNoteResponse,
-    GetNotesResponse,
     GetNoteResponse,
-    Note,
-} from '../types/notes'
+    GetNotesResponse,
+} from '../store/types'
+import { CreateNoteBody, Note } from '../store/types'
 
 const api = getApiInstance('/notes')
 

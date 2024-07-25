@@ -4,30 +4,24 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
-import { Note as NoteType } from '../../types/notes'
 import AddTags from './addTags/AddTagsTextArea'
-
+import { addNote } from '../../store/notesSlice'
+import { useDispatch } from 'react-redux'
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
-interface CreateNoteFormProps {
-    setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>
-}
 
-//
-interface FilmOption {
-    title: string
-    inputValue?: string
-}
-//
 
-const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
+
+
+const CreateNoteForm = () => {
+    const dispatch = useDispatch()
     const { addNotification: notify } = useNotification()
     const [isTitleVisible, setIsTitleVisible] = useState<boolean>(false)
     const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(true)
 
     // for the tag suggestions
-    const [tags, setTags] = useState<(FilmOption | string)[]>([])
-    const [options, setOptions] = useState<FilmOption[]>([])
+    const [tags, setTags] = useState<(TagsOption | string)[]>([])
+    const [options, setOptions] = useState<TagsOption[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     useEffect(() => {
@@ -80,9 +74,8 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
                 content,
                 tags: tags as string[],
             })
-            console.log('Note saved:', response)
             notify('Note saved successfully', 'success')
-            setNotes((prevState: NoteType[]) => [response.note, ...prevState])
+            dispatch(addNote(response.note))
             setFormStatus((prevState) => ({ ...prevState, isSaved: true }))
             setFormData(initialFormData)
         } catch (error) {
@@ -257,3 +250,11 @@ const CreateNoteForm: React.FC<CreateNoteFormProps> = ({ setNotes }) => {
 }
 
 export default CreateNoteForm
+
+
+// types 
+interface TagsOption {
+    title: string
+    inputValue?: string
+}
+//

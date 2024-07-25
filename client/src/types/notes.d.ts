@@ -1,12 +1,6 @@
 // types/notes.ts
-export interface Note {
-    id: string
-    title: string
-    content: string
-    tags: string[]
-    createdAt: string
-    updatedAt: string
-}
+import { Note } from "../store/types"
+
 
 export interface CreateNoteResponse {
     success: boolean
