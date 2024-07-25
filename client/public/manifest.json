@@ -1,0 +1,7 @@
+{
+    "short_name": "i-notebook",
+    "name": "Notes on the go.",
+    "icons": [],
+    "start_url": ".",
+    "display": "standalone"
+}
