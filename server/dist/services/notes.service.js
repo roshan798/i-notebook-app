@@ -28,10 +28,15 @@ class NotesService {
     }
     getNotesByUserId(userId, params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, orderBy = "desc", sortBy = "createdAt", limit, page } = params;
+            const { orderBy = "desc", sortBy = "createdAt", limit, page } = params;
+            const sortOrder = orderBy === "desc" ? -1 : 1;
+            const sortCriteria = {
+                updatedAt: sortOrder,
+                // createdAt: sortOrder
+            };
             try {
                 const notes = yield notes_model_1.default.find({ userId })
-                    .sort({ [sortBy]: orderBy });
+                    .sort(sortCriteria);
                 return notes;
             }
             catch (error) {

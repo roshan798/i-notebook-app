@@ -77,6 +77,21 @@ class NotesController {
                     message: 'Note ID is required',
                 });
             }
+            // check whether this user is the owner of the note
+            const user = req.user;
+            const note = yield notes_service_1.default.getNoteById(noteId);
+            if (note === null) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Note not found',
+                });
+            }
+            if (note.userId.toString() !== user._id) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'You are not authorized to update this note',
+                });
+            }
             const noteData = req.body;
             const notesValidationError = (0, validation_1.validateNote)(noteData);
             if (notesValidationError !== null) {
@@ -90,7 +105,7 @@ class NotesController {
                 res.json({
                     success: true,
                     message: 'Note updated successfully',
-                    updatedNote: new notes_dto_1.default(updatedNote),
+                    note: new notes_dto_1.default(updatedNote),
                 });
             }
             catch (error) {

@@ -7,6 +7,7 @@ class NotesDTO {
         this.content = notes.content;
         this.tags = notes.tags;
         this.createdAt = notes.createdAt;
+        this.updatedAt = notes.updatedAt;
     }
 }
 exports.default = NotesDTO;
