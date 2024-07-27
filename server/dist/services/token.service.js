@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("../configs/config"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const refresh_model_1 = __importDefault(require("../models/refresh.model"));
+const refresh_model_1 = __importDefault(require("../schema/models/refresh.model"));
 class TokenService {
     constructor() {
         this.generateAccessToken = (payload) => {

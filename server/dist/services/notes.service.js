@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const notes_model_1 = __importDefault(require("../models/notes.model"));
+const notes_model_1 = __importDefault(require("../schema/models/notes.model"));
 class NotesService {
     create(notes) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,9 +30,11 @@ class NotesService {
         return __awaiter(this, void 0, void 0, function* () {
             const { orderBy = "desc", sortBy = "createdAt", limit, page } = params;
             const sortOrder = orderBy === "desc" ? -1 : 1;
+            // Define sort criteria with correct SortOrder types
             const sortCriteria = {
+                pinned: -1,
+                pinnedAt: -1,
                 updatedAt: sortOrder,
-                // createdAt: sortOrder
             };
             try {
                 const notes = yield notes_model_1.default.find({ userId })
@@ -73,6 +75,27 @@ class NotesService {
                 return updatedNote;
             }
             catch (error) {
+                throw error;
+            }
+        });
+    }
+    pinNoteById(noteId, pin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updateFields = {
+                    pinned: pin
+                };
+                if (pin) {
+                    updateFields.pinnedAt = new Date(); // Set `pinnedAt` to current date if pin is true
+                }
+                else {
+                    updateFields.pinnedAt = undefined; // Optionally clear `pinnedAt` if pin is false
+                }
+                const note = yield notes_model_1.default.findByIdAndUpdate(noteId, Object.assign(Object.assign({}, updateFields), { updatedAt: new Date() }), { new: true }).exec();
+                return note;
+            }
+            catch (error) {
+                console.error('Error pinning note:', error);
                 throw error;
             }
         });

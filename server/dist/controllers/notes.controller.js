@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const validation_1 = require("../utils/validation");
 const notes_service_1 = __importDefault(require("../services/notes.service"));
-const notes_dto_1 = __importDefault(require("../DTO/notes.dto"));
+const notes_dto_1 = __importDefault(require("../schema/DTO/notes.dto"));
 class NotesController {
     createNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -146,6 +146,40 @@ class NotesController {
                 res.status(500).json({
                     success: false,
                     message: 'Internal server error',
+                });
+            }
+        });
+    }
+    togglePinNote(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const pin = req.body.pin;
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Note ID is required',
+                });
+            }
+            try {
+                const note = yield notes_service_1.default.pinNoteById(id, pin);
+                if (note === null) {
+                    return res.status(400)
+                        .json({
+                        success: "false",
+                        message: "Note not availble to pin"
+                    });
+                }
+                res.json({
+                    success: true,
+                    message: 'Note pinned successfully',
+                    // pinnedNote: new NotesDTO(note as Notes),
+                });
+            }
+            catch (error) {
+                console.log('Error pinning note', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error'
                 });
             }
         });
