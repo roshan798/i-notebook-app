@@ -2,11 +2,11 @@ import { ObjectId } from 'mongoose'
 import { Request, Response } from 'express'
 import UserService from '../services/user.service'
 import TokenService from '../services/token.service'
-import { LoginRequestBody, SignupRequestBody } from 'userRequest'
+import { LoginRequestBody, SignupRequestBody } from 'schema/types/userRequest'
 import { validateLogin, validateSignup } from '../utils/validation'
 import HashService from '../services/hash.service'
-import { User } from 'user'
-import UserDTO from '../DTO/user.dto'
+import { User } from 'schema/types/user'
+import UserDTO from '../schema/DTO/user.dto'
 interface TokenPayload {
     _id: string
     [key: string]: any

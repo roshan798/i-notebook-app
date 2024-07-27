@@ -4,6 +4,10 @@ export type User = {
     email: string
     createdAt: string | Date
 }
+export interface ApiResponse {
+    succees: boolean
+    message: string
+}
 
 export type UserState = {
     user: User | null
@@ -14,23 +18,18 @@ export interface CreateNoteBody {
     content: string
     tags: string[]
 }
-export interface CreateNoteResponse {
-    success: boolean
-    message: string
+
+export interface CreateNoteResponse extends ApiResponse {
     note: Note
 }
-export interface GetNotesResponse {
-    success: boolean
-    message: string
+export interface GetNotesResponse extends ApiResponse {
     notes: Note[]
 }
-export interface GetNoteResponse {
-    success: boolean
-    message: string
-    note: Note
-}
+export interface GetNoteResponse extends CreateNoteResponse { }
 export interface Note extends CreateNoteBody {
     id: string
+    pinned: boolean,
+    pinnedAt?: string | Date
     createdAt: string | Date
     updatedAt: string | Date
 }

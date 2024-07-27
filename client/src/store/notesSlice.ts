@@ -32,15 +32,41 @@ const notesSlice = createSlice({
                 return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
             });
         },
+        pinNote: (state, action: PayloadAction<string>) => {
+            const noteId = action.payload;
+            state.notes = state.notes.map((note) => {
+                if (note.id === noteId) {
+                    const isPinned = !note.pinned;
+                    return {
+                        ...note,
+                        pinned: isPinned,
+                        pinnedAt: isPinned ? new Date().toISOString() : undefined,
+                    };
+                }
+                return note;
+            });
+
+            state.notes = state.notes.sort((a, b) => {
+                if (a.pinned && b.pinned) {
+                    return new Date(b.pinnedAt!).getTime() - new Date(a.pinnedAt!).getTime();
+                } else if (a.pinned && !b.pinned) {
+                    return -1;
+                } else if (!a.pinned && b.pinned) {
+                    return 1;
+                } else {
+                    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+                }
+            });
+        },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
         setError: (state, action: PayloadAction<string | null>) => {
-            state.error = action.payload
-        }
+            state.error = action.payload;
+        },
     },
 });
 
-export const { setNotes, setLoading, setError, deleteNote, updateNote, addNote } = notesSlice.actions;
+export const { setNotes, setLoading, setError, deleteNote, updateNote, addNote, pinNote } = notesSlice.actions;
 
 export default notesSlice.reducer;

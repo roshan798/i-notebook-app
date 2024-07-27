@@ -1,5 +1,5 @@
-import UserModel from '../models/user.model'
-import { User, FilterQuery } from 'user'
+import UserModel from '../schema/models/user.model'
+import { User, FilterQuery } from 'schema/types/user'
 
 class UserService {
     async createUser(user: User): Promise<User> {

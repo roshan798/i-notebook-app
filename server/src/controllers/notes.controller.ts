@@ -1,9 +1,9 @@
-import { NotesRequestBody, GetNotesParams, Notes } from 'notes'
 import { Request, Response } from 'express'
 import { validateNote } from '../utils/validation'
 import NotesService from '../services/notes.service'
 import { TokenPayload } from '../services/token.service'
-import NotesDTO from '../DTO/notes.dto'
+import NotesDTO from '../schema/DTO/notes.dto'
+import type { NotesRequestBody, GetNotesParams, Notes } from '../schema/types/notes'
 
 class NotesController {
     async createNote(req: Request, res: Response) {
@@ -135,6 +135,39 @@ class NotesController {
                 message: 'Internal server error',
             })
         }
+    }
+    async togglePinNote(req: Request, res: Response) {
+        const id = req.params.id
+        const pin: boolean = req.body.pin
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Note ID is required',
+            })
+        }
+        try {
+            const note = await NotesService.pinNoteById(id, pin)
+            if (note === null) {
+                return res.status(400)
+                    .json({
+                        success: "false",
+                        message: "Note not availble to pin"
+                    })
+            }
+            res.json({
+                success: true,
+                message: 'Note pinned successfully',
+                // pinnedNote: new NotesDTO(note as Notes),
+            });
+
+        } catch (error) {
+            console.log('Error pinning note', error)
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            })
+        }
+
     }
 }
 export default new NotesController()

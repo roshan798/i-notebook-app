@@ -1,5 +1,5 @@
-import type { NotesRequestBody } from 'notes'
-import type { LoginRequestBody, SignupRequestBody } from 'userRequest'
+import type { NotesRequestBody } from 'schema/types/notes'
+import type { LoginRequestBody, SignupRequestBody } from 'schema/types/userRequest'
 const validationMessages = {
     EMAIL_REQUIRED: 'Email is required',
     PASSWORD_REQUIRED: 'Password is required',

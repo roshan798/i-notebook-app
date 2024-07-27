@@ -1,4 +1,3 @@
-// http/notes.ts
 import { getApiInstance } from '.'
 import {
     CreateNoteResponse,
@@ -43,7 +42,13 @@ export const updateNote = async (
     const response = await api.put<CreateNoteResponse>(`/${noteId}`, data)
     return response.data
 }
-
+export interface PinNoteResponse {
+    success: boolean
+}
+export const pinNote = async (noteId: string, data: { pin: boolean }): Promise<PinNoteResponse> => {
+    const response = await api.put<PinNoteResponse>(`/${noteId}/pin`, data)
+    return response.data
+}
 
 interface FilmOption {
     title: string

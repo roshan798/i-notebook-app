@@ -1,4 +1,4 @@
-import type { User } from 'user'
+import type { User } from 'schema/types/user'
 
 export default class UserDTO {
     name: string

@@ -8,7 +8,7 @@
         "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
         "allowImportingTsExtensions": false, // Do not allow importing TypeScript files with non-standard extensions
         "noEmit": false, // Ensure this is set to false to allow emitting output files
-        "typeRoots": ["./node_modules/@types", "./src/types"], // Specify folders to find type declarations
+        "typeRoots": ["./node_modules/@types", "src/schema/types"], // Specify folders to find type declarations
         "baseUrl": "./src", // Base directory for module resolution
         "paths": {
             "@controllers/*": ["controllers/*"],

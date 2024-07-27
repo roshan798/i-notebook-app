@@ -1,7 +1,6 @@
-import type { Notes } from 'notes'
-import mongoose, { Schema } from 'mongoose'
-
-const NotesSchema = new Schema(
+import type { Notes } from 'notes';
+import mongoose, { Schema } from 'mongoose';
+const NotesSchema = new Schema<Notes>(
     {
         title: {
             type: String,
@@ -19,19 +18,23 @@ const NotesSchema = new Schema(
             type: [String],
             required: false,
         },
-        isDeleted: {
-            type: Boolean,
-            default: false,
-        },
         accessTo: {
             type: [Schema.Types.ObjectId],
             ref: 'users',
+            required: false,
+        },
+        pinned: {
+            type: Boolean,
+            default: false,
+        },
+        pinnedAt: {
+            type: Date,
             required: false,
         },
     },
     {
         timestamps: true,
     }
-)
+);
 
-export default mongoose.model<Notes>('notes', NotesSchema)
+export default mongoose.model<Notes>('notes', NotesSchema);
