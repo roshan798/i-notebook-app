@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack } from '@mui/material';
+import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Note as NoteType } from '../../store/types';
 import { formatDate, getRelativeTime } from '../../utils/timeUtils';
-import { DeleteOutlineRounded } from '@mui/icons-material';
+import { DeleteOutlineRounded, DeleteRounded } from '@mui/icons-material';
 import UpdateNoteForm from "./UpdateNoteForm";
 
 interface NoteCardProps {
@@ -13,18 +13,39 @@ interface NoteCardProps {
 
 const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
     const [showMore, setShowMore] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteHovered, setIsDeleteHovered] = useState(false); // State to track hover status
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
+
     const chipsToShow = showMore ? note.tags : note.tags.slice(0, 4);
 
     const handleToggle = () => {
         setShowMore(!showMore);
     };
-    const [isModalOpen, setisModalOpen] = useState(false);
+
     const handleClose = () => {
-        setisModalOpen(false);
-    }
+        setIsModalOpen(false);
+    };
+
     const handleOpen = () => {
-        setisModalOpen(true);
-    }
+        setIsModalOpen(true);
+    };
+
+    const handleDialogOpen = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setIsDialogOpen(false);
+    };
+
+    const handleConfirmDelete = () => {
+        if (handleDeleteNote) {
+            handleDeleteNote(note.id);
+        }
+        handleDialogClose();
+    };
+
     return (
         <>
             {isModalOpen && <UpdateNoteForm isOpen={isModalOpen} handleClose={handleClose} note={note} />}
@@ -67,7 +88,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                             >
                                 {note.title}
                             </Typography>
-                            <Tooltip title={ "Created: " + formatDate(note?.createdAt)}>
+                            <Tooltip title={"Created: " + formatDate(note?.createdAt)}>
                                 <Typography variant="caption" color="GrayText" sx={{
                                     whiteSpace: 'nowrap',
                                 }}>
@@ -80,11 +101,6 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                             color="text.secondary"
                             sx={{
                                 mt: 1,
-                                // overflow: 'hidden',
-                                // display: '-webkit-box',
-                                // WebkitBoxOrient: 'vertical',
-                                // WebkitLineClamp: 20,
-                                // lineClamp: 20,
                             }}
                         >
                             {note.content}
@@ -134,14 +150,38 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                             <IconButton
                                 size='small'
                                 aria-label="delete-note"
-                                onClick={() => { handleDeleteNote && handleDeleteNote(note.id) }}
+                                onMouseEnter={() => setIsDeleteHovered(true)}
+                                onMouseLeave={() => setIsDeleteHovered(false)}
+                                onClick={handleDialogOpen}
                             >
-                                <DeleteOutlineRounded fontSize='medium' />
+                                {isDeleteHovered ? <DeleteRounded fontSize='medium' color='error' /> : <DeleteOutlineRounded fontSize='medium' />}
                             </IconButton>
                         </Tooltip>
                     </Stack>
                 </Card>
             </div>
+
+            <Dialog
+                open={isDialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to delete this note?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
