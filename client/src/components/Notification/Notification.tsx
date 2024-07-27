@@ -1,5 +1,3 @@
-// src/components/Notification/Notification.tsx
-
 import { useEffect } from 'react'
 import { Snackbar, Alert, Slide, SlideProps } from '@mui/material'
 import { useNotification } from '../../contexts/NotificationContext'

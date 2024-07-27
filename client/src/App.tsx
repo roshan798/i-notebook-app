@@ -1,12 +1,10 @@
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline,CircularProgress,Box } from '@mui/material';
 import { useLoadingWithRefresh } from './hooks/useLoadingWithRefresh';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import useTheme from './theme/useTheme';
 import Notification from './components/Notification/Notification';
 
