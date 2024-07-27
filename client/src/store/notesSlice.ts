@@ -27,6 +27,10 @@ const notesSlice = createSlice({
                 }
                 return note;
             });
+
+            state.notes = state.notes.sort((a, b) => {
+                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+            });
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;

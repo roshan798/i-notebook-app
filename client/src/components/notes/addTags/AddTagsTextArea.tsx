@@ -16,6 +16,7 @@ interface AddTagsProps {
     setOptions: (options: FilmOption[]) => void
     loading?: boolean
     error?: string | null
+    isUpdateForm?: boolean
 }
 
 export default function AddTagsTextArea({
@@ -24,6 +25,7 @@ export default function AddTagsTextArea({
     setValue,
     options,
     setOptions,
+    isUpdateForm = false
 }: AddTagsProps) {
     const handleAddTag = (
         _event: React.SyntheticEvent,
@@ -63,11 +65,13 @@ export default function AddTagsTextArea({
             spacing={3}
             sx={{
                 width: '100%',
+                border: `1px solid ${isUpdateForm && defaultBorderColor}`,
+                borderRadius: `${isUpdateForm ? '4px' : '0'}`,
                 borderLeft: `1px solid ${defaultBorderColor}`,
                 borderRight: `1px solid ${defaultBorderColor}`,
             }}>
             <Autocomplete
-                size="small"
+                size="medium"
                 multiple
                 freeSolo
                 id={tagListId}
@@ -109,9 +113,10 @@ export default function AddTagsTextArea({
                 }}
                 renderInput={(params) => (
                     <TextField
+                        label={isUpdateForm ? 'Tags' : ""}
                         {...params}
                         variant="outlined"
-                        placeholder="Tags..."
+                        placeholder={!isUpdateForm ? 'Tags...' : ""}
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 border: 'none',

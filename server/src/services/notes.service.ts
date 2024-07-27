@@ -1,6 +1,7 @@
 import { Notes, NotesId, NotesRequestBody, GetNotesParams } from 'notes'
 import NotesModel from '../models/notes.model'
 import { UserId } from 'user'
+import { SortOrder } from 'mongoose'
 class NotesService {
     async create(notes: NotesRequestBody): Promise<Notes> {
         try {
@@ -13,15 +14,22 @@ class NotesService {
     }
 
     async getNotesByUserId(userId: UserId, params: GetNotesParams): Promise<Notes[]> {
-        const { id, orderBy = "desc", sortBy = "createdAt", limit, page } = params;
+        const { orderBy = "desc", sortBy = "createdAt", limit, page } = params;
+        const sortOrder: SortOrder = orderBy === "desc" ? -1 : 1;
+        const sortCriteria = {
+            updatedAt: sortOrder,
+            // createdAt: sortOrder
+        };
+
         try {
             const notes = await NotesModel.find({ userId })
-                .sort({ [sortBy]: orderBy });
-            return notes
+                .sort(sortCriteria);
+            return notes;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
+
 
     async getNoteById(noteId: NotesId): Promise<Notes | null> {
         try {

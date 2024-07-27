@@ -7,6 +7,8 @@ import { useNotification } from '../../contexts/NotificationContext'
 import AddTags from './addTags/AddTagsTextArea'
 import { addNote } from '../../store/notesSlice'
 import { useDispatch } from 'react-redux'
+import { notifications } from '../../utils/notificationMessages'
+import { APIError } from '../../types/api'
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
 
@@ -74,12 +76,15 @@ const CreateNoteForm = () => {
                 content,
                 tags: tags as string[],
             })
-            notify('Note saved successfully', 'success')
+            notify(notifications.note.save.success, 'success')
             dispatch(addNote(response.note))
             setFormStatus((prevState) => ({ ...prevState, isSaved: true }))
             setFormData(initialFormData)
+            setTags(initialFormData.tags)
         } catch (error) {
             console.error('Error saving note:', error)
+            const err = error as APIError;
+            notify(err.response?.data.message || notifications.note.save.error, 'error')
             setFormStatus((prevState) => ({
                 ...prevState,
                 isErrorSaving: true,
@@ -134,7 +139,6 @@ const CreateNoteForm = () => {
                 <TextField
                     id="title"
                     name="title"
-                    label=""
                     value={title}
                     placeholder="Title"
                     onChange={handleChange}
@@ -162,7 +166,6 @@ const CreateNoteForm = () => {
             <TextField
                 id="content"
                 name="content"
-                label=""
                 value={content}
                 onChange={handleChange}
                 onClick={handleContentClick}

@@ -36,6 +36,14 @@ export const deleteNote = async (noteId: string): Promise<DeleteNoteResponse> =>
     const response = await api.delete(`/${noteId}`)
     return response.data
 }
+export const updateNote = async (
+    noteId: string,
+    data: CreateNoteBody
+): Promise<CreateNoteResponse> => {
+    const response = await api.put<CreateNoteResponse>(`/${noteId}`, data)
+    return response.data
+}
+
 
 interface FilmOption {
     title: string

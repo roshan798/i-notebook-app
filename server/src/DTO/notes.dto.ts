@@ -5,6 +5,7 @@ class NotesDTO {
     content: string
     tags: string[]
     createdAt: Date
+    updatedAt?: Date
 
     constructor(notes: Notes) {
         this.id = notes._id!.toString()
@@ -12,6 +13,7 @@ class NotesDTO {
         this.content = notes.content
         this.tags = notes.tags
         this.createdAt = notes.createdAt
+        this.updatedAt = notes.updatedAt
     }
 }
 export default NotesDTO
