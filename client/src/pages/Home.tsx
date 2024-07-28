@@ -9,7 +9,7 @@ export default function Home() {
             <Box sx={{ padding: 2 }} display="flex" justifyContent="center">
                 <Box
                     sx={{
-                        maxWidth: '50rem',
+                        maxWidth: '60rem',
                         width: '100%',
                     }}>
                     <CreateNoteForm />

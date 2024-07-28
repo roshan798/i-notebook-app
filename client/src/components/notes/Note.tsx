@@ -67,7 +67,7 @@ const Note = () => {
                 ) : (
                     notes.length > 0 ? (
                         <Masonry
-                            columns={{ xs: 1, sm: 2, md: 2 }}
+                            columns={{ xs: 1, sm: 2, md: 3 }}
                             spacing={2}
                         // sequential
                         >
