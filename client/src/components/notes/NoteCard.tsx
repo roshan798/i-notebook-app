@@ -4,15 +4,17 @@ import { formatDate, getRelativeTime } from '../../utils/timeUtils';
 import UpdateNoteForm from "./UpdateNoteForm";
 import { pinNote as PinNoteApi } from '../../http/notes';
 import { EditNote, DeleteOutlineRounded, DeleteRounded, PushPin, PushPinOutlined } from '@mui/icons-material';
-import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack} from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { pinNote } from '../../store/notesSlice';
+import MyDialog from '../shared/MyDialog';
+
 interface NoteCardProps {
     note: NoteType;
     handleDeleteNote?: (noteId: string) => void;
 }
-const cardStyles = {
 
+const cardStyles = {
     position: "relative",
     borderRadius: 2,
     display: 'flex',
@@ -30,16 +32,14 @@ const cardStyles = {
         '&:hover .notes-menu': {
             opacity: 1,
         },
-
     }
-}
+};
+
 const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [showMore, setShowMore] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteHovered, setIsDeleteHovered] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isPinHovered, setIsPinHovered] = useState(false);
     const [pinPending, setPinPending] = useState(false);
 
     const chipsToShow = showMore ? note.tags : note.tags.slice(0, 4);
@@ -70,6 +70,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
         }
         handleDialogClose();
     };
+
     const handlePin = async () => {
         try {
             setPinPending(true);
@@ -77,21 +78,19 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
             if (response.success) {
                 dispatch(pinNote(note.id));
             }
-
         } catch (error) {
-            console.error('Error pinning note:', error)
-        }
-        finally {
+            console.error('Error pinning note:', error);
+        } finally {
             setPinPending(false);
         }
-    }
+    };
 
     return (
         <>
             {isModalOpen && <UpdateNoteForm isOpen={isModalOpen} handleClose={handleClose} note={note} />}
-            <div >
+            <div>
                 <Card elevation={3} sx={cardStyles}>
-                    <Tooltip title="pin">
+                    <Tooltip title={note.pinned ? "Unpin" : "Pin"}>
                         <IconButton
                             disabled={pinPending}
                             className='pin'
@@ -104,18 +103,27 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                                 padding: '0.2rem',
                                 zIndex: 5,
                                 backgroundColor: 'darkgrey',
-                                opacity: note.pinned ? 1 : 0,
+                                opacity: 0,
                                 transition: 'opacity 0.3s',
+                                '& .icon-filled': {
+                                    display: note.pinned ? 'block' : 'none',
+                                },
+                                '& .icon-outlined': {
+                                    display: note.pinned ? 'none' : 'block',
+                                },
+                                '&:hover .icon-filled': {
+                                    display: 'block',
+                                },
+                                '&:hover .icon-outlined': {
+                                    display: 'none',
+                                },
                             }}
                             size='small'
                             aria-label="pin-note"
-                            onMouseEnter={() => setIsPinHovered(true)}
-                            onMouseLeave={() => setIsPinHovered(false)}
                             onClick={handlePin}
-
                         >
-
-                            {note.pinned || isPinHovered ? <PushPin fontSize='medium' /> : <PushPinOutlined fontSize='medium' />}
+                            <PushPin className="icon-filled" fontSize='medium' />
+                            <PushPinOutlined className="icon-outlined" fontSize='medium' />
                         </IconButton>
                     </Tooltip>
                     <CardContent sx={{
@@ -203,38 +211,30 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
                             <IconButton
                                 size='small'
                                 aria-label="delete-note"
-                                onMouseEnter={() => setIsDeleteHovered(true)}
-                                onMouseLeave={() => setIsDeleteHovered(false)}
                                 onClick={handleDialogOpen}
+                                sx={{
+                                    '&:hover': { backgroundColor: 'rgba(255, 0, 0, 0.1)' },
+                                    '& .icon-filled': { display: 'none' },
+                                    '&:hover .icon-filled': { display: 'block' },
+                                    '&:hover .icon-outlined': { display: 'none' },
+                                }}
                             >
-                                {isDeleteHovered ? <DeleteRounded fontSize='medium' color='error' /> : <DeleteOutlineRounded fontSize='medium' />}
+                                <DeleteRounded fontSize='medium' className='icon-filled' color='error' />
+                                <DeleteOutlineRounded className='icon-outlined' fontSize='medium' />
                             </IconButton>
                         </Tooltip>
                     </Stack>
                 </Card>
             </div >
-
-            <Dialog
-                open={isDialogOpen}
-                onClose={handleDialogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this note?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <MyDialog
+                dialogTitle='Confirm Delete'
+                dialogText='Are you sure you want to delete this note?'
+                isDialogOpen={isDialogOpen}
+                handleClose={handleDialogClose}
+                handleConfirm={handleConfirmDelete}
+                confirmText='Delete'
+                color='error'
+            />
         </>
     );
 };

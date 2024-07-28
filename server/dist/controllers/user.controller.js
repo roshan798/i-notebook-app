@@ -143,7 +143,7 @@ class UserController {
             }
             try {
                 const { _id } = (yield token_service_1.default.verifyRefreshToken(refreshToken));
-                yield token_service_1.default.removeToken(refreshToken);
+                const response = yield token_service_1.default.removeToken(refreshToken);
                 res.clearCookie('refreshToken');
                 res.clearCookie('accessToken');
                 res.status(200).json({
@@ -188,30 +188,16 @@ class UserController {
             if (!user) {
                 return res.status(404).json({ message: 'No user found' });
             }
-            // Delete previously stored token before creating new ones
-            yield token_service_1.default.removeToken(refreshTokenFromCookie);
-            // Generate new tokens (both access and refresh tokens)
+            const response = yield token_service_1.default.removeToken(refreshTokenFromCookie);
+            if (response.deletedCount === 0) {
+                return res.json({ success: true });
+            }
             const { refreshToken, accessToken } = token_service_1.default.generateTokens({
                 _id: user._id,
                 email: user.email,
             });
-            // Store new refresh token in the database
             yield token_service_1.default.storeRefreshToken(refreshToken, user._id);
-            // TODO setting cookie will be a function in the future
-            // Set cookies with new tokens
             setCookie(res, accessToken, refreshToken);
-            // res.cookie('refreshToken', refreshToken, {
-            //     maxAge: 1000 * 60 * 60 * 24, // for 1 day
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === "production",
-            //     sameSite: "strict",
-            // });
-            // res.cookie('accessToken', accessToken, {
-            //     maxAge: 1000 * 60 * 60 * 24 * 30, // for 30 days
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-            //     sameSite: "strict",
-            // });
             return res.json({
                 user: new user_dto_1.default(user),
                 success: true,
