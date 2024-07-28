@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Box, TextField, Tooltip, IconButton } from '@mui/material'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import { Box, TextField, Tooltip, IconButton, InputAdornment } from '@mui/material'
+import { CheckBoxOutlined, LocalOffer, PushPin, PushPinOutlined } from '@mui/icons-material'
+import { useDispatch } from 'react-redux'
 import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
 import { useNotification } from '../../contexts/NotificationContext'
 import AddTags from './addTags/AddTagsTextArea'
 import { addNote } from '../../store/notesSlice'
-import { useDispatch } from 'react-redux'
 import { notifications } from '../../utils/notificationMessages'
 import { APIError } from '../../types/api'
+
 export const defaultBorderColor = '#757575'
 const TAG_LIST_ID = 'tags-standard'
-
-
-
 
 const CreateNoteForm = () => {
     const dispatch = useDispatch()
@@ -48,6 +46,7 @@ const CreateNoteForm = () => {
         title: '',
         content: '',
         tags: [],
+        pinned: false,
     }
     const [formData, setFormData] = useState(initialFormData)
     const { title, content } = formData
@@ -160,6 +159,55 @@ const CreateNoteForm = () => {
                             },
                         },
                     }}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    className='pin'
+                                    disableRipple
+                                    disableTouchRipple
+                                    sx={{
+                                        position: 'absolute',
+                                        top: "-12px",
+                                        right: "-10px",
+                                        padding: '0.2rem',
+                                        zIndex: 5,
+                                        backgroundColor: 'darkgrey',
+                                        opacity: 0,
+                                        transition: 'opacity 0.3s',
+                                        '& .icon-filled': {
+                                            display: 'none',
+                                        },
+                                        '& .icon-outlined': {
+                                            display: 'block',
+                                        },
+                                        '&:hover .icon-filled': {
+                                            display: 'block',
+                                        },
+                                        '&:hover .icon-outlined': {
+                                            display: 'none',
+                                        },
+                                    }}
+                                    size='small'
+                                    aria-label="pin-note"
+                                    onClick={() => {
+                                        setFormData((prevState) => ({
+                                            ...prevState,
+                                            pinned: !prevState.pinned,
+                                        }))
+                                    }}
+                                >
+                                    <Tooltip title={formData.pinned ? "Unpin" : "Pin"}>
+                                        <>
+                                            <PushPin className="icon-filled" fontSize='medium' />
+                                            <PushPinOutlined className="icon-outlined" fontSize='medium' />
+                                        </>
+                                    </Tooltip>
+                                </IconButton>
+
+                            </InputAdornment>
+                        ),
+                    }}
                 />
             )}
 
@@ -173,6 +221,8 @@ const CreateNoteForm = () => {
                 placeholder="Take a note..."
                 fullWidth
                 multiline
+
+
                 sx={{
                     '& .MuiOutlinedInput-root': {
                         '& fieldset': {
@@ -191,22 +241,40 @@ const CreateNoteForm = () => {
                         },
                     },
                 }}
+                InputProps={isTitleVisible === false ? {
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <Tooltip title="Add checklist">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => {
+                                        setIsTitleVisible((prevState) => !prevState)
+                                    }}
+                                >
+                                    <CheckBoxOutlined />
+                                </IconButton>
+                            </Tooltip>
+                        </InputAdornment>
+                    ),
+                } : {}}
             />
-            {isTitleVisible && isAddTagVisible && (
-                <Box ref={tagRef} id="id">
-                    <AddTags
-                        tagListId="tags-standard"
-                        value={tags}
-                        setValue={setTags}
-                        options={options}
-                        setOptions={() => {
-                            setOptions(options)
-                        }}
-                        loading={loading}
-                        error={error}
-                    />
-                </Box>
-            )}
+            {
+                isTitleVisible && isAddTagVisible && (
+                    <Box ref={tagRef} id="id">
+                        <AddTags
+                            tagListId="tags-standard"
+                            value={tags}
+                            setValue={setTags}
+                            options={options}
+                            setOptions={() => {
+                                setOptions(options)
+                            }}
+                            loading={loading}
+                            error={error}
+                        />
+                    </Box>
+                )
+            }
             <Box>
                 {isTitleVisible && (
                     <>
@@ -241,14 +309,14 @@ const CreateNoteForm = () => {
                                             (prevState) => !prevState
                                         )
                                     }>
-                                    <LocalOfferIcon />
+                                    <LocalOffer />
                                 </IconButton>
                             </Tooltip>
                         </Box>
                     </>
                 )}
             </Box>
-        </Box>
+        </Box >
     )
 }
 
