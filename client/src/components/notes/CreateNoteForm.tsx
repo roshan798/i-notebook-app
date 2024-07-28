@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Box, TextField, Tooltip, IconButton, InputAdornment } from '@mui/material'
-import { CheckBoxOutlined, LocalOffer, PushPin, PushPinOutlined } from '@mui/icons-material'
+import { LocalOffer, PushPin, PushPinOutlined } from '@mui/icons-material'
 import { useDispatch } from 'react-redux'
 import SaveButton from './SaveButton'
 import { createNote, getTags } from '../../http/notes'
@@ -231,22 +231,22 @@ const CreateNoteForm = () => {
                         },
                     },
                 }}
-                // InputProps={isTitleVisible === false ? {
-                //     endAdornment: (
-                //         <InputAdornment position="end">
-                //             <Tooltip title="Add checklist">
-                //                 <IconButton
-                //                     aria-label="toggle password visibility"
-                //                     onClick={() => {
-                //                         setIsTitleVisible((prevState) => !prevState)
-                //                     }}
-                //                 >
-                //                     <CheckBoxOutlined />
-                //                 </IconButton>
-                //             </Tooltip>
-                //         </InputAdornment>
-                //     ),
-                // } : {}}
+            // InputProps={isTitleVisible === false ? {
+            //     endAdornment: (
+            //         <InputAdornment position="end">
+            //             <Tooltip title="Add checklist">
+            //                 <IconButton
+            //                     aria-label="toggle password visibility"
+            //                     onClick={() => {
+            //                         setIsTitleVisible((prevState) => !prevState)
+            //                     }}
+            //                 >
+            //                     <CheckBoxOutlined />
+            //                 </IconButton>
+            //             </Tooltip>
+            //         </InputAdornment>
+            //     ),
+            // } : {}}
             />
             {
                 isTitleVisible && isAddTagVisible && (
