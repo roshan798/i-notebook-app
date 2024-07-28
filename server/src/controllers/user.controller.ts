@@ -198,10 +198,7 @@ class UserController {
             return res.status(404).json({ message: 'No user found' })
         }
 
-        const response = await TokenService.removeToken(refreshTokenFromCookie)
-        if (response.deletedCount === 0) {
-            return res.json({ success: true })
-        }
+        await TokenService.removeToken(refreshTokenFromCookie)
         const { refreshToken, accessToken } = TokenService.generateTokens({
             _id: user._id as string,
             email: user.email,
