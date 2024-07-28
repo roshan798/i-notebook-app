@@ -49,7 +49,7 @@ const CreateNoteForm = () => {
         pinned: false,
     }
     const [formData, setFormData] = useState(initialFormData)
-    const { title, content } = formData
+    const { title, content, pinned } = formData
     const formRef = useRef<HTMLDivElement>(null)
     const tagRef = useRef<HTMLDivElement>(null)
     const [formStatus, setFormStatus] = useState({
@@ -74,6 +74,7 @@ const CreateNoteForm = () => {
                 title,
                 content,
                 tags: tags as string[],
+                pinned
             })
             notify(notifications.note.save.success, 'success')
             dispatch(addNote(response.note))
@@ -162,49 +163,38 @@ const CreateNoteForm = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton
-                                    className='pin'
-                                    disableRipple
-                                    disableTouchRipple
-                                    sx={{
-                                        position: 'absolute',
-                                        top: "-12px",
-                                        right: "-10px",
-                                        padding: '0.2rem',
-                                        zIndex: 5,
-                                        backgroundColor: 'darkgrey',
-                                        opacity: 0,
-                                        transition: 'opacity 0.3s',
-                                        '& .icon-filled': {
-                                            display: 'none',
-                                        },
-                                        '& .icon-outlined': {
-                                            display: 'block',
-                                        },
-                                        '&:hover .icon-filled': {
-                                            display: 'block',
-                                        },
-                                        '&:hover .icon-outlined': {
-                                            display: 'none',
-                                        },
-                                    }}
-                                    size='small'
-                                    aria-label="pin-note"
-                                    onClick={() => {
-                                        setFormData((prevState) => ({
-                                            ...prevState,
-                                            pinned: !prevState.pinned,
-                                        }))
-                                    }}
-                                >
-                                    <Tooltip title={formData.pinned ? "Unpin" : "Pin"}>
-                                        <>
-                                            <PushPin className="icon-filled" fontSize='medium' />
-                                            <PushPinOutlined className="icon-outlined" fontSize='medium' />
-                                        </>
-                                    </Tooltip>
-                                </IconButton>
-
+                                <Tooltip title={pinned ? "Unpin" : "pin"}>
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        className='pin'
+                                        disableRipple
+                                        disableTouchRipple
+                                        sx={{
+                                            '& .icon-filled': {
+                                                display: pinned ? "block" : 'none',
+                                            },
+                                            '& .icon-outlined': {
+                                                display: !pinned ? "block" : 'none',
+                                            },
+                                            '&:hover .icon-filled': {
+                                                display: 'block',
+                                            },
+                                            '&:hover .icon-outlined': {
+                                                display: 'none',
+                                            },
+                                        }}
+                                        size='small'
+                                        onClick={() => {
+                                            setFormData((prevState) => ({
+                                                ...prevState,
+                                                pinned: !prevState.pinned,
+                                            }))
+                                        }}
+                                    >
+                                        <PushPin className="icon-filled" fontSize='medium' />
+                                        <PushPinOutlined className="icon-outlined" fontSize='medium' />
+                                    </IconButton>
+                                </Tooltip>
                             </InputAdornment>
                         ),
                     }}
@@ -241,22 +231,22 @@ const CreateNoteForm = () => {
                         },
                     },
                 }}
-                InputProps={isTitleVisible === false ? {
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <Tooltip title="Add checklist">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => {
-                                        setIsTitleVisible((prevState) => !prevState)
-                                    }}
-                                >
-                                    <CheckBoxOutlined />
-                                </IconButton>
-                            </Tooltip>
-                        </InputAdornment>
-                    ),
-                } : {}}
+                // InputProps={isTitleVisible === false ? {
+                //     endAdornment: (
+                //         <InputAdornment position="end">
+                //             <Tooltip title="Add checklist">
+                //                 <IconButton
+                //                     aria-label="toggle password visibility"
+                //                     onClick={() => {
+                //                         setIsTitleVisible((prevState) => !prevState)
+                //                     }}
+                //                 >
+                //                     <CheckBoxOutlined />
+                //                 </IconButton>
+                //             </Tooltip>
+                //         </InputAdornment>
+                //     ),
+                // } : {}}
             />
             {
                 isTitleVisible && isAddTagVisible && (

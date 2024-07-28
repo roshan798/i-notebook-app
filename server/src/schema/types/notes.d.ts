@@ -8,6 +8,8 @@ export interface NotesRequestBody {
     content: string
     tags: string[]
     userId: UserId
+    pinned: boolean
+    pinnedAt?: Date
 }
 
 export interface Notes extends NotesRequestBody, Document {

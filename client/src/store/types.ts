@@ -17,6 +17,7 @@ export interface CreateNoteBody {
     title: string
     content: string
     tags: string[]
+    pinned?: boolean
 }
 
 export interface CreateNoteResponse extends ApiResponse {

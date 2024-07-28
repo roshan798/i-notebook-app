@@ -15,7 +15,9 @@ class NotesController {
                 message: notesValidationError,
             })
         }
-
+        if (noteData.pinned === true) {
+            noteData.pinnedAt = new Date()
+        }
         try {
             const savedNote = await NotesService.create({
                 ...noteData,
