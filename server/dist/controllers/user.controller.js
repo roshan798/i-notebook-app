@@ -188,10 +188,7 @@ class UserController {
             if (!user) {
                 return res.status(404).json({ message: 'No user found' });
             }
-            const response = yield token_service_1.default.removeToken(refreshTokenFromCookie);
-            if (response.deletedCount === 0) {
-                return res.json({ success: true });
-            }
+            yield token_service_1.default.removeToken(refreshTokenFromCookie);
             const { refreshToken, accessToken } = token_service_1.default.generateTokens({
                 _id: user._id,
                 email: user.email,

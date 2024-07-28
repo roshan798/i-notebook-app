@@ -26,6 +26,9 @@ class NotesController {
                     message: notesValidationError,
                 });
             }
+            if (noteData.pinned === true) {
+                noteData.pinnedAt = new Date();
+            }
             try {
                 const savedNote = yield notes_service_1.default.create(Object.assign(Object.assign({}, noteData), { userId: req.user._id }));
                 res.status(201).json({
