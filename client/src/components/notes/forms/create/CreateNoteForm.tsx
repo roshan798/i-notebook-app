@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box } from '@mui/material';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import { Box, CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { createNote, getTags } from '../../../../http/notes';
 import { useNotification } from '../../../../contexts/NotificationContext';
@@ -8,15 +8,17 @@ import { notifications } from '../../../../utils/notificationMessages';
 import { APIError } from '../../../../types/api';
 import AddCheckList from '../../addChecklist/AddCheckList';
 
-import type { ChecklistItem } from "../../../../store/types"
-import TitleField from './TittleField';
-import ContentField from './ContentField';
-import TagsField, { TagsOption } from './TagsField';
-import Actions from './Actions';
+import type { ChecklistItem } from "../../../../store/types";
+import { TagsOption } from './TagsField';
+
+// Lazy-loaded components
+const TitleField = React.lazy(() => import('./TittleField'));
+const ContentField = React.lazy(() => import('./ContentField'));
+const TagsField = React.lazy(() => import('./TagsField'));
+const Actions = React.lazy(() => import('./Actions'));
 
 export const defaultBorderColor = '#757575';
 const TAG_LIST_ID = 'tags-standard';
-
 
 const CreateNoteForm = () => {
     const dispatch = useDispatch();
@@ -53,12 +55,12 @@ const CreateNoteForm = () => {
         tags: [],
         pinned: false,
     };
-    const [checkListItems, setCheckListItems] = useState<ChecklistItem[]>([])
+    const [checkListItems, setCheckListItems] = useState<ChecklistItem[]>([]);
     const [formData, setFormData] = useState(initialFormData);
     const { title, content, pinned } = formData;
     const formRef = useRef<HTMLDivElement>(null);
     const tagRef = useRef<HTMLDivElement>(null);
-    const checkListRef = useRef<HTMLDivElement>(null)
+    const checkListRef = useRef<HTMLDivElement>(null);
     const [formStatus, setFormStatus] = useState({
         isSaving: false,
         isSaved: false,
@@ -99,7 +101,7 @@ const CreateNoteForm = () => {
                 isErrorSaving: true,
             }));
         } finally {
-            setFormStatus((preState) => ({ ...preState, isSaving: false }));
+            setFormStatus((prevState) => ({ ...prevState, isSaving: false }));
         }
     };
 
@@ -125,8 +127,8 @@ const CreateNoteForm = () => {
                 setIsAddTagVisible(false);
                 setTags([]);
                 setFormData(initialFormData);
-                setTypeOfNote("note")
-                setCheckListItems([])
+                setTypeOfNote("note");
+                setCheckListItems([]);
             }
         };
 
@@ -147,20 +149,23 @@ const CreateNoteForm = () => {
     const toggleTagVisibility = () => {
         setIsAddTagVisible((prevState) => !prevState);
     };
+
     const addItemsToChecklist = (item: ChecklistItem) => {
-        setCheckListItems((prevState) => [item, ...prevState])
-    }
+        setCheckListItems((prevState) => [item, ...prevState]);
+    };
+
     const removeItemFromChecklist = (id: number) => {
-        setCheckListItems((prevState) => prevState.filter(item => item.id !== id))
-    }
+        setCheckListItems((prevState) => prevState.filter(item => item.id !== id));
+    };
+
     const handleCheckListChange = (id: number) => {
         setCheckListItems((prevState) => prevState.map(item => {
             if (item.id === id) {
-                return { ...item, completed: !item.completed }
+                return { ...item, completed: !item.completed };
             }
-            return item
-        }))
-    }
+            return item;
+        }));
+    };
 
     return (
         <Box
@@ -173,57 +178,57 @@ const CreateNoteForm = () => {
                 boxShadow: 6,
             }}
         >
-            {isTitleVisible && (
-                <TitleField
-                    title={title}
-                    handleChange={handleChange}
-                    pinned={pinned}
-                    togglePin={togglePin}
-                />
-            )}
+            <Suspense fallback={<CircularProgress />}>
+                {isTitleVisible && (
+                    <TitleField
+                        title={title}
+                        handleChange={handleChange}
+                        pinned={pinned}
+                        togglePin={togglePin}
+                    />
+                )}
 
-            {typeOfNote === "note" ? (<ContentField
-                content={content}
-                handleChange={handleChange}
-                handleContentClick={handleContentClick}
-                isTitleVisible={isTitleVisible}
-                setTypeOfNote={setTypeOfNote}
+                {typeOfNote === "note" ? (
+                    <ContentField
+                        content={content}
+                        handleChange={handleChange}
+                        handleContentClick={handleContentClick}
+                        isTitleVisible={isTitleVisible}
+                        setTypeOfNote={setTypeOfNote}
+                    />
+                ) : (
+                    <AddCheckList
+                        checkListRef={checkListRef}
+                        items={checkListItems}
+                        addItem={addItemsToChecklist}
+                        removeItem={removeItemFromChecklist}
+                        toggleComplete={handleCheckListChange}
+                    />
+                )}
 
-            />) : (<AddCheckList
-                checkListRef={checkListRef}
-                items={checkListItems}
-                addItem={addItemsToChecklist}
-                removeItem={removeItemFromChecklist}
-                toggleComplete={handleCheckListChange}
-            />)}
+                {isTitleVisible && isAddTagVisible && (
+                    <TagsField
+                        tags={tags}
+                        setTags={setTags}
+                        options={options}
+                        setOptions={setOptions}
+                        loading={loading}
+                        error={error}
+                        tagRef={tagRef}
+                    />
+                )}
 
-
-            {isTitleVisible && isAddTagVisible && (
-                <TagsField
-                    tags={tags}
-                    setTags={setTags}
-                    options={options}
-                    setOptions={setOptions}
-                    loading={loading}
-                    error={error}
-                    tagRef={tagRef}
-                />
-            )}
-            {isTitleVisible && (
-                <Actions
-                    handleSave={handleSave}
-                    formStatus={formStatus}
-                    toggleTagVisibility={toggleTagVisibility}
-                    isAddTagVisible={isAddTagVisible}
-                />
-            )}
+                {isTitleVisible && (
+                    <Actions
+                        handleSave={handleSave}
+                        formStatus={formStatus}
+                        toggleTagVisibility={toggleTagVisibility}
+                        isAddTagVisible={isAddTagVisible}
+                    />
+                )}
+            </Suspense>
         </Box>
     );
 };
 
 export default CreateNoteForm;
-
-
-
-
-
