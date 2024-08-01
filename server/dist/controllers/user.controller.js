@@ -119,8 +119,7 @@ class UserController {
                 setCookie(res, accessToken, refreshToken);
                 res.status(200).json({
                     success: true,
-                    user: new user_dto_1.default(user),
-                    options: options,
+                    user: new user_dto_1.default(user)
                 });
             }
             catch (error) {
