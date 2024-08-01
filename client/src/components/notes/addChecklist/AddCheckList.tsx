@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, IconButton, Typography, Tooltip } from '@mui/material';
 import { Add, CheckBox, CheckBoxOutlineBlank, Clear } from '@mui/icons-material';
 import type { CheckListItem } from './tempTypes';
-import { defaultBorderColor } from '../forms/CreateNoteForm';
+import { defaultBorderColor } from '../forms/create/CreateNoteForm';
 export interface AddCheckListProps {
     items: CheckListItem[];
     addItem: (item: CheckListItem) => void;

@@ -36,9 +36,9 @@ const Note = () => {
 
     return (
         <Box sx={{ padding: 2, mt: 6 }}>
-            <Typography variant="h5" component="h2" sx={{ mb: 3 }}>
+            {/* <Typography variant="h5" component="h2" sx={{ mb: 3 }}>
                 My Notes
-            </Typography>
+            </Typography> */}
             <Box>
                 {loading ? (
                     <Grid container spacing={2}>

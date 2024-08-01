@@ -62,17 +62,6 @@ export const updateOneField = async (noteId: string, data: UpdateOneFieldData): 
     return response.data
 }
 
-
-
-
-
-
-
-
-
-
-
-
 interface TagsOptions {
     title: string
     inputValue?: string

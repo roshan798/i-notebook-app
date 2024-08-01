@@ -1,7 +1,7 @@
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack'
-import { defaultBorderColor } from '../forms/CreateNoteForm'
+import { defaultBorderColor } from '../forms/create/CreateNoteForm'
 
 interface FilmOption {
     title: string

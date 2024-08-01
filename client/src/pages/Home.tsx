@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import CreateNoteForm from '../components/notes/forms/CreateNoteForm'
+import CreateNoteForm from '../components/notes/forms/create/CreateNoteForm'
 import Note from '../components/notes/Note'
 
 export default function Home() {
