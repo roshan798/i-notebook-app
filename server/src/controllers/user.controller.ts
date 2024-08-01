@@ -123,8 +123,7 @@ class UserController {
             setCookie(res, accessToken, refreshToken)
             res.status(200).json({
                 success: true,
-                user: new UserDTO(user),
-                options: options,
+                user: new UserDTO(user)
             })
         } catch (error) {
             console.error('Error logging in:', error)
