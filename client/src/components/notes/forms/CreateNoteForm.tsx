@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, TextField, Tooltip, IconButton, InputAdornment } from '@mui/material';
 import { CheckBoxOutlined, LocalOffer, PushPin, PushPinOutlined } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import SaveButton from './SaveButton';
-import { createNote, getTags } from '../../http/notes';
-import { useNotification } from '../../contexts/NotificationContext';
-import AddTags from './addTags/AddTagsTextArea';
-import { addNote } from '../../store/notesSlice';
-import { notifications } from '../../utils/notificationMessages';
-import { APIError } from '../../types/api';
-import AddCheckList from './addChecklist/AddCheckList';
+import SaveButton from '../SaveButton';
+import { createNote, getTags } from '../../../http/notes';
+import { useNotification } from '../../../contexts/NotificationContext';
+import AddTags from '../addTags/AddTagsTextArea';
+import { addNote } from '../../../store/notesSlice';
+import { notifications } from '../../../utils/notificationMessages';
+import { APIError } from '../../../types/api';
+import AddCheckList from '../addChecklist/AddCheckList';
 
-import type { ChecklistItem } from "../../store/types"
+import type { ChecklistItem } from "../../../store/types"
 
 export const defaultBorderColor = '#757575';
 const TAG_LIST_ID = 'tags-standard';
@@ -382,7 +382,10 @@ const Actions = ({ handleSave, formStatus, toggleTagVisibility, isAddTagVisible 
     </Box>
 );
 
-
+interface TagsOption {
+    title: string;
+    inputValue?: string;
+}
 interface TagsOption {
     title: string;
     inputValue?: string;

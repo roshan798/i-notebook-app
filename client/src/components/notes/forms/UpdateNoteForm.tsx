@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, TextField, IconButton, Modal, Fade, Backdrop } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import SaveButton from './SaveButton';
-import { updateNote, getTags } from '../../http/notes';
-import { useNotification } from '../../contexts/NotificationContext';
-import AddTags from './addTags/AddTagsTextArea';
+import SaveButton from '../SaveButton';
+import { updateNote, getTags } from '../../../http/notes';
+import { useNotification } from '../../../contexts/NotificationContext';
+import AddTags from '../addTags/AddTagsTextArea';
 import { useDispatch } from 'react-redux';
-import { updateNote as updateNoteAction } from '../../store/notesSlice';
-import { Note } from '../../store/types';
-import { notifications } from '../../utils/notificationMessages';
-import { APIError } from '../../types/api';
+import { updateNote as updateNoteAction } from '../../../store/notesSlice';
+import { Note } from '../../../store/types';
+import { notifications } from '../../../utils/notificationMessages';
+import { APIError } from '../../../types/api';
 export const defaultBorderColor = '#757575';
 const TAG_LIST_ID = 'tags-standard-update';
 
@@ -57,7 +57,7 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
 
     const [formData, setFormData] = useState(initialFormData);
     const { title, content } = formData;
-    const formRef = useRef<HTMLDivElement>(null);
+    // const formRef = useRef<HTMLDivElement>(null);
     const tagRef = useRef<HTMLDivElement>(null);
     const [formStatus, setFormStatus] = useState({
         isSaving: false,
@@ -73,11 +73,14 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
                 isErrorSaving: false,
             });
 
-            const response = await updateNote(note.id, {
+            const data = {
                 title,
                 content,
                 tags: tags as string[],
-            });
+                type: note.type,
+                pinned: note.pinned
+            };
+            const response = await updateNote(note.id, data);
 
             dispatch(updateNoteAction(response.note));
             notify(notifications.note.update.success, 'success');
@@ -118,7 +121,7 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
         >
             <Fade in={isOpen}>
                 <Box
-                    ref={formRef}
+                    // ref={formRef}
                     sx={{
                         position: 'absolute',
                         top: '50%',
@@ -132,9 +135,10 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
                         borderRadius: 1,
                         maxHeight: '90vh',
                         overflowY: 'auto',
+                        pt:1
                     }}
                 >
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                         <IconButton onClick={handleClose}>
                             <CloseIcon />
                         </IconButton>
@@ -162,30 +166,31 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
                             }}
                         />
                     </Box>
-                    <Box sx={{ mb: 2 }}>
-                        <TextField
-                            id="update-content"
-                            name="content"
-                            label="Content"
-                            value={content}
-                            onChange={handleChange}
-                            fullWidth
-                            multiline
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        borderColor: defaultBorderColor,
+                    {note.type === "note" &&
+                        <Box sx={{ mb: 2 }}>
+                            <TextField
+                                id="update-content"
+                                name="content"
+                                label="Content"
+                                value={content}
+                                onChange={handleChange}
+                                fullWidth
+                                multiline
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            borderColor: defaultBorderColor,
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: defaultBorderColor,
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: defaultBorderColor,
+                                        },
                                     },
-                                    '&:hover fieldset': {
-                                        borderColor: defaultBorderColor,
-                                    },
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: defaultBorderColor,
-                                    },
-                                },
-                            }}
-                        />
-                    </Box>
+                                }}
+                            />
+                        </Box>}
                     <Box id={TAG_LIST_ID} ref={tagRef} sx={{ mb: 2 }}>
                         <AddTags
                             tagListId="tags-standard"

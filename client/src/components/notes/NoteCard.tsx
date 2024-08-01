@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Note as NoteType } from '../../store/types';
-import UpdateNoteForm from "./UpdateNoteForm";
+import UpdateNoteForm from "./forms/UpdateNoteForm";
 import { CardContent, Card } from '@mui/material';
 import MyDialog from '../shared/MyDialog';
 import {

@@ -25,7 +25,7 @@ export interface CreateNoteBody {
     checklist?: ChecklistItem[]
     tags: string[]
     type: "note" | "list"
-    pinned : boolean
+    pinned: boolean
 }
 
 export interface CreateNoteResponse extends ApiResponse {

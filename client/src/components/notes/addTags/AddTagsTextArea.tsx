@@ -1,7 +1,7 @@
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack'
-import { defaultBorderColor } from '../CreateNoteForm'
+import { defaultBorderColor } from '../forms/CreateNoteForm'
 
 interface FilmOption {
     title: string
@@ -70,7 +70,6 @@ export default function AddTagsTextArea({
                 borderLeft: `1px solid ${defaultBorderColor}`,
                 borderRight: `1px solid ${defaultBorderColor}`,
                 borderBottom: `1px solid ${defaultBorderColor}`,
-
             }}>
             <Autocomplete
                 size="medium"

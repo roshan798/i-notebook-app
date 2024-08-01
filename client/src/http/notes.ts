@@ -73,26 +73,26 @@ export const updateOneField = async (noteId: string, data: UpdateOneFieldData): 
 
 
 
-interface FilmOption {
+interface TagsOptions {
     title: string
     inputValue?: string
 }
 
 // Assuming this is just a placeholder for mock data
-const result: FilmOption[] = []
+const result: TagsOptions[] = []
 
 // dummy function in future will use api calls for suggestions
-export const getTags = async (): Promise<FilmOption[]> => {
-    const response: { data: FilmOption[] } = await new Promise((resolve) => {
+export const getTags = async (): Promise<TagsOptions[]> => {
+    const response: { data: TagsOptions[] } = await new Promise((resolve) => {
         resolve({ data: result })
         // use setTimeout to simulate a delay
     })
-    return response.data as FilmOption[]
+    return response.data as TagsOptions[]
 }
 
 export const tagSuggestions = async (
     inputValue: string
-): Promise<FilmOption[]> => {
-    const response = await api.get<FilmOption[]>(`/tags?query=${inputValue}`)
+): Promise<TagsOptions[]> => {
+    const response = await api.get<TagsOptions[]>(`/tags?query=${inputValue}`)
     return response.data
 }
