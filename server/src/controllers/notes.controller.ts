@@ -3,7 +3,7 @@ import { validateNote } from '../utils/validation'
 import NotesService from '../services/notes.service'
 import { TokenPayload } from '../services/token.service'
 import NotesDTO from '../schema/DTO/notes.dto'
-import type { NotesRequestBody, GetNotesParams, Notes } from '../schema/types/notes'
+import type { NotesRequestBody, GetNotesParams, Notes, UpdateRequestBody } from '../schema/types/notes'
 
 class NotesController {
     async createNote(req: Request, res: Response) {
@@ -18,6 +18,9 @@ class NotesController {
         if (noteData.pinned === true) {
             noteData.pinnedAt = new Date()
         }
+        // remove comment
+        // console.log(noteData);
+        // return res.json({ message: 'Note created' })
         try {
             const savedNote = await NotesService.create({
                 ...noteData,
@@ -60,29 +63,7 @@ class NotesController {
     }
 
     async updateNote(req: Request, res: Response) {
-        const noteId = req.params.id
-        if (!noteId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Note ID is required',
-            })
-        }
-        // check whether this user is the owner of the note
-        const user = req.user as TokenPayload
-        const note = await NotesService.getNoteById(noteId)
-        if (note === null) {
-            return res.status(404).json({
-                success: false,
-                message: 'Note not found',
-            })
-        }
-        if (note.userId.toString() !== user._id) {
-            return res.status(403).json({
-                success: false,
-                message: 'You are not authorized to update this note',
-            })
-        }
-
+        const noteId = req.params.id as string
         const noteData = req.body as NotesRequestBody
         const notesValidationError = validateNote(noteData)
         if (notesValidationError !== null) {
@@ -109,21 +90,8 @@ class NotesController {
     }
     async deleteNote(req: Request, res: Response) {
         const noteId = req.params.id
-        if (!noteId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Note ID is required',
-            })
-        }
         try {
-            const note = await NotesService.deleteNoteById(noteId)
-            if (note === null) {
-                return res.status(400)
-                    .json({
-                        success: "false",
-                        message: "Note note availble to delete"
-                    })
-            }
+            await NotesService.deleteNoteById(noteId)
             res.json({
                 success: true,
                 message: 'Note deleted successfully',
@@ -141,21 +109,8 @@ class NotesController {
     async togglePinNote(req: Request, res: Response) {
         const id = req.params.id
         const pin: boolean = req.body.pin
-        if (!id) {
-            return res.status(400).json({
-                success: false,
-                message: 'Note ID is required',
-            })
-        }
         try {
-            const note = await NotesService.pinNoteById(id, pin)
-            if (note === null) {
-                return res.status(400)
-                    .json({
-                        success: "false",
-                        message: "Note not availble to pin"
-                    })
-            }
+            await NotesService.pinNoteById(id, pin)
             res.json({
                 success: true,
                 message: 'Note pinned successfully',
@@ -169,7 +124,30 @@ class NotesController {
                 message: 'Internal server error'
             })
         }
-
     }
+
+
+    async updateOneField(req: Request, res: Response) {
+        const id = req.params.id
+        const { field } = req.body as UpdateRequestBody
+        const { value } = req.body as UpdateRequestBody
+        try {
+            await NotesService.updateFields(id, { [field]: value })
+            res.json({
+                success: true,
+                message: 'Note title updated successfully',
+                // updatedNote: new NotesDTO(note as Notes),
+            });
+
+        } catch (error) {
+            console.log('Error updating note title', error)
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            })
+        }
+    }
+
 }
 export default new NotesController()
+

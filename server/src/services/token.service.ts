@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongoose'
 import config from '../configs/config'
 import jwt from 'jsonwebtoken'
-import refreshModal from '../schema/models/refresh.model'
+import refreshModal from '../schema/models/refresh'
 
 export type TokenPayload = {
     _id: string

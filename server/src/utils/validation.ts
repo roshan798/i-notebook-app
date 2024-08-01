@@ -11,7 +11,7 @@ const validationMessages = {
 const notesMessages = {
     TITLE_REQUIRED: 'Title is required',
     CONTENT_REQUIRED: 'Content is required',
-    TITLE_CONTENT_REQUIRED: 'Title and content are required',
+    CONTENT_OR_LIST_REQUIRED: 'Note must have list or content',
 }
 
 export const validateEmail = (email: string): Boolean => {
@@ -55,10 +55,9 @@ export const validateSignup = (data: SignupRequestBody): string | null => {
 }
 
 export const validateNote = (data: NotesRequestBody): string | null => {
-    const { title, content } = data
-
-    if (!title || !content) {
-        return notesMessages.TITLE_CONTENT_REQUIRED
+    const {content, checklist } = data
+    if (!content && (!checklist || checklist.length === 0)) {
+        return notesMessages.CONTENT_OR_LIST_REQUIRED
     }
 
     return null

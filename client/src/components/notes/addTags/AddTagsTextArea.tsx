@@ -69,6 +69,8 @@ export default function AddTagsTextArea({
                 borderRadius: `${isUpdateForm ? '4px' : '0'}`,
                 borderLeft: `1px solid ${defaultBorderColor}`,
                 borderRight: `1px solid ${defaultBorderColor}`,
+                borderBottom: `1px solid ${defaultBorderColor}`,
+
             }}>
             <Autocomplete
                 size="medium"

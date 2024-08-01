@@ -1,14 +1,31 @@
-import type { Notes } from 'notes';
 import mongoose, { Schema } from 'mongoose';
+import type { Notes } from '../types/notes';
+
+const ChecklistItemSchema = new Schema(
+    {
+        text: {
+            type: String,
+            required: true,
+        },
+        completed: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    { _id: false }
+);
+
 const NotesSchema = new Schema<Notes>(
     {
         title: {
             type: String,
-            required: true,
+            required: false,
+            default: '',
         },
         content: {
             type: String,
-            required: true,
+            required: false,
+            default: '',
         },
         userId: {
             type: Schema.Types.ObjectId,
@@ -30,6 +47,15 @@ const NotesSchema = new Schema<Notes>(
         pinnedAt: {
             type: Date,
             required: false,
+        },
+        checklist: {
+            type: [ChecklistItemSchema],
+            required: false,
+        },
+        type: {
+            type: String,
+            enum: ['note', 'list'],
+            default: 'note',
         },
     },
     {

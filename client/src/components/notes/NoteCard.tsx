@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Note as NoteType } from '../../store/types';
-import { formatDate, getRelativeTime } from '../../utils/timeUtils';
 import UpdateNoteForm from "./UpdateNoteForm";
-import { pinNote as PinNoteApi } from '../../http/notes';
-import { EditNote, DeleteOutlineRounded, DeleteRounded, PushPin, PushPinOutlined } from '@mui/icons-material';
-import { CardContent, Typography, Chip, Box, Tooltip, IconButton, Card, Stack} from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { pinNote } from '../../store/notesSlice';
+import { CardContent, Card } from '@mui/material';
 import MyDialog from '../shared/MyDialog';
+import {
+    Checklist,
+    PinButton,
+    NoteTitle,
+    NoteContent,
+    NotesMenu,
+    NoteTags
+} from './noteCardComponent';
+import { useNotification } from '../../contexts/NotificationContext';
+import { useDispatch } from 'react-redux';
+import { deleteNote as deleteNoteAPI } from '../../http/notes';
+import { deleteNote } from '../../store/notesSlice';
+import { APIError } from '../../types/api';
+import { notifications } from '../../utils/notificationMessages';
 
-interface NoteCardProps {
-    note: NoteType;
-    handleDeleteNote?: (noteId: string) => void;
-}
 
 const cardStyles = {
     position: "relative",
@@ -35,25 +40,17 @@ const cardStyles = {
     }
 };
 
-const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
+const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
+    const { addNotification: notify } = useNotification();
     const dispatch = useDispatch();
-    const [showMore, setShowMore] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [pinPending, setPinPending] = useState(false);
-
-    const chipsToShow = showMore ? note.tags : note.tags.slice(0, 4);
-
-    const handleToggle = () => {
-        setShowMore(!showMore);
-    };
-
     const handleClose = () => {
-        setIsModalOpen(false);
+        setUpdateModalOpen(false);
     };
 
     const handleOpen = () => {
-        setIsModalOpen(true);
+        setUpdateModalOpen(true);
     };
 
     const handleDialogOpen = () => {
@@ -63,6 +60,16 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
     const handleDialogClose = () => {
         setIsDialogOpen(false);
     };
+    const handleDeleteNote = async (noteId: string) => {
+        try {
+            const response = await deleteNoteAPI(noteId);
+            dispatch(deleteNote(noteId));
+            notify(response.message || notifications.note.delete.success, 'success');
+        } catch (err) {
+            const error = err as APIError;
+            notify(error.message || notifications.note.delete.error, 'error');
+        }
+    };
 
     const handleConfirmDelete = () => {
         if (handleDeleteNote) {
@@ -70,162 +77,32 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, handleDeleteNote }) => {
         }
         handleDialogClose();
     };
-
-    const handlePin = async () => {
-        try {
-            setPinPending(true);
-            const response = await PinNoteApi(note.id, { pin: !note.pinned });
-            if (response.success) {
-                dispatch(pinNote(note.id));
-            }
-        } catch (error) {
-            console.error('Error pinning note:', error);
-        } finally {
-            setPinPending(false);
-        }
-    };
-
     return (
         <>
-            {isModalOpen && <UpdateNoteForm isOpen={isModalOpen} handleClose={handleClose} note={note} />}
+            {isUpdateModalOpen && <UpdateNoteForm isOpen={isUpdateModalOpen} handleClose={handleClose} note={note} />}
             <div>
                 <Card elevation={3} sx={cardStyles}>
-                    <Tooltip title={note.pinned ? "Unpin" : "Pin"}>
-                        <IconButton
-                            disabled={pinPending}
-                            className='pin'
-                            disableRipple
-                            disableTouchRipple
-                            sx={{
-                                position: 'absolute',
-                                top: "-12px",
-                                right: "-10px",
-                                padding: '0.2rem',
-                                zIndex: 5,
-                                backgroundColor: 'darkgrey',
-                                opacity: 0,
-                                transition: 'opacity 0.3s',
-                                '& .icon-filled': {
-                                    display: note.pinned ? 'block' : 'none',
-                                },
-                                '& .icon-outlined': {
-                                    display: note.pinned ? 'none' : 'block',
-                                },
-                                '&:hover .icon-filled': {
-                                    display: 'block',
-                                },
-                                '&:hover .icon-outlined': {
-                                    display: 'none',
-                                },
-                            }}
-                            size='small'
-                            aria-label="pin-note"
-                            onClick={handlePin}
-                        >
-                            <PushPin className="icon-filled" fontSize='medium' />
-                            <PushPinOutlined className="icon-outlined" fontSize='medium' />
-                        </IconButton>
-                    </Tooltip>
+                    <PinButton pinned={note.pinned} notesId={note.id} />
                     <CardContent sx={{
                         flexGrow: 1,
                         display: 'flex',
                         flexDirection: 'column',
                     }}>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}>
-                            <Typography
-                                variant="h5"
-                                gutterBottom
-                                component="div"
-                                sx={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    fontWeight: 600,
-                                }}
-                            >
-                                {note.title}
-                            </Typography>
-                            <Tooltip title={"Created: " + formatDate(note?.createdAt)}>
-                                <Typography variant="caption" color="GrayText" sx={{
-                                    whiteSpace: 'nowrap',
-                                }}>
-                                    {getRelativeTime(note.updatedAt)}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                                mt: 1,
-                            }}
-                        >
-                            {note.content}
-                        </Typography>
-                        {chipsToShow.length > 0 &&
-                            <Box sx={{ mt: 2, mb: 1, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                                {chipsToShow.map((tag) => (
-                                    <Chip
-                                        variant="filled"
-                                        key={tag}
-                                        label={tag}
-                                        size="small"
-                                    />
-                                ))}
-                                {note.tags.length > 4 && (
-                                    <Chip
-                                        variant="outlined"
-                                        size="small"
-                                        label={showMore ? 'Show Less' : 'Show More'}
-                                        color="secondary"
-                                        key={showMore ? 'Show Less' : 'Show More'}
-                                        onClick={handleToggle}
-                                    />
-                                )}
-                            </Box>
-                        }
+
+                        <NoteTitle
+                            createdAt={note.createdAt}
+                            updatedAt={note.updatedAt}
+                            title={note.title || ""}
+                            setUpdateModalOpen={setUpdateModalOpen}
+                        />
+                        {note.type === "list" ? <Checklist
+                            items={note.checklist || []}
+                        /> : <NoteContent content={note.content || ""} />}
+                        {note.tags.length > 0 && <NoteTags tags={note.tags} />}
                     </CardContent>
-                    <Stack className='notes-menu' direction="row" sx={{
-                        padding: '0.2rem',
-                        opacity: { xs: 1, sm: 0 },
-                        transition: 'opacity 0.3s',
-                        '& .MuiIconButton-root': { borderRadius: 1, mt: -2, ml: 1 },
-                        '@media (min-width:600px)': {
-                            opacity: 0,
-                        },
-                    }}>
-                        <Tooltip title="Edit">
-                            <IconButton
-                                size='small'
-                                aria-label="edit-note"
-                                onClick={handleOpen}
-                            >
-                                <EditNote fontSize='medium' />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <IconButton
-                                size='small'
-                                aria-label="delete-note"
-                                onClick={handleDialogOpen}
-                                sx={{
-                                    '&:hover': { backgroundColor: 'rgba(255, 0, 0, 0.1)' },
-                                    '& .icon-filled': { display: 'none' },
-                                    '&:hover .icon-filled': { display: 'block' },
-                                    '&:hover .icon-outlined': { display: 'none' },
-                                }}
-                            >
-                                <DeleteRounded fontSize='medium' className='icon-filled' color='error' />
-                                <DeleteOutlineRounded className='icon-outlined' fontSize='medium' />
-                            </IconButton>
-                        </Tooltip>
-                    </Stack>
+                    <NotesMenu handleOpen={handleOpen} handleDialogOpen={handleDialogOpen} />
                 </Card>
-            </div >
+            </div>
             <MyDialog
                 dialogTitle='Confirm Delete'
                 dialogText='Are you sure you want to delete this note?'

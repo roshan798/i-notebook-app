@@ -1,16 +1,25 @@
+import { Document } from 'mongoose'
 import type { ObjectId } from 'mongodb'
 import type { UserId } from './user'
-import { Document } from 'mongoose'
 
 export type NotesId = ObjectId | string
 export interface NotesRequestBody {
-    title: string
-    content: string
+    title?: string
+    content?: string
+    checklist?: ChecklistItem[];
     tags: string[]
+    type: "note" | "list"
     userId: UserId
     pinned: boolean
     pinnedAt?: Date
 }
+
+
+interface ChecklistItem {
+    text: string;
+    completed: boolean;
+}
+
 
 export interface Notes extends NotesRequestBody, Document {
     _id?: NotesId
@@ -29,4 +38,9 @@ export interface GetNotesParams {
     orderBy?: "asc" | "desc",
     limit?: number,
     page?: number,
+}
+
+export interface UpdateRequestBody {
+    field: "title" | "content" | "pinned"
+    value: string | boolean
 }

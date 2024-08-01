@@ -1,4 +1,4 @@
-import UserModel from '../schema/models/user.model'
+import UserModel from '../schema/models/user'
 import { User, FilterQuery } from 'schema/types/user'
 
 class UserService {

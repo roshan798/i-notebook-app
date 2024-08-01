@@ -1,15 +1,16 @@
-import { SortOrder } from 'mongoose'
-import NotesModel from '../schema/models/notes.model'
-import type { UserId } from '../schema/types/user'
-import { Notes, NotesId, NotesRequestBody, GetNotesParams } from '../schema/types/notes'
+import { SortOrder } from 'mongoose';
+import NotesModel from '../schema/models/notes';
+import type { UserId } from '../schema/types/user';
+import { Notes, NotesId, NotesRequestBody, GetNotesParams } from '../schema/types/notes';
+
 class NotesService {
     async create(notes: NotesRequestBody): Promise<Notes> {
         try {
-            const savedNote = new NotesModel(notes)
-            await savedNote.save()
-            return savedNote
+            const savedNote = new NotesModel(notes);
+            await savedNote.save();
+            return savedNote;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 
@@ -26,34 +27,37 @@ class NotesService {
 
         try {
             const notes = await NotesModel.find({ userId })
-                .sort(sortCriteria)
+                .sort(sortCriteria);
             return notes;
         } catch (error) {
             throw error;
         }
     }
+
     async getNoteById(noteId: NotesId): Promise<Notes | null> {
         try {
-            const note = await NotesModel.findById(noteId)
-            return note
+            const note = await NotesModel.findById(noteId);
+            return note;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
+
     async deleteNoteById(noteId: NotesId): Promise<Notes | null> {
         try {
-            const note = await NotesModel.findByIdAndDelete(noteId)
-            return note
+            const note = await NotesModel.findByIdAndDelete(noteId);
+            return note;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
+
     async updateNoteById(noteId: NotesId, notes: NotesRequestBody): Promise<Notes | null> {
         try {
-            const updatedNote = await NotesModel.findByIdAndUpdate(noteId, notes, { new: true })
-            return updatedNote
+            const updatedNote = await NotesModel.findByIdAndUpdate(noteId, notes, { new: true });
+            return updatedNote;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 
@@ -81,5 +85,22 @@ class NotesService {
             throw error;
         }
     }
+
+    // Global update function
+    async updateFields(noteId: NotesId, updates: Partial<NotesRequestBody>): Promise<Notes | null> {
+        try {
+            const updatedNote = await NotesModel.findByIdAndUpdate(
+                noteId,
+                { ...updates, updatedAt: new Date() },
+                { new: true }
+            ).exec();
+
+            return updatedNote;
+        } catch (error) {
+            console.error('Error updating note:', error);
+            throw error;
+        }
+    }
 }
-export default new NotesService()
+
+export default new NotesService();
