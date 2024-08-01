@@ -12,7 +12,7 @@ const validationMessages = {
 const notesMessages = {
     TITLE_REQUIRED: 'Title is required',
     CONTENT_REQUIRED: 'Content is required',
-    TITLE_CONTENT_REQUIRED: 'Title and content are required',
+    CONTENT_OR_LIST_REQUIRED: 'Note must have list or content',
 };
 const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -48,9 +48,9 @@ const validateSignup = (data) => {
 };
 exports.validateSignup = validateSignup;
 const validateNote = (data) => {
-    const { title, content } = data;
-    if (!title || !content) {
-        return notesMessages.TITLE_CONTENT_REQUIRED;
+    const { content, checklist } = data;
+    if (!content && (!checklist || checklist.length === 0)) {
+        return notesMessages.CONTENT_OR_LIST_REQUIRED;
     }
     return null;
 };

@@ -2,15 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class NotesDTO {
     constructor(notes) {
+        this.title = "";
+        this.content = "";
+        this.checklist = [];
         this.id = notes._id.toString();
-        this.title = notes.title;
-        this.content = notes.content;
         this.tags = notes.tags;
         this.pinned = notes.pinned;
         this.createdAt = notes.createdAt;
         this.updatedAt = notes.updatedAt;
-        if (this.pinned)
+        this.type = notes.type;
+        if (notes.title !== undefined)
+            this.title = notes.title;
+        if (notes.content !== undefined)
+            this.content = notes.content;
+        if (notes.pinnedAt)
             this.pinnedAt = notes.pinnedAt;
+        if (notes.checklist)
+            this.checklist = notes.checklist;
     }
 }
 exports.default = NotesDTO;

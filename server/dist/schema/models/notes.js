@@ -1,0 +1,81 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importStar(require("mongoose"));
+const ChecklistItemSchema = new mongoose_1.Schema({
+    text: {
+        type: String,
+        required: true,
+    },
+    completed: {
+        type: Boolean,
+        default: false,
+    },
+}, { _id: false });
+const NotesSchema = new mongoose_1.Schema({
+    title: {
+        type: String,
+        required: false,
+        default: '',
+    },
+    content: {
+        type: String,
+        required: false,
+        default: '',
+    },
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'users',
+    },
+    tags: {
+        type: [String],
+        required: false,
+    },
+    accessTo: {
+        type: [mongoose_1.Schema.Types.ObjectId],
+        ref: 'users',
+        required: false,
+    },
+    pinned: {
+        type: Boolean,
+        default: false,
+    },
+    pinnedAt: {
+        type: Date,
+        required: false,
+    },
+    checklist: {
+        type: [ChecklistItemSchema],
+        required: false,
+    },
+    type: {
+        type: String,
+        enum: ['note', 'list'],
+        default: 'note',
+    },
+}, {
+    timestamps: true,
+});
+exports.default = mongoose_1.default.model('notes', NotesSchema);

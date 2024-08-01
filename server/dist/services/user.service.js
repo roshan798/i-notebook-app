@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_model_1 = __importDefault(require("../schema/models/user.model"));
+const user_1 = __importDefault(require("../schema/models/user"));
 class UserService {
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newUser = new user_model_1.default(user);
+                const newUser = new user_1.default(user);
                 yield newUser.save();
                 return newUser;
             }
@@ -31,7 +31,7 @@ class UserService {
     getUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield user_model_1.default.findOne({ email }).exec();
+                const user = yield user_1.default.findOne({ email }).exec();
                 if (!user) {
                     console.log('User not found');
                     return null;
@@ -47,7 +47,7 @@ class UserService {
     getUser(filter) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield user_model_1.default.findOne(filter).exec();
+                const user = yield user_1.default.findOne(filter).exec();
                 if (!user) {
                     console.log('User not found');
                     return null;

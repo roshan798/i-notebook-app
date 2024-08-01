@@ -29,6 +29,9 @@ class NotesController {
             if (noteData.pinned === true) {
                 noteData.pinnedAt = new Date();
             }
+            // remove comment
+            // console.log(noteData);
+            // return res.json({ message: 'Note created' })
             try {
                 const savedNote = yield notes_service_1.default.create(Object.assign(Object.assign({}, noteData), { userId: req.user._id }));
                 res.status(201).json({
@@ -74,27 +77,6 @@ class NotesController {
     updateNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const noteId = req.params.id;
-            if (!noteId) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Note ID is required',
-                });
-            }
-            // check whether this user is the owner of the note
-            const user = req.user;
-            const note = yield notes_service_1.default.getNoteById(noteId);
-            if (note === null) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Note not found',
-                });
-            }
-            if (note.userId.toString() !== user._id) {
-                return res.status(403).json({
-                    success: false,
-                    message: 'You are not authorized to update this note',
-                });
-            }
             const noteData = req.body;
             const notesValidationError = (0, validation_1.validateNote)(noteData);
             if (notesValidationError !== null) {
@@ -123,21 +105,8 @@ class NotesController {
     deleteNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const noteId = req.params.id;
-            if (!noteId) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Note ID is required',
-                });
-            }
             try {
-                const note = yield notes_service_1.default.deleteNoteById(noteId);
-                if (note === null) {
-                    return res.status(400)
-                        .json({
-                        success: "false",
-                        message: "Note note availble to delete"
-                    });
-                }
+                yield notes_service_1.default.deleteNoteById(noteId);
                 res.json({
                     success: true,
                     message: 'Note deleted successfully',
@@ -157,21 +126,8 @@ class NotesController {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             const pin = req.body.pin;
-            if (!id) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Note ID is required',
-                });
-            }
             try {
-                const note = yield notes_service_1.default.pinNoteById(id, pin);
-                if (note === null) {
-                    return res.status(400)
-                        .json({
-                        success: "false",
-                        message: "Note not availble to pin"
-                    });
-                }
+                yield notes_service_1.default.pinNoteById(id, pin);
                 res.json({
                     success: true,
                     message: 'Note pinned successfully',
@@ -180,6 +136,28 @@ class NotesController {
             }
             catch (error) {
                 console.log('Error pinning note', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error'
+                });
+            }
+        });
+    }
+    updateOneField(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { field } = req.body;
+            const { value } = req.body;
+            try {
+                yield notes_service_1.default.updateFields(id, { [field]: value });
+                res.json({
+                    success: true,
+                    message: 'Note title updated successfully',
+                    // updatedNote: new NotesDTO(note as Notes),
+                });
+            }
+            catch (error) {
+                console.log('Error updating note title', error);
                 res.status(500).json({
                     success: false,
                     message: 'Internal server error'

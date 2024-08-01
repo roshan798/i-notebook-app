@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("../configs/config"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const refresh_model_1 = __importDefault(require("../schema/models/refresh.model"));
+const refresh_1 = __importDefault(require("../schema/models/refresh"));
 class TokenService {
     constructor() {
         this.generateAccessToken = (payload) => {
@@ -34,7 +34,7 @@ class TokenService {
     storeRefreshToken(token, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield refresh_model_1.default.create({
+                yield refresh_1.default.create({
                     token: token,
                     userId: userId,
                 });
@@ -56,19 +56,19 @@ class TokenService {
     }
     findRefreshToken(userId, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield refresh_model_1.default.findOne({
+            return yield refresh_1.default.findOne({
                 userId: userId,
             });
         });
     }
     updateRefreshToken(userId, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield refresh_model_1.default.updateOne({ _id: userId }, { token: refreshToken });
+            return yield refresh_1.default.updateOne({ _id: userId }, { token: refreshToken });
         });
     }
     removeToken(refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield refresh_model_1.default.deleteOne({ token: refreshToken });
+            return yield refresh_1.default.deleteOne({ token: refreshToken });
         });
     }
 }

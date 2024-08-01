@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const notes_model_1 = __importDefault(require("../schema/models/notes.model"));
+const notes_1 = __importDefault(require("../schema/models/notes"));
 class NotesService {
     create(notes) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const savedNote = new notes_model_1.default(notes);
+                const savedNote = new notes_1.default(notes);
                 yield savedNote.save();
                 return savedNote;
             }
@@ -37,7 +37,7 @@ class NotesService {
                 updatedAt: sortOrder,
             };
             try {
-                const notes = yield notes_model_1.default.find({ userId })
+                const notes = yield notes_1.default.find({ userId })
                     .sort(sortCriteria);
                 return notes;
             }
@@ -49,7 +49,7 @@ class NotesService {
     getNoteById(noteId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const note = yield notes_model_1.default.findById(noteId);
+                const note = yield notes_1.default.findById(noteId);
                 return note;
             }
             catch (error) {
@@ -60,7 +60,7 @@ class NotesService {
     deleteNoteById(noteId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const note = yield notes_model_1.default.findByIdAndDelete(noteId);
+                const note = yield notes_1.default.findByIdAndDelete(noteId);
                 return note;
             }
             catch (error) {
@@ -71,7 +71,7 @@ class NotesService {
     updateNoteById(noteId, notes) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const updatedNote = yield notes_model_1.default.findByIdAndUpdate(noteId, notes, { new: true });
+                const updatedNote = yield notes_1.default.findByIdAndUpdate(noteId, notes, { new: true });
                 return updatedNote;
             }
             catch (error) {
@@ -91,11 +91,24 @@ class NotesService {
                 else {
                     updateFields.pinnedAt = undefined; // Optionally clear `pinnedAt` if pin is false
                 }
-                const note = yield notes_model_1.default.findByIdAndUpdate(noteId, Object.assign(Object.assign({}, updateFields), { updatedAt: new Date() }), { new: true }).exec();
+                const note = yield notes_1.default.findByIdAndUpdate(noteId, Object.assign(Object.assign({}, updateFields), { updatedAt: new Date() }), { new: true }).exec();
                 return note;
             }
             catch (error) {
                 console.error('Error pinning note:', error);
+                throw error;
+            }
+        });
+    }
+    // Global update function
+    updateFields(noteId, updates) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updatedNote = yield notes_1.default.findByIdAndUpdate(noteId, Object.assign(Object.assign({}, updates), { updatedAt: new Date() }), { new: true }).exec();
+                return updatedNote;
+            }
+            catch (error) {
+                console.error('Error updating note:', error);
                 throw error;
             }
         });
