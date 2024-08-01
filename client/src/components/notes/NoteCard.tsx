@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Note as NoteType } from '../../store/types';
-import UpdateNoteForm from "./forms/UpdateNoteForm";
-import { CardContent, Card } from '@mui/material';
+import { CardContent, Card, CircularProgress } from '@mui/material';
 import MyDialog from '../shared/MyDialog';
 import {
     Checklist,
@@ -17,7 +16,7 @@ import { deleteNote as deleteNoteAPI } from '../../http/notes';
 import { deleteNote } from '../../store/notesSlice';
 import { APIError } from '../../types/api';
 import { notifications } from '../../utils/notificationMessages';
-
+const UpdateNoteForm = lazy(() => import('./forms/UpdateNoteForm'));
 
 const cardStyles = {
     position: "relative",
@@ -79,7 +78,15 @@ const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
     };
     return (
         <>
-            {isUpdateModalOpen && <UpdateNoteForm isOpen={isUpdateModalOpen} handleClose={handleClose} note={note} />}
+            {isUpdateModalOpen &&
+                (
+                    <Suspense fallback={<CircularProgress />}>
+                        <UpdateNoteForm
+                            isOpen={isUpdateModalOpen}
+                            handleClose={handleClose}
+                            note={note} />
+                    </Suspense>
+                )}
             <div>
                 <Card elevation={3} sx={cardStyles}>
                     <PinButton pinned={note.pinned} notesId={note.id} />
