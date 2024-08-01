@@ -1,6 +1,6 @@
 import notesController from '../controllers/notes.controller'
 import authMiddleware from '../middlewares/authMiddleware'
-import checkOwnership from '@middlewares/checkOwnership'
+import checkOwnership from '../middlewares/checkOwnership'
 import express from 'express'
 const router = express.Router()
 
