@@ -53,13 +53,18 @@ export const pinNote = async (noteId: string, data: { pin: boolean }): Promise<P
 }
 
 interface UpdateOneFieldData {
-    field: "title" | "content" | "pinned"
+    field: "title" | "content" | "pinned" | "color"
     value: string | boolean
 }
 
 export const updateOneField = async (noteId: string, data: UpdateOneFieldData): Promise<UpdateNoteResponse> => {
     const response = await api.put<UpdateNoteResponse>(`/${noteId}/one`, data)
     return response.data
+}
+
+export const changeColor = async (noteId: string, data: { color: string }): Promise<UpdateNoteResponse> => {
+    const response = await api.patch(`/${noteId}/color`, data)
+    return response.data;
 }
 
 interface TagsOptions {

@@ -11,7 +11,7 @@ const app = express()
 const corsOptions = {
     origin: [config.client.url],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS',"PATCH"],
 }
 // middlewares
 app.use(cors(corsOptions))

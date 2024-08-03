@@ -1,6 +1,6 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Note as NoteType } from '../../store/types';
-import { CardContent, Card, CircularProgress } from '@mui/material';
+import { CardContent, Card } from '@mui/material';
 import MyDialog from '../shared/MyDialog';
 import {
     Checklist,
@@ -12,11 +12,13 @@ import {
 } from './noteCardComponent';
 import { useNotification } from '../../contexts/NotificationContext';
 import { useDispatch } from 'react-redux';
-import { deleteNote as deleteNoteAPI } from '../../http/notes';
+import { changeColor, deleteNote as deleteNoteAPI } from '../../http/notes';
 import { deleteNote } from '../../store/notesSlice';
 import { APIError } from '../../types/api';
 import { notifications } from '../../utils/notificationMessages';
-const UpdateNoteForm = lazy(() => import('./forms/UpdateNoteForm'));
+import { Color, colorMap } from './noteCardComponent/cardColor';
+import { debounce } from 'lodash';
+import UpdateNoteForm from './forms/UpdateNoteForm';
 
 const cardStyles = {
     position: "relative",
@@ -44,6 +46,8 @@ const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
     const dispatch = useDispatch();
     const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [noteColor, setNoteColor] = useState<Color>(colorMap[note.color === "" ? "default" : note.color]);
+
     const handleClose = () => {
         setUpdateModalOpen(false);
     };
@@ -59,6 +63,7 @@ const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
     const handleDialogClose = () => {
         setIsDialogOpen(false);
     };
+
     const handleDeleteNote = async (noteId: string) => {
         try {
             const response = await deleteNoteAPI(noteId);
@@ -76,38 +81,58 @@ const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
         }
         handleDialogClose();
     };
+
+    const debouncedColorChange = useMemo(() =>
+        debounce(async (color: Color) => {
+            try {
+                await changeColor(note.id, { color: color.name });
+            } catch (error) {
+                console.error('Error updating note color', error);
+                notify(notifications.note.update.error, 'error');
+            }
+        }, 5000), [note.id, notify]);
+
+    const handleColorChange = (color: Color) => {
+        setNoteColor(color);
+        debouncedColorChange(color);
+    };
+
     return (
         <>
-            {isUpdateModalOpen &&
-                (
-                    <Suspense fallback={<CircularProgress />}>
-                        <UpdateNoteForm
-                            isOpen={isUpdateModalOpen}
-                            handleClose={handleClose}
-                            note={note} />
-                    </Suspense>
-                )}
+            {isUpdateModalOpen && (
+                <UpdateNoteForm
+                    isOpen={isUpdateModalOpen}
+                    handleClose={handleClose}
+                    note={note} />
+            )}
             <div>
-                <Card elevation={3} sx={cardStyles}>
+                <Card elevation={3} sx={{
+                    ...cardStyles,
+                    backgroundColor: (noteColor.value)
+                }}>
                     <PinButton pinned={note.pinned} notesId={note.id} />
                     <CardContent sx={{
                         flexGrow: 1,
                         display: 'flex',
                         flexDirection: 'column',
+                        '& > *': {
+                            color: noteColor.textColor
+                        }
                     }}>
-
                         <NoteTitle
                             createdAt={note.createdAt}
                             updatedAt={note.updatedAt}
                             title={note.title || ""}
                             setUpdateModalOpen={setUpdateModalOpen}
+                            color={noteColor}
                         />
                         {note.type === "list" ? <Checklist
+                            color={noteColor}
                             items={note.checklist || []}
-                        /> : <NoteContent content={note.content || ""} />}
-                        {note.tags.length > 0 && <NoteTags tags={note.tags} />}
+                        /> : <NoteContent content={note.content || ""} color={noteColor} />}
+                        {note.tags.length > 0 && <NoteTags color={noteColor} tags={note.tags} />}
                     </CardContent>
-                    <NotesMenu handleOpen={handleOpen} handleDialogOpen={handleDialogOpen} />
+                    <NotesMenu color={noteColor} onColorChange={handleColorChange} handleOpen={handleOpen} handleDialogOpen={handleDialogOpen} />
                 </Card>
             </div>
             <MyDialog

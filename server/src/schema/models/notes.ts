@@ -57,6 +57,10 @@ const NotesSchema = new Schema<Notes>(
             enum: ['note', 'list'],
             default: 'note',
         },
+        color: {
+            type: String,
+            default: "default"
+        }
     },
     {
         timestamps: true,

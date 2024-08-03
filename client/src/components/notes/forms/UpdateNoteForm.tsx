@@ -57,7 +57,6 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
 
     const [formData, setFormData] = useState(initialFormData);
     const { title, content } = formData;
-    // const formRef = useRef<HTMLDivElement>(null);
     const tagRef = useRef<HTMLDivElement>(null);
     const [formStatus, setFormStatus] = useState({
         isSaving: false,
@@ -78,7 +77,8 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
                 content,
                 tags: tags as string[],
                 type: note.type,
-                pinned: note.pinned
+                pinned: note.pinned,
+                color: note.color
             };
             const response = await updateNote(note.id, data);
 
@@ -121,7 +121,6 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
         >
             <Fade in={isOpen}>
                 <Box
-                    // ref={formRef}
                     sx={{
                         position: 'absolute',
                         top: '50%',
@@ -135,7 +134,7 @@ const UpdateNoteForm: React.FC<UpdateNoteFormProps> = ({ note, isOpen, handleClo
                         borderRadius: 1,
                         maxHeight: '90vh',
                         overflowY: 'auto',
-                        pt:1
+                        pt: 1
                     }}
                 >
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>

@@ -11,6 +11,6 @@ router.delete('/:id', authMiddleware, checkOwnership, notesController.deleteNote
 router.put('/:id/pin', authMiddleware, checkOwnership, notesController.togglePinNote)
 
 router.put('/:id/one', authMiddleware, checkOwnership, notesController.updateOneField);
-
+router.patch("/:id/color",authMiddleware,notesController.changeColor)
 
 export default router

@@ -26,6 +26,7 @@ export interface CreateNoteBody {
     tags: string[]
     type: "note" | "list"
     pinned: boolean
+    color: "default" | string
 }
 
 export interface CreateNoteResponse extends ApiResponse {

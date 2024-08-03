@@ -12,6 +12,7 @@ export interface NotesRequestBody {
     userId: UserId
     pinned: boolean
     pinnedAt?: Date
+    color ?: string
 }
 
 
@@ -30,6 +31,7 @@ export interface Notes extends NotesRequestBody, Document {
     accessTo?: UserId[]
     pinned: boolean
     pinnedAt?: Date
+    color: string
 }
 
 export interface GetNotesParams {
@@ -43,4 +45,7 @@ export interface GetNotesParams {
 export interface UpdateRequestBody {
     field: "title" | "content" | "pinned"
     value: string | boolean
+}
+export interface ChangeColorBody {
+    color: string;
 }

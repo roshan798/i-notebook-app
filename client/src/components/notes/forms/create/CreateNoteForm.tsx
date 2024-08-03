@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { createNote, getTags } from '../../../../http/notes';
 import { useNotification } from '../../../../contexts/NotificationContext';
@@ -9,13 +9,10 @@ import { APIError } from '../../../../types/api';
 import AddCheckList from '../../addChecklist/AddCheckList';
 
 import type { ChecklistItem } from "../../../../store/types";
-import { TagsOption } from './TagsField';
-
-// Lazy-loaded components
-const TitleField = React.lazy(() => import('./TittleField'));
-const ContentField = React.lazy(() => import('./ContentField'));
-const TagsField = React.lazy(() => import('./TagsField'));
-const Actions = React.lazy(() => import('./Actions'));
+import TitleField from './TittleField';
+import ContentField from './ContentField';
+import TagsField, { TagsOption } from './TagsField';
+import Actions from './Actions';
 
 export const defaultBorderColor = '#757575';
 const TAG_LIST_ID = 'tags-standard';
@@ -27,7 +24,6 @@ const CreateNoteForm = () => {
     const [isTitleVisible, setIsTitleVisible] = useState<boolean>(false);
     const [isAddTagVisible, setIsAddTagVisible] = useState<boolean>(true);
 
-    // for the tag suggestions
     const [tags, setTags] = useState<(TagsOption | string)[]>([]);
     const [options, setOptions] = useState<TagsOption[]>([]);
     const [loading, setLoading] = useState(false);
@@ -86,6 +82,7 @@ const CreateNoteForm = () => {
                 pinned,
                 checklist: checkListItems,
                 type: typeOfNote,
+                color: "default",
             });
             notify(notifications.note.save.success, 'success');
             dispatch(addNote(response.note));
@@ -178,55 +175,53 @@ const CreateNoteForm = () => {
                 boxShadow: 6,
             }}
         >
-            <Suspense fallback={<CircularProgress />}>
-                {isTitleVisible && (
-                    <TitleField
-                        title={title}
-                        handleChange={handleChange}
-                        pinned={pinned}
-                        togglePin={togglePin}
-                    />
-                )}
+            {isTitleVisible && (
+                <TitleField
+                    title={title}
+                    handleChange={handleChange}
+                    pinned={pinned}
+                    togglePin={togglePin}
+                />
+            )}
 
-                {typeOfNote === "note" ? (
-                    <ContentField
-                        content={content}
-                        handleChange={handleChange}
-                        handleContentClick={handleContentClick}
-                        isTitleVisible={isTitleVisible}
-                        setTypeOfNote={setTypeOfNote}
-                    />
-                ) : (
-                    <AddCheckList
-                        checkListRef={checkListRef}
-                        items={checkListItems}
-                        addItem={addItemsToChecklist}
-                        removeItem={removeItemFromChecklist}
-                        toggleComplete={handleCheckListChange}
-                    />
-                )}
+            {typeOfNote === "note" ? (
+                <ContentField
+                    content={content}
+                    handleChange={handleChange}
+                    handleContentClick={handleContentClick}
+                    isTitleVisible={isTitleVisible}
+                    setTypeOfNote={setTypeOfNote}
+                />
+            ) : (
+                <AddCheckList
+                    checkListRef={checkListRef}
+                    items={checkListItems}
+                    addItem={addItemsToChecklist}
+                    removeItem={removeItemFromChecklist}
+                    toggleComplete={handleCheckListChange}
+                />
+            )}
 
-                {isTitleVisible && isAddTagVisible && (
-                    <TagsField
-                        tags={tags}
-                        setTags={setTags}
-                        options={options}
-                        setOptions={setOptions}
-                        loading={loading}
-                        error={error}
-                        tagRef={tagRef}
-                    />
-                )}
+            {isTitleVisible && isAddTagVisible && (
+                <TagsField
+                    tags={tags}
+                    setTags={setTags}
+                    options={options}
+                    setOptions={setOptions}
+                    loading={loading}
+                    error={error}
+                    tagRef={tagRef}
+                />
+            )}
 
-                {isTitleVisible && (
-                    <Actions
-                        handleSave={handleSave}
-                        formStatus={formStatus}
-                        toggleTagVisibility={toggleTagVisibility}
-                        isAddTagVisible={isAddTagVisible}
-                    />
-                )}
-            </Suspense>
+            {isTitleVisible && (
+                <Actions
+                    handleSave={handleSave}
+                    formStatus={formStatus}
+                    toggleTagVisibility={toggleTagVisibility}
+                    isAddTagVisible={isAddTagVisible}
+                />
+            )}
         </Box>
     );
 };

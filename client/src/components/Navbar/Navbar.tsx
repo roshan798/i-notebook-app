@@ -15,18 +15,14 @@ import {
     LightMode,
     Menu as MoreVertIcon,
 } from '@mui/icons-material'
-import CustomLink from '../shared/CustomLink'
 import { useSelector } from 'react-redux'
+import CustomLink from '../shared/CustomLink'
 import { RootState } from '../../store/types'
 import AccountMenu from './AccountMenu'
+import { useTheme } from '../../theme/useTheme'
 
-
-interface NavbarProps {
-    toggleDarkTheme: () => void
-    mode: 'dark' | 'light'
-}
-
-const ToggleThemeSwitch: React.FC<NavbarProps> = ({ mode, toggleDarkTheme }) => {
+const ToggleThemeSwitch = () => {
+    const { mode, toggleMode } = useTheme()
 
     return (
         <>
@@ -34,10 +30,10 @@ const ToggleThemeSwitch: React.FC<NavbarProps> = ({ mode, toggleDarkTheme }) => 
                 <IconButton
                     edge="start"
                     aria-label="toggle theme"
-                    onClick={() => {
-                        toggleDarkTheme()
-                    }}
+                    onClick={toggleMode}
+                    size='large'
                     sx={{ mr: 1 }}>
+
                     {mode === 'light' ? (
                         <DarkMode />
                     ) : (
@@ -48,7 +44,7 @@ const ToggleThemeSwitch: React.FC<NavbarProps> = ({ mode, toggleDarkTheme }) => 
     )
 }
 
-const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
+const Navbar = () => {
     const { user } = useSelector((state: RootState) => state.user)
     const location = useLocation()
     const { pathname } = location
@@ -86,10 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                             display: { xs: 'none', md: 'flex' },
                             alignItems: 'center',
                         }}>
-                        <ToggleThemeSwitch
-                            mode={mode}
-                            toggleDarkTheme={toggleDarkTheme}
-                        />
+                        <ToggleThemeSwitch />
                         {isLoggedIn ? (
                             <>
                                 <Button
@@ -134,10 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkTheme, mode }) => {
                         </>}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <ToggleThemeSwitch
-                            mode={mode}
-                            toggleDarkTheme={toggleDarkTheme}
-                        />
+                        <ToggleThemeSwitch />
                         <IconButton
                             size="large"
                             aria-label="show more"

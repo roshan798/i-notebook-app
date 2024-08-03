@@ -10,6 +10,7 @@ class NotesDTO {
     createdAt: Date
     updatedAt?: Date
     pinnedAt?: Date
+    color: string
     constructor(notes: Notes) {
         this.id = notes._id!.toString()
         this.tags = notes.tags
@@ -17,6 +18,7 @@ class NotesDTO {
         this.createdAt = notes.createdAt
         this.updatedAt = notes.updatedAt
         this.type = notes.type
+        this.color = notes.color
         if (notes.title !== undefined) this.title = notes.title
         if (notes.content !== undefined) this.content = notes.content
         if (notes.pinnedAt) this.pinnedAt = notes.pinnedAt

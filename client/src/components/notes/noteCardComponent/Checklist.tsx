@@ -1,12 +1,14 @@
 import React from 'react';
 import { List, ListItem, Checkbox, Typography } from '@mui/material';
 import type { ChecklistItem } from '../../../store/types';
+import { Color } from './cardColor';
 
 interface ChecklistProps {
     items: ChecklistItem[];
+    color: Color;
 }
 
-const Checklist: React.FC<ChecklistProps> = ({ items }) => {
+const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
     return (
         <div>
             <List sx={{ padding: 0 }}>
@@ -30,7 +32,7 @@ const Checklist: React.FC<ChecklistProps> = ({ items }) => {
                             variant="body2"
                             sx={{
                                 textDecoration: item.completed ? 'line-through' : 'none',
-                                color: item.completed ? 'text.secondary' : 'text.primary',
+                                color: color.checklistTextColor, // Checklist text color
                                 marginLeft: '0.5rem',
                             }}
                         >

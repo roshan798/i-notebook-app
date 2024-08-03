@@ -1,16 +1,18 @@
 import React from 'react';
 import { Box, Typography, Tooltip } from "@mui/material";
 import { formatDate, getRelativeTime } from "../../../utils/timeUtils";
+import { Color } from './cardColor';
 
 interface NoteTitleProps {
     createdAt: Date | string;
     updatedAt: Date | string;
     title: string;
     setUpdateModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+    color: Color
 }
 
 
-const NoteTitle: React.FC<NoteTitleProps> = ({ setUpdateModalOpen, createdAt, updatedAt, title }) => {
+const NoteTitle: React.FC<NoteTitleProps> = ({ setUpdateModalOpen, createdAt, updatedAt, title, color }) => {
 
 
     return (
@@ -20,7 +22,7 @@ const NoteTitle: React.FC<NoteTitleProps> = ({ setUpdateModalOpen, createdAt, up
                 gutterBottom
                 component="div"
                 title={title}
-                color={title ? "textPrimary" : "GrayText"}
+                color={title ? color.titleColor || "textPrimary" : "GrayText"}
                 onClick={() => setUpdateModalOpen(true)}
                 sx={{
                     overflow: 'hidden',

@@ -3,7 +3,8 @@ import { validateNote } from '../utils/validation'
 import NotesService from '../services/notes.service'
 import { TokenPayload } from '../services/token.service'
 import NotesDTO from '../schema/DTO/notes.dto'
-import type { NotesRequestBody, GetNotesParams, Notes, UpdateRequestBody } from '../schema/types/notes'
+import type { NotesRequestBody, GetNotesParams, Notes, UpdateRequestBody, ChangeColorBody } from '../schema/types/notes'
+import notesService from '../services/notes.service'
 
 class NotesController {
     async createNote(req: Request, res: Response) {
@@ -141,6 +142,23 @@ class NotesController {
 
         } catch (error) {
             console.log('Error updating note title', error)
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            })
+        }
+    }
+
+    async changeColor(req: Request, res: Response) {
+        const notesId = req.params.id;
+        const data = req.body as ChangeColorBody
+        try {
+            await notesService.updateFields(notesId, data)
+            return res.json({
+                success: true
+            });
+        } catch (error) {
+            console.log('Error updating note color', error)
             res.status(500).json({
                 success: false,
                 message: 'Internal server error'
