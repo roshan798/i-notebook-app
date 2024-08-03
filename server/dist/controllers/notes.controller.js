@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const validation_1 = require("../utils/validation");
 const notes_service_1 = __importDefault(require("../services/notes.service"));
 const notes_dto_1 = __importDefault(require("../schema/DTO/notes.dto"));
+const notes_service_2 = __importDefault(require("../services/notes.service"));
 class NotesController {
     createNote(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -158,6 +159,25 @@ class NotesController {
             }
             catch (error) {
                 console.log('Error updating note title', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error'
+                });
+            }
+        });
+    }
+    changeColor(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const notesId = req.params.id;
+            const data = req.body;
+            try {
+                yield notes_service_2.default.updateFields(notesId, data);
+                return res.json({
+                    success: true
+                });
+            }
+            catch (error) {
+                console.log('Error updating note color', error);
                 res.status(500).json({
                     success: false,
                     message: 'Internal server error'

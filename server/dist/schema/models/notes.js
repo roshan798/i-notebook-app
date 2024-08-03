@@ -75,6 +75,10 @@ const NotesSchema = new mongoose_1.Schema({
         enum: ['note', 'list'],
         default: 'note',
     },
+    color: {
+        type: String,
+        default: "default"
+    }
 }, {
     timestamps: true,
 });

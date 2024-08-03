@@ -15,7 +15,7 @@ const app = (0, express_1.default)();
 const corsOptions = {
     origin: [config_1.default.client.url],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', "PATCH"],
 };
 // middlewares
 app.use((0, cors_1.default)(corsOptions));

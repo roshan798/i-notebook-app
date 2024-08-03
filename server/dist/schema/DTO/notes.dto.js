@@ -11,6 +11,7 @@ class NotesDTO {
         this.createdAt = notes.createdAt;
         this.updatedAt = notes.updatedAt;
         this.type = notes.type;
+        this.color = notes.color;
         if (notes.title !== undefined)
             this.title = notes.title;
         if (notes.content !== undefined)
