@@ -6,6 +6,7 @@ import {
     Paper,
     IconButton,
     InputAdornment,
+    Divider,
 } from '@mui/material'
 import React, { useState } from 'react'
 import { AxiosResponse } from 'axios'
@@ -19,6 +20,7 @@ import SignInWithGoogle from '../components/SignInWithGoogle'
 import { useNotification } from '../contexts/NotificationContext'
 import { notifications } from '../utils/notificationMessages'
 import { APIError } from '../types/api'
+
 interface FormState {
     email: string
     password: string
@@ -47,26 +49,31 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
+        await performLogin(formData.email, formData.password)
+    }
 
+    const performLogin = async (email: string, password: string) => {
         setLoading(true)
         setError(null)
 
         try {
-            const response: AxiosResponse = await login(formData)
+            const response: AxiosResponse = await login({ email, password })
             const { user } = response.data
             dispatch(setUser(user))
             notify(notifications.login.success, 'success')
             navigate('/')
         } catch (error) {
-            const err = error as APIError;
-            console.log(error);
+            const err = error as APIError
+            console.log(error)
             setError(err.response?.data.message || 'Login failed. Please check your credentials and try again.')
-            notify(err.response?.data.message || notifications.login.error,
-                'error'
-            )
+            notify(err.response?.data.message || notifications.login.error, 'error')
         } finally {
             setLoading(false)
         }
+    }
+
+    const handleGuestLogin = async () => {
+        await performLogin('guest@gmail.com', 'Guest@123')
     }
 
     return (
@@ -142,6 +149,23 @@ const Login: React.FC = () => {
                         </Typography>
                     )}
                 </form>
+                <Divider
+                    sx={{
+                        fontSize: '0.8rem',
+                        color: 'GrayText',
+                        userSelect: 'none',
+                    }}>
+                    OR
+                </Divider>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    sx={{ marginTop: 2, borderRadius: 1 }}
+                    onClick={handleGuestLogin}
+                    disabled={loading}>
+                    {loading ? 'Logging In...' : 'Login as Guest'}
+                </Button>
                 <SignInWithGoogle />
                 <Typography
                     variant="body2"
