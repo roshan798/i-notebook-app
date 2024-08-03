@@ -89,6 +89,7 @@ const CreateNoteForm = () => {
             setFormStatus((prevState) => ({ ...prevState, isSaved: true }));
             setFormData(initialFormData);
             setTags(initialFormData.tags);
+            setCheckListItems([]);
         } catch (error) {
             console.error('Error saving note:', error);
             const err = error as APIError;

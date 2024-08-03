@@ -12,8 +12,8 @@ export type Color = {
 
 export const colorMap: Record<string, Color> = {
     "default": {
-        name: "Default",
-        value: '', // No transparency
+        name: "default",
+        value: '', 
         textColor: '',
         chipText: '',
         titleColor: '',
