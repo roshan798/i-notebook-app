@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Menu,
     MenuItem,
@@ -28,16 +28,21 @@ const AccountMenu: React.FC<AccountMenuProps> = ({
 }) => {
     const { addNotification: notify } = useNotification()
     const dispatch = useDispatch()
+    
+    const [loading, setLoading] = useState(false)
     const handleLogout = async () => {
         try {
+            setLoading(true)
             await logout()
             dispatch(setUser(null))
             notify(notifications.logout.success, 'success')
-            handleClose()
         } catch (error) {
             console.error(error)
             notify(notifications.logout.error, 'error')
+        }
+        finally {
             handleClose()
+            setLoading(false)
         }
     }
 
@@ -84,7 +89,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
             </MenuItem>
-            <MenuItem onClick={handleLogout}>
+            <MenuItem onClick={handleLogout} disabled={loading}>
                 <ListItemIcon>
                     <Logout />
                 </ListItemIcon>
