@@ -12,7 +12,6 @@ interface TokenPayload {
     [key: string]: any
 }
 const options = {
-    maxAge: 1000 * 60 * 60 * 24, // for 1 day
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite:
@@ -25,8 +24,8 @@ const setCookie = (
     accessToken: string,
     refreshToken: string
 ) => {
-    res.cookie('refreshToken', refreshToken, options)
-    res.cookie('accessToken', accessToken, options)
+    res.cookie('refreshToken', refreshToken, { ...options, maxAge: 1000 * 60 * 60 * 24 * 7 }) // 7 days
+    res.cookie('accessToken', accessToken, { ...options, maxAge: 1000 * 60 * 60 }) // 1hr
 }
 
 class UserController {

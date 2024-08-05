@@ -19,9 +19,6 @@ class NotesController {
         if (noteData.pinned === true) {
             noteData.pinnedAt = new Date()
         }
-        // remove comment
-        // console.log(noteData);
-        // return res.json({ message: 'Note created' })
         try {
             const savedNote = await NotesService.create({
                 ...noteData,

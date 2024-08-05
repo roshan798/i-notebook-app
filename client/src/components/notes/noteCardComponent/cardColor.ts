@@ -167,5 +167,15 @@ export const colorMap: Record<string, Color> = {
         contentColor: '#ffffffde',
         checklistTextColor: '#ffffffde',
         iconColor: '#ffffffde'
-    }
+    },
+    "Lemon": {
+        name: "Lemon",
+        value: '#fff44f',
+        textColor: '#000000de',
+        chipText: '#000000c0',
+        titleColor: '#000000f2',
+        contentColor: '#000000de',
+        checklistTextColor: '#000000de',
+        iconColor: '#000000de'
+    },
 };

@@ -1,10 +1,13 @@
 import { getApiInstance } from '.'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import config from '../configs/config';
 import {
     CreateNoteResponse,
     GetNoteResponse,
     GetNotesResponse,
     UpdateNoteResponse,
 } from '../store/types'
+
 import { CreateNoteBody, Note } from '../store/types'
 
 const api = getApiInstance('/notes')
@@ -90,3 +93,27 @@ export const tagSuggestions = async (
     const response = await api.get<TagsOptions[]>(`/tags?query=${inputValue}`)
     return response.data
 }
+
+
+api.interceptors.response.use(
+    (response: AxiosResponse): AxiosResponse => {
+        return response;
+    },
+    async (error: AxiosError): Promise<AxiosResponse | never> => {
+        const originalRequest = error.config as AxiosRequestConfig & { _isRetry?: boolean };
+
+        if (error.response?.status === 401 && originalRequest && !originalRequest._isRetry) {
+            originalRequest._isRetry = true;
+            try {
+                await axios.get(`${config.getAPIURL()}/auth/refresh`, {
+                    withCredentials: true
+                });
+                return api.request(originalRequest);
+            } catch (refreshError) {
+                console.log("Interceptor Error", refreshError);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
