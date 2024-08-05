@@ -18,7 +18,6 @@ const validation_1 = require("../utils/validation");
 const hash_service_1 = __importDefault(require("../services/hash.service"));
 const user_dto_1 = __importDefault(require("../schema/DTO/user.dto"));
 const options = {
-    maxAge: 1000 * 60 * 60 * 24, // for 1 day
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production'
@@ -26,8 +25,8 @@ const options = {
         : 'strict',
 };
 const setCookie = (res, accessToken, refreshToken) => {
-    res.cookie('refreshToken', refreshToken, options);
-    res.cookie('accessToken', accessToken, options);
+    res.cookie('refreshToken', refreshToken, Object.assign(Object.assign({}, options), { maxAge: 1000 * 60 * 60 * 24 * 7 })); // 7 days
+    res.cookie('accessToken', accessToken, Object.assign(Object.assign({}, options), { maxAge: 1000 * 60 * 60 })); // 1hr
 };
 class UserController {
     signup(req, res) {

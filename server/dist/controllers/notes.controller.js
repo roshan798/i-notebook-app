@@ -30,9 +30,6 @@ class NotesController {
             if (noteData.pinned === true) {
                 noteData.pinnedAt = new Date();
             }
-            // remove comment
-            // console.log(noteData);
-            // return res.json({ message: 'Note created' })
             try {
                 const savedNote = yield notes_service_1.default.create(Object.assign(Object.assign({}, noteData), { userId: req.user._id }));
                 res.status(201).json({
