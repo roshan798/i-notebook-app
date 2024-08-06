@@ -21,9 +21,7 @@ export const getRelativeTime = (
         const interval = intervals[i]
         const count = Math.floor(diffInSeconds / interval.seconds)
         if (count > 0) {
-            return count === 1
-                ? `1${interval.label} ago`
-                : `${count} ${interval.label}s ago`
+            return `${count}${interval.label} ago`;
         }
     }
 

@@ -3,7 +3,7 @@ import { EditNote, DeleteRounded, DeleteOutlineRounded, PaletteRounded, PaletteO
 import { Stack, Tooltip, IconButton, Menu, MenuItem } from "@mui/material";
 import ColorPicker from "./ColorPicker";
 import { useTheme } from "../../../theme/useTheme";
-import { Color } from "./cardColor";
+import { Color } from "../../../data/cardColor";
 
 type NoteMenuProps = {
     handleOpen: () => void;
@@ -16,10 +16,11 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { theme } = useTheme();
     const handleColorPickerOpen = (event: React.MouseEvent<HTMLElement>) => {
+        if (anchorEl) return;
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleColorPickerClose = () => {
         setAnchorEl(null);
     };
 
@@ -64,6 +65,7 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
                     size='small'
                     aria-label="change-color"
                     onClick={handleColorPickerOpen}
+                    onMouseEnter={handleColorPickerOpen}
                     sx={{
                         '& .icon-filled': { display: 'none' },
                         '&:hover .icon-filled': { display: 'block' },
@@ -79,17 +81,17 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
                 id="color-picker-menu"
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
+                onClose={handleColorPickerClose}
                 MenuListProps={{
                     'aria-labelledby': 'change-color',
                 }}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'left',
+                    horizontal: "center",
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'left',
+                    horizontal: 'center',
                 }}
                 sx={{
                     backgroundColor: 'transparent',
@@ -110,7 +112,9 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
                     }
                 }}
             >
-                <MenuItem disableRipple>
+                <MenuItem disableRipple
+                    onMouseLeave={handleColorPickerClose}
+                >
                     <ColorPicker onSelect={(color) => { onColorChange(color); }} />
                 </MenuItem>
             </Menu>

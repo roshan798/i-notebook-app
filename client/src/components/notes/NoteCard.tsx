@@ -16,7 +16,7 @@ import { changeColor, deleteNote as deleteNoteAPI } from '../../http/notes';
 import { deleteNote } from '../../store/notesSlice';
 import { APIError } from '../../types/api';
 import { notifications } from '../../utils/notificationMessages';
-import { Color, colorMap } from './noteCardComponent/cardColor';
+import { Color, colorMap } from '../../data/cardColor';
 import { debounce } from 'lodash';
 import UpdateNoteForm from './forms/UpdateNoteForm';
 

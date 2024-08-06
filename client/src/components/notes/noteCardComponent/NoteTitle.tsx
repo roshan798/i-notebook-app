@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Tooltip } from "@mui/material";
 import { formatDate, getRelativeTime } from "../../../utils/timeUtils";
-import { Color } from './cardColor';
+import { Color } from '../../../data/cardColor';
 
 interface NoteTitleProps {
     createdAt: Date | string;
@@ -22,7 +22,7 @@ const NoteTitle: React.FC<NoteTitleProps> = ({ setUpdateModalOpen, createdAt, up
                 gutterBottom
                 component="div"
                 title={title}
-                color={title ? color.titleColor || "textPrimary" : "GrayText"}
+                color={title ? color.titleColor + "de" || "textPrimary" : "GrayText"}
                 onClick={() => setUpdateModalOpen(true)}
                 sx={{
                     overflow: 'hidden',
@@ -35,7 +35,12 @@ const NoteTitle: React.FC<NoteTitleProps> = ({ setUpdateModalOpen, createdAt, up
                 {title ? title : "Add title"}
             </Typography>
             <Tooltip title={"Created: " + formatDate(createdAt)}>
-                <Typography variant="caption" color="GrayText" sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="caption" color={color.name === "default" ? "GrayText" : color.contentColor + "90"} sx={{
+                    whiteSpace: 'nowrap',
+                    '&:hover ': {
+                        textDecoration: "underline",
+                    }
+                }}>
                     {getRelativeTime(updatedAt)}
                 </Typography>
             </Tooltip>

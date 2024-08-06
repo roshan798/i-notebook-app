@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, ListItem, Checkbox, Typography } from '@mui/material';
 import type { ChecklistItem } from '../../../store/types';
-import { Color } from './cardColor';
+import { Color } from '../../../data/cardColor';
 
 interface ChecklistProps {
     items: ChecklistItem[];
@@ -32,7 +32,7 @@ const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
                             variant="body2"
                             sx={{
                                 textDecoration: item.completed ? 'line-through' : 'none',
-                                color: color.checklistTextColor, // Checklist text color
+                                color: color.name !== "default" ? color.contentColor + (item.completed ?  "90": "e0") : "text.secondary",
                                 marginLeft: '0.5rem',
                             }}
                         >

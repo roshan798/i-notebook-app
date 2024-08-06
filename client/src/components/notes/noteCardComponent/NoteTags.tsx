@@ -1,6 +1,6 @@
 import { Box, Chip } from "@mui/material";
 import { useState } from "react";
-import { Color } from "./cardColor";
+import { Color } from "../../../data/cardColor";
 
 const NoteTags: React.FC<{ tags: string[], color: Color }> = ({ tags, color }) => {
     const [showMore, setShowMore] = useState(false);
@@ -8,6 +8,7 @@ const NoteTags: React.FC<{ tags: string[], color: Color }> = ({ tags, color }) =
     const handleToggle = () => {
         setShowMore(!showMore);
     };
+    const tagColor = color.name === "default" ? "" : color.chipText + "b0";
 
     return (
         <Box sx={{ mt: 2, mb: 1, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -18,10 +19,10 @@ const NoteTags: React.FC<{ tags: string[], color: Color }> = ({ tags, color }) =
                     size="small"
                     variant="outlined"
                     sx={{
-                        color: color.chipText,
-                        borderColor: color.chipText,
+                        color: tagColor,
+                        borderColor: tagColor,
                         '& .MuiChip-label': {
-                            color: color.chipText,
+                            color: tagColor,
                         }
                     }}
                 />
@@ -31,14 +32,13 @@ const NoteTags: React.FC<{ tags: string[], color: Color }> = ({ tags, color }) =
                     variant="outlined"
                     size="small"
                     label={showMore ? 'Show Less' : 'Show More'}
-                    color="secondary"
                     key={showMore ? 'Show Less' : 'Show More'}
                     onClick={handleToggle}
                     sx={{
-                        color: color.textColor, // Apply text color
-                        borderColor: color.chipText,
+                        color: tagColor, 
+                        borderColor: tagColor,
                         '& .MuiChip-label': {
-                            color: color.chipText, // Apply text color inside Chip
+                            color: tagColor, 
                         }
                     }}
                 />

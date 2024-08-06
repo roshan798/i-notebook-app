@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { useTheme } from '../../../theme/useTheme';
-import { colorMap, Color } from './cardColor';
+import { colorMap, Color } from '../../../data/cardColor';
 
 const ColorPicker: React.FC<{ onSelect: (color: Color) => void }> = ({ onSelect }) => {
     const { theme } = useTheme();
