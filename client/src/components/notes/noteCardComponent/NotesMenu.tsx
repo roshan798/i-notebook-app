@@ -42,22 +42,6 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
                     <EditNote className="menu-icon " fontSize='medium' />
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Delete">
-                <IconButton
-                    size='small'
-                    aria-label="delete-note"
-                    onClick={handleDialogOpen}
-                    sx={{
-                        '&:hover': { backgroundColor: 'rgba(255, 0, 0, 0.1)' },
-                        '& .icon-filled': { display: 'none' },
-                        '&:hover .icon-filled': { display: 'block' },
-                        '&:hover .icon-outlined': { display: 'none' },
-                    }}
-                >
-                    <DeleteRounded fontSize='medium' className='icon-filled' color='error' />
-                    <DeleteOutlineRounded className='menu-icon icon-outlined' fontSize='medium' />
-                </IconButton>
-            </Tooltip>
             <Tooltip title="Change color">
                 <IconButton
                     aria-controls="color-picker-menu"
@@ -75,7 +59,22 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
                     <PaletteRounded className='menu-icon icon-filled' fontSize='medium' />
                     <PaletteOutlined className='menu-icon icon-outlined' fontSize='medium' />
                 </IconButton>
-
+            </Tooltip>
+            <Tooltip title="Delete">
+                <IconButton
+                    size='small'
+                    aria-label="delete-note"
+                    onClick={handleDialogOpen}
+                    sx={{
+                        '&:hover': { backgroundColor: 'rgba(255, 0, 0, 0.1)' },
+                        '& .icon-filled': { display: 'none' },
+                        '&:hover .icon-filled': { display: 'block' },
+                        '&:hover .icon-outlined': { display: 'none' },
+                    }}
+                >
+                    <DeleteRounded fontSize='medium' className='icon-filled' color='error' />
+                    <DeleteOutlineRounded className='menu-icon icon-outlined' fontSize='medium' />
+                </IconButton>
             </Tooltip>
             <Menu
                 id="color-picker-menu"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, IconButton, Tooltip, Zoom } from "@mui/material";
 import { useTheme } from '../../../theme/useTheme';
 import { colorMap, Color } from '../../../data/cardColor';
 
@@ -37,7 +37,7 @@ const ColorPicker: React.FC<{ onSelect: (color: Color) => void }> = ({ onSelect 
 
             {Object.entries(colorMap).map(([name, color]) => (
                 name === "default" ? null :
-                    <Tooltip key={name} title={name}>
+                    <Tooltip key={name} title={name} color={color.value} TransitionComponent={Zoom} arrow>
                         <IconButton
                             onClick={() => onSelect(color)}
                             sx={{
