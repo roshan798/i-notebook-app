@@ -15,4 +15,5 @@ router.delete('/:id', authMiddleware_1.default, checkOwnership_1.default, notes_
 router.put('/:id/pin', authMiddleware_1.default, checkOwnership_1.default, notes_controller_1.default.togglePinNote);
 router.put('/:id/one', authMiddleware_1.default, checkOwnership_1.default, notes_controller_1.default.updateOneField);
 router.patch("/:id/color", authMiddleware_1.default, notes_controller_1.default.changeColor);
+router.put('/:id/checklist', authMiddleware_1.default, notes_controller_1.default.updateChecklist);
 exports.default = router;

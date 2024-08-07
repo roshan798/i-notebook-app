@@ -113,5 +113,23 @@ class NotesService {
             }
         });
     }
+    updateCheckList(noteId, checklistItem) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id, completed } = checklistItem;
+                // Perform the update operation
+                const result = yield notes_1.default.findOneAndUpdate({ _id: noteId, 'checklist._id': id }, { $set: { 'checklist.$.completed': completed } }, { new: true, useFindAndModify: false } // Return the updated document
+                );
+                if (!result) {
+                    throw new Error('Note or checklist item not found');
+                }
+                return result;
+            }
+            catch (error) {
+                console.error('Error updating checklist item:', error);
+                throw error; // Re-throw the error to handle it in the controller
+            }
+        });
+    }
 }
 exports.default = new NotesService();

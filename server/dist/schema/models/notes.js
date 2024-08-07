@@ -33,7 +33,7 @@ const ChecklistItemSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
-}, { _id: false });
+});
 const NotesSchema = new mongoose_1.Schema({
     title: {
         type: String,

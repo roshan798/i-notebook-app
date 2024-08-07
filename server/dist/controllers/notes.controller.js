@@ -182,5 +182,31 @@ class NotesController {
             }
         });
     }
+    updateChecklist(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const notesId = req.params.id;
+            const checklist = req.body; // Extract checklistId and completed status from request body
+            try {
+                const result = yield notes_service_2.default.updateCheckList(notesId, checklist);
+                if (!result) {
+                    return res.status(404).json({
+                        success: false,
+                        message: 'Note not found'
+                    });
+                }
+                return res.json({
+                    success: true,
+                    updatedNote: result
+                });
+            }
+            catch (error) {
+                console.log('Error updating note checklist', error);
+                res.status(500).json({
+                    success: false,
+                    message: 'Internal server error'
+                });
+            }
+        });
+    }
 }
 exports.default = new NotesController();

@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+class CheckListDTO {
+    constructor(checklist) {
+        this.id = checklist._id;
+        this.text = checklist.text;
+        this.completed = checklist.completed;
+    }
+}
 class NotesDTO {
     constructor(notes) {
         this.title = "";
@@ -19,7 +26,7 @@ class NotesDTO {
         if (notes.pinnedAt)
             this.pinnedAt = notes.pinnedAt;
         if (notes.checklist)
-            this.checklist = notes.checklist;
+            this.checklist = notes.checklist.map((item) => new CheckListDTO(item));
     }
 }
 exports.default = NotesDTO;
