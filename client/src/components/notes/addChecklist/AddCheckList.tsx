@@ -6,8 +6,8 @@ import { defaultBorderColor } from '../forms/create/CreateNoteForm';
 export interface AddCheckListProps {
     items: CheckListItem[];
     addItem: (item: CheckListItem) => void;
-    removeItem: (id: number) => void;
-    toggleComplete: (id: number) => void;
+    removeItem: (id: string) => void;
+    toggleComplete: (id: string) => void;
     checkListRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -27,7 +27,7 @@ const AddCheckList: React.FC<AddCheckListProps> = ({ items,
     const handleAddItem = () => {
         if (inputValue.trim() !== '') {
             addItem({
-                id: Date.now(),
+                id: Date.now().toString(),
                 text: inputValue,
                 completed: false,
             });
@@ -41,11 +41,11 @@ const AddCheckList: React.FC<AddCheckListProps> = ({ items,
         }
     };
 
-    const handleRemoveItem = (id: number) => {
+    const handleRemoveItem = (id: string) => {
         removeItem(id);
     };
 
-    const handleToggleComplete = (id: number) => {
+    const handleToggleComplete = (id: string) => {
         toggleComplete(id);
     };
 

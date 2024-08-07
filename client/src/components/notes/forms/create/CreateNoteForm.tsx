@@ -152,11 +152,11 @@ const CreateNoteForm = () => {
         setCheckListItems((prevState) => [item, ...prevState]);
     };
 
-    const removeItemFromChecklist = (id: number) => {
+    const removeItemFromChecklist = (id: string) => {
         setCheckListItems((prevState) => prevState.filter(item => item.id !== id));
     };
 
-    const handleCheckListChange = (id: number) => {
+    const handleCheckListChange = (id: string) => {
         setCheckListItems((prevState) => prevState.map(item => {
             if (item.id === id) {
                 return { ...item, completed: !item.completed };
