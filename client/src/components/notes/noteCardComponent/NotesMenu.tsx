@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { EditNote, DeleteRounded, DeleteOutlineRounded, PaletteRounded, PaletteOutlined } from "@mui/icons-material";
 import { Stack, Tooltip, IconButton, Menu, MenuItem } from "@mui/material";
 import ColorPicker from "./ColorPicker";
@@ -15,11 +15,12 @@ type NoteMenuProps = {
 const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onColorChange, color }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { theme } = useTheme();
-    const handleColorPickerOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const timeouteRef = useRef<NodeJS.Timeout | null>(null);
+    const colorPickerRef = useRef<HTMLButtonElement | null>(null);
+    const handleColorPickerOpen = () => {
         if (anchorEl) return;
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(colorPickerRef.current);
     };
-
     const handleColorPickerClose = () => {
         setAnchorEl(null);
     };
@@ -44,12 +45,21 @@ const NotesMenu: React.FC<NoteMenuProps> = ({ handleOpen, handleDialogOpen, onCo
             </Tooltip>
             <Tooltip title="Change color">
                 <IconButton
+                    ref={colorPickerRef}
                     aria-controls="color-picker-menu"
                     aria-haspopup="true"
                     size='small'
                     aria-label="change-color"
                     onClick={handleColorPickerOpen}
-                    onMouseEnter={handleColorPickerOpen}
+                    onMouseEnter={() => {
+                        timeouteRef.current = setTimeout(handleColorPickerOpen, 500);
+                    }}
+                    onMouseLeave={() => {
+                        if (timeouteRef.current) {
+                            clearTimeout(timeouteRef.current);
+                            timeouteRef.current = null;
+                        }
+                    }}
                     sx={{
                         '& .icon-filled': { display: 'none' },
                         '&:hover .icon-filled': { display: 'block' },
