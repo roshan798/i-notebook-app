@@ -1,7 +1,7 @@
 import { SortOrder } from 'mongoose';
 import NotesModel from '../schema/models/notes';
 import type { UserId } from '../schema/types/user';
-import { Notes, NotesId, NotesRequestBody, GetNotesParams } from '../schema/types/notes';
+import { Notes, NotesId, NotesRequestBody, GetNotesParams, ChecklistItem } from '../schema/types/notes';
 
 class NotesService {
     async create(notes: NotesRequestBody): Promise<Notes> {
@@ -101,6 +101,28 @@ class NotesService {
             throw error;
         }
     }
+    async updateCheckList(noteId: string, checklistItem: ChecklistItem): Promise<Notes | null> {
+    try {
+        const { id, completed } = checklistItem;
+
+        // Perform the update operation
+        const result = await NotesModel.findOneAndUpdate(
+            { _id: noteId, 'checklist._id': id },
+            { $set: { 'checklist.$.completed': completed } },
+            { new: true, useFindAndModify: false } // Return the updated document
+        );
+
+        if (!result) {
+            throw new Error('Note or checklist item not found');
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Error updating checklist item:', error);
+        throw error; // Re-throw the error to handle it in the controller
+    }
+}
+    
 }
 
 export default new NotesService();

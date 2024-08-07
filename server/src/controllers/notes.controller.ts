@@ -3,7 +3,7 @@ import { validateNote } from '../utils/validation'
 import NotesService from '../services/notes.service'
 import { TokenPayload } from '../services/token.service'
 import NotesDTO from '../schema/DTO/notes.dto'
-import type { NotesRequestBody, GetNotesParams, Notes, UpdateRequestBody, ChangeColorBody } from '../schema/types/notes'
+import type { NotesRequestBody, GetNotesParams, Notes, UpdateRequestBody, ChangeColorBody, ChecklistItem } from '../schema/types/notes'
 import notesService from '../services/notes.service'
 
 class NotesController {
@@ -162,6 +162,32 @@ class NotesController {
             })
         }
     }
+    async updateChecklist(req: Request, res: Response) {
+        const notesId = req.params.id;
+        const checklist = req.body as ChecklistItem; // Extract checklistId and completed status from request body
+        try {
+            const result = await notesService.updateCheckList(notesId, checklist);
+
+            if (!result) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Note not found'
+                });
+            }
+
+            return res.json({
+                success: true,
+                updatedNote: result
+            });
+        } catch (error) {
+            console.log('Error updating note checklist', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
+    }
+
 
 }
 export default new NotesController()

@@ -1,5 +1,5 @@
 export interface CheckListItem {
-    id: number;
+    id: string;
     text: string;
     completed: boolean;
 }

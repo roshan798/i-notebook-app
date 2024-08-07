@@ -9,6 +9,7 @@ import {
 } from '../store/types'
 
 import { CreateNoteBody, Note } from '../store/types'
+import { ChecklistItem } from "../store/types";
 
 const api = getApiInstance('/notes')
 
@@ -70,6 +71,14 @@ export const changeColor = async (noteId: string, data: { color: string }): Prom
     return response.data;
 }
 
+// to update the checklist items state to completed / uncompleted
+interface UpdateChecklistResponse extends UpdateNoteResponse {
+    updatedNote: Note
+}
+export const updateChecklist = async (noteId: string, data: ChecklistItem): Promise<UpdateChecklistResponse> => {
+    const response = await api.put(`/${noteId}/checklist`, data)
+    return response.data
+}
 interface TagsOptions {
     title: string
     inputValue?: string

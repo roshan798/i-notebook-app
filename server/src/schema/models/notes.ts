@@ -11,8 +11,7 @@ const ChecklistItemSchema = new Schema(
             type: Boolean,
             default: false,
         },
-    },
-    { _id: false }
+    }
 );
 
 const NotesSchema = new Schema<Notes>(

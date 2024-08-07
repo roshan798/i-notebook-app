@@ -15,7 +15,7 @@ export type UserState = {
 }
 
 export interface ChecklistItem {
-    id: number;
+    id: string;
     text: string;
     completed: boolean;
 }

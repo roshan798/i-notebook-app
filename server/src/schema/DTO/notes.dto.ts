@@ -1,9 +1,20 @@
-import type { Notes } from '../types/notes'
+import type { ChecklistItem, Notes } from '../types/notes'
+class CheckListDTO {
+    id: string
+    text: string
+    completed: boolean
+    constructor(checklist: ChecklistItem) {
+        this.id = checklist._id
+        this.text = checklist.text
+        this.completed = checklist.completed
+    }
+}
+
 class NotesDTO {
     id: string
     title: string = ""
     content: string = ""
-    checklist: { text: string; completed: boolean }[] = []
+    checklist: CheckListDTO[] = []
     tags: string[]
     type: "note" | "list"
     pinned: boolean
@@ -22,7 +33,7 @@ class NotesDTO {
         if (notes.title !== undefined) this.title = notes.title
         if (notes.content !== undefined) this.content = notes.content
         if (notes.pinnedAt) this.pinnedAt = notes.pinnedAt
-        if (notes.checklist) this.checklist = notes.checklist
+        if (notes.checklist) this.checklist = notes.checklist.map((item) => new CheckListDTO(item))
     }
 }
 export default NotesDTO

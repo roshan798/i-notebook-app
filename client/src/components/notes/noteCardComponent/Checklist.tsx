@@ -6,17 +6,25 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import type { ChecklistItem } from '../../../store/types';
 import { Color } from '../../../data/cardColor';
+import { updateChecklist } from '../../../http/notes';
+import { useDispatch } from 'react-redux';
+import { updateNote } from '../../../store/notesSlice';
+import { useNotification } from '../../../contexts/NotificationContext';
 
 interface ChecklistProps {
     items: ChecklistItem[];
     color: Color;
+    noteId: string;
 }
 
-const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
+const Checklist: React.FC<ChecklistProps> = ({ items, color, noteId }) => {
+    const dispatch = useDispatch()
+    const { addNotification } = useNotification();
     const [showAllChecked, setShowAllChecked] = useState(false);
-
-    const checkedItems = items.filter((item) => item.completed);
-    const uncheckedItems = items.filter((item) => !item.completed);
+    const [checkList, setCheckList] = useState<ChecklistItem[]>(items);
+    const [loading, setLoading] = useState(false);
+    const checkedItems = checkList.filter((item) => item.completed);
+    const uncheckedItems = checkList.filter((item) => !item.completed);
     const visibleCheckedItems = showAllChecked ? checkedItems : checkedItems.slice(0, 2);
 
     const hiddenCheckedItemsCount = checkedItems.length - visibleCheckedItems.length;
@@ -24,6 +32,45 @@ const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
     const handleShowMore = () => {
         setShowAllChecked((prev) => !prev);
     };
+
+    const handleCheckBoxClick = async (item: ChecklistItem) => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            setCheckList((prev) => {
+                const updatedChecklist = prev.map((i) => {
+                    if (i.id === item.id) {
+                        return { ...i, completed: !i.completed };
+                    }
+                    return i;
+                });
+                return updatedChecklist;
+            });
+            const response = await updateChecklist(noteId, {
+                id: item.id,
+                text: item.text,
+                completed: !item.completed,
+            });
+            dispatch(updateNote(response.updatedNote));
+            console.log(response);
+        } catch (error) {
+            addNotification("Error updating checklist item", "error");
+            setCheckList((prev) => {
+                const updatedChecklist = prev.map((i) => {
+                    if (i.id === item.id) {
+                        return { ...i, completed: !i.completed };
+                    }
+                    return i;
+                });
+                return updatedChecklist;
+            });
+            console.log(error);
+        }
+        finally {
+            setLoading(false);
+        }
+
+    }
 
     return (
         <div>
@@ -44,6 +91,9 @@ const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
                                 icon={<RadioButtonUncheckedIcon />}
                                 checkedIcon={<CheckCircleOutlineIcon />}
                                 checked={item.completed}
+                                onClick={() => {
+                                    handleCheckBoxClick(item)
+                                }}
                                 disableRipple
                                 sx={{ padding: '0.1rem' }}
                             />
@@ -77,6 +127,9 @@ const Checklist: React.FC<ChecklistProps> = ({ items, color }) => {
                                 icon={<RadioButtonUncheckedIcon />}
                                 checkedIcon={<CheckCircleOutlineIcon />}
                                 checked={item.completed}
+                                onClick={() => {
+                                    handleCheckBoxClick(item)
+                                }}
                                 disableRipple
                                 sx={{ padding: '0.1rem' }}
                             />

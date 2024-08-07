@@ -127,6 +127,7 @@ const NoteCard: React.FC<{ note: NoteType }> = ({ note }) => {
                             color={noteColor}
                         />
                         {note.type === "list" ? <Checklist
+                            noteId={note.id}
                             color={noteColor}
                             items={note.checklist || []}
                         /> : <NoteContent content={note.content || ""} color={noteColor} />}

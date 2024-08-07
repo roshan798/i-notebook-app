@@ -12,11 +12,13 @@ export interface NotesRequestBody {
     userId: UserId
     pinned: boolean
     pinnedAt?: Date
-    color ?: string
+    color?: string
 }
 
 
 interface ChecklistItem {
+    _id: string;
+    id: string;
     text: string;
     completed: boolean;
 }
